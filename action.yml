@@ -1,6 +1,11 @@
-name: "s3 cache"
-author: tespkg
-description: "S3 actions cache with actions/cache@v2 passthrough"
+name: "s3 actions cache"
+author: Madrona Games, Inc.
+description: "S3 actions cache with actions/cache passthrough"
+
+branding:
+  icon: "archive"
+  color: "gray-dark"
+
 inputs:
   endpoint:
     description: "s3 / minio endpoint, see: https://docs.min.io/docs/javascript-client-api-reference.html"
@@ -58,6 +63,3 @@ runs:
   main: "dist/restore/index.js"
   post: "dist/save/index.js"
   post-if: "success()"
-branding:
-  icon: "archive"
-  color: "gray-dark"

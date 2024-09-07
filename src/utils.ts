@@ -220,7 +220,7 @@ export async function saveCache(standalone: boolean) {
           ? getInput("region", "AWS_REGION")
           : core.getState(State.Region),
       });
-
+      core.info("Created client");
       const compressionMethod = await utils.getCompressionMethod();
       const cachePaths = await utils.resolvePaths(paths);
       core.debug("Cache Paths:");

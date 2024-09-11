@@ -51,7 +51,7 @@ async function restoreCache() {
       const archivePath = path.join(
         await utils.createTempDirectory(),
         cacheFileName,
-      );
+      ).replaceAll("\\", "/");
 
       const { item: obj, matchingKey } = await findObject(
         mc,

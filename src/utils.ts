@@ -228,7 +228,10 @@ export async function saveCache(standalone: boolean) {
 
       const archiveFolder = await utils.createTempDirectory();
       const cacheFileName = utils.getCacheFileName(compressionMethod);
-      const archivePath = path.join(archiveFolder, cacheFileName);
+      const archivePath = path.join(archiveFolder, cacheFileName).replaceAll(
+        "\\",
+        "/",
+      );
 
       core.debug(`Archive Path: ${archivePath}`);
 
@@ -237,7 +240,7 @@ export async function saveCache(standalone: boolean) {
         await listTar(archivePath, compressionMethod);
       }
 
-      const object = path.join(key, cacheFileName);
+      const object = path.join(key, cacheFileName).replaceAll("\\", "/");
 
       core.info(`Uploading tar to s3. Bucket: ${bucket}, Object: ${object}`);
       await mc.fPutObject(bucket, object, archivePath, {});

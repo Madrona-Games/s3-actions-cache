@@ -110210,7 +110210,7 @@ async function saveCache(standalone) {
             core.info("Cache saved to s3 successfully");
         }
         catch (e) {
-            core.info("Save s3 cache failed: " + e.message);
+            core.info("Save s3 cache failed: " + e.message + "\n" + e.stack);
             if (useFallback) {
                 if (isGhes()) {
                     core.warning("Cache fallback is not supported on Github Enterpise.");

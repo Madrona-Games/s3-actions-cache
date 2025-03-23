@@ -109950,7 +109950,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
 const utils_1 = __nccwpck_require__(1798);
-process.on("uncaughtException", (e) => core.info("warning: " + e.message));
+process.on("uncaughtException", (e) => core.info("warning: " + e.message + "\n" + e.stack));
 (0, utils_1.saveCache)(true);
 
 

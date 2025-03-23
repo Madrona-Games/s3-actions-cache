@@ -109955,7 +109955,7 @@ const core = __importStar(__nccwpck_require__(7484));
 const path = __importStar(__nccwpck_require__(6928));
 const state_1 = __nccwpck_require__(2462);
 const utils_1 = __nccwpck_require__(1798);
-process.on("uncaughtException", (e) => core.info("warning: " + e.message));
+process.on("uncaughtException", (e) => core.info("warning: " + e.message + "\n" + e.stack));
 async function restoreCache() {
     try {
         const bucket = core.getInput("bucket", { required: true });

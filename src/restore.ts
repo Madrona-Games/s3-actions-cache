@@ -17,7 +17,10 @@ import {
   setCacheSizeOutput,
 } from "./utils";
 
-process.on("uncaughtException", (e) => core.info("warning: " + e.message));
+process.on(
+  "uncaughtException",
+  (e) => core.info("warning: " + e.message + "\n" + e.stack),
+);
 
 async function restoreCache() {
   try {

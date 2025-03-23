@@ -110226,7 +110226,7 @@ async function saveCache(standalone) {
         }
     }
     catch (e) {
-        core.info("warning: " + e.message);
+        core.info("warning: " + e.message + "\n" + e.stack);
     }
 }
 

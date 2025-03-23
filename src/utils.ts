@@ -260,6 +260,6 @@ export async function saveCache(standalone: boolean) {
       }
     }
   } catch (e) {
-    core.info("warning: " + e.message);
+    core.info("warning: " + e.message + "\n" + e.stack);
   }
 }

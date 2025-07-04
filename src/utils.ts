@@ -44,6 +44,7 @@ export function newMinio({
     secretKey: secretKey ?? getInput("secretKey", "AWS_SECRET_ACCESS_KEY"),
     sessionToken: sessionToken ?? getInput("sessionToken", "AWS_SESSION_TOKEN"),
     region: region ?? getInput("region", "AWS_REGION"),
+    partSize: (getInputAsInt("partSize") ?? 256) * 1024 * 1024,
   });
 }
 

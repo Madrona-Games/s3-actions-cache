@@ -44129,7 +44129,7 @@ function expand(str, isTop) {
   var isOptions = m.body.indexOf(',') >= 0;
   if (!isSequence && !isOptions) {
     // {a},b}
-    if (m.post.match(/,.*\}/)) {
+    if (m.post.match(/,(?!,).*\}/)) {
       str = m.pre + '{' + m.body + escClose + m.post;
       return expand(str);
     }
@@ -109993,6 +109993,7 @@ function newMinio({ accessKey, secretKey, sessionToken, region, } = {}) {
         secretKey: secretKey ?? getInput("secretKey", "AWS_SECRET_ACCESS_KEY"),
         sessionToken: sessionToken ?? getInput("sessionToken", "AWS_SESSION_TOKEN"),
         region: region ?? getInput("region", "AWS_REGION"),
+        partSize: (getInputAsInt("partSize") ?? 256) * 1024 * 1024,
     });
 }
 function getInputAsBoolean(name, options) {

@@ -29,7 +29,7 @@ jobs:
           sessionToken: "AQoDYXdzEJraDcqRtz123" # optional
           bucket: actions-cache # required
           use-fallback: true # optional, use github actions cache fallback, default true
-
+          partSize: 256 # optional
           # actions/cache compatible properties: https://github.com/actions/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           path: |

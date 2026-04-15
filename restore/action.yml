@@ -47,11 +47,11 @@ inputs:
   downloadConcurrency:
     description: "Number of parallel byte-range download streams (default: 16). Higher values saturate 10 Gbps+ networks."
     required: false
-    default: "16"
+    default: "8"
   uploadConcurrency:
     description: "Number of parallel upload streams for multipart upload (default: 16). Higher values saturate 10 Gbps+ networks."
     required: false
-    default: "16"
+    default: "8"
 outputs:
   cache-hit:
     description: "A boolean value to indicate an exact match was found for the primary key"

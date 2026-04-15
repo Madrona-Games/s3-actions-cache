@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "24.x"
           cache: "npm"
@@ -27,29 +27,21 @@ jobs:
         run: npm run test:unit
 
   integration-tests:
-    name: Integration Tests (RustFS)
-    runs-on: ubuntu-latest
-    services:
-      rustfs:
-        image: rustfs/rustfs:latest
-        ports:
-          - 9000:9000
-        env:
-          RUSTFS_ACCESS_KEY: rustfsadmin
-          RUSTFS_SECRET_KEY: rustfsadmin
-          RUSTFS_ADDRESS: "0.0.0.0:9000"
-        options: >-
-          --health-cmd="curl -f http://127.0.0.1:9000/health"
-          --health-interval=5s
-          --health-timeout=3s
-          --health-retries=10
-          --health-start-period=10s
+    name: Integration Tests (RustFS) - ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Start RustFS
+        run: docker compose up -d --wait
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "24.x"
           cache: "npm"
@@ -57,33 +49,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Wait for RustFS to be ready
-        run: |
-          for i in $(seq 1 30); do
-            if curl -sf http://localhost:9000/health; then
-              echo "RustFS is ready"
-              exit 0
-            fi
-            echo "Waiting for RustFS... ($i/30)"
-            sleep 2
-          done
-          echo "RustFS failed to start"
-          exit 1
-
       - name: Run integration tests
         run: npm run test:integration
         env:
           S3_ENDPOINT: http://localhost:9000
+
+      - name: Stop RustFS
+        if: always()
+        run: docker compose down
 
   build:
     name: Build & Verify Dist
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "24.x"
           cache: "npm"
@@ -102,29 +85,43 @@ jobs:
             exit 1
           fi
 
-  e2e-save:
-    name: E2E Save (${{ matrix.os }})
+  e2e-save-restore:
+    name: E2E Save & Restore - ${{ matrix.os }}
     needs: [unit-tests, build]
     strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
       fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Start RustFS
+        run: docker compose up -d --wait
+
+      - name: Create test bucket
+        shell: bash
+        run: |
+          curl -sf -X PUT http://localhost:9000/actions-cache \
+            -u rustfsadmin:rustfsadmin
+
       - name: Generate files in working directory
         shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} test-cache
+
       - name: Generate files outside working directory
         shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} ~/test-cache
+
       - name: Save cache
         uses: ./
         with:
-          endpoint: play.min.io
-          accessKey: "Q3AM3UQ867SPQQA43P2F"
-          secretKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+          endpoint: localhost
+          port: "9000"
+          insecure: true
+          accessKey: "rustfsadmin"
+          secretKey: "rustfsadmin"
           bucket: actions-cache
           use-fallback: false
           key: test-${{ runner.os }}-${{ github.run_id }}
@@ -132,53 +129,97 @@ jobs:
             test-cache
             ~/test-cache
 
-  e2e-restore:
-    name: E2E Restore (${{ matrix.os }})
-    needs: e2e-save
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Remove cached files
+        shell: bash
+        run: |
+          rm -rf test-cache
+          rm -rf ~/test-cache
+
       - name: Restore cache
         uses: ./
         with:
-          endpoint: play.min.io
-          accessKey: "Q3AM3UQ867SPQQA43P2F"
-          secretKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+          endpoint: localhost
+          port: "9000"
+          insecure: true
+          accessKey: "rustfsadmin"
+          secretKey: "rustfsadmin"
           bucket: actions-cache
           use-fallback: false
           key: test-${{ runner.os }}-${{ github.run_id }}
           path: |
             test-cache
             ~/test-cache
+
       - name: Verify cache files in working directory
         shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} test-cache
+
       - name: Verify cache files outside working directory
         shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} ~/test-cache
 
+      - name: Stop RustFS
+        if: always()
+        run: docker compose down
+
   e2e-restore-keys:
-    name: E2E Restore Keys (${{ matrix.os }})
-    needs: e2e-save
+    name: E2E Restore Keys - ${{ matrix.os }}
+    needs: [unit-tests, build]
     strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
       fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore cache
+        uses: actions/checkout@v6
+
+      - name: Start RustFS
+        run: docker compose up -d --wait
+
+      - name: Create test bucket
+        shell: bash
+        run: |
+          curl -sf -X PUT http://localhost:9000/actions-cache \
+            -u rustfsadmin:rustfsadmin
+
+      - name: Generate files in working directory
+        shell: bash
+        run: scripts/create-cache-files.sh ${{ runner.os }} test-cache
+
+      - name: Generate files outside working directory
+        shell: bash
+        run: scripts/create-cache-files.sh ${{ runner.os }} ~/test-cache
+
+      - name: Save cache
         uses: ./
         with:
-          endpoint: play.min.io
-          accessKey: "Q3AM3UQ867SPQQA43P2F"
-          secretKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+          endpoint: localhost
+          port: "9000"
+          insecure: true
+          accessKey: "rustfsadmin"
+          secretKey: "rustfsadmin"
+          bucket: actions-cache
+          use-fallback: false
+          key: test-${{ runner.os }}-${{ github.run_id }}
+          path: |
+            test-cache
+            ~/test-cache
+
+      - name: Remove cached files
+        shell: bash
+        run: |
+          rm -rf test-cache
+          rm -rf ~/test-cache
+
+      - name: Restore cache with restore keys
+        uses: ./
+        with:
+          endpoint: localhost
+          port: "9000"
+          insecure: true
+          accessKey: "rustfsadmin"
+          secretKey: "rustfsadmin"
           bucket: actions-cache
           use-fallback: false
           key: test-${{ runner.os }}-${{ github.run_id }}-${{ github.sha }}
@@ -186,36 +227,56 @@ jobs:
             test-cache
             ~/test-cache
           restore-keys: test-${{ runner.os }}-
+
       - name: Verify cache files in working directory
         shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} test-cache
+
       - name: Verify cache files outside working directory
         shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} ~/test-cache
 
-  e2e-save-only:
-    name: E2E Save Only (${{ matrix.os }})
+      - name: Stop RustFS
+        if: always()
+        run: docker compose down
+
+  e2e-save-restore-only:
+    name: E2E Save Only & Restore Only - ${{ matrix.os }}
     needs: [unit-tests, build]
     strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
       fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Start RustFS
+        run: docker compose up -d --wait
+
+      - name: Create test bucket
+        shell: bash
+        run: |
+          curl -sf -X PUT http://localhost:9000/actions-cache \
+            -u rustfsadmin:rustfsadmin
+
       - name: Generate files in working directory
         shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} test-cache
+
       - name: Generate files outside working directory
         shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} ~/test-cache
-      - name: Save cache
+
+      - name: Save cache (save-only action)
         uses: ./save/
         with:
-          endpoint: play.min.io
-          accessKey: "Q3AM3UQ867SPQQA43P2F"
-          secretKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+          endpoint: localhost
+          port: "9000"
+          insecure: true
+          accessKey: "rustfsadmin"
+          secretKey: "rustfsadmin"
           bucket: actions-cache
           use-fallback: false
           key: test-save-only-${{ runner.os }}-${{ github.run_id }}
@@ -223,32 +284,35 @@ jobs:
             test-cache
             ~/test-cache
 
-  e2e-restore-only:
-    name: E2E Restore Only (${{ matrix.os }})
-    needs: e2e-save-only
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Restore cache
+      - name: Remove cached files
+        shell: bash
+        run: |
+          rm -rf test-cache
+          rm -rf ~/test-cache
+
+      - name: Restore cache (restore-only action)
         uses: ./restore/
         with:
-          endpoint: play.min.io
-          accessKey: "Q3AM3UQ867SPQQA43P2F"
-          secretKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
+          endpoint: localhost
+          port: "9000"
+          insecure: true
+          accessKey: "rustfsadmin"
+          secretKey: "rustfsadmin"
           bucket: actions-cache
           use-fallback: false
           key: test-save-only-${{ runner.os }}-${{ github.run_id }}
           path: |
             test-cache
             ~/test-cache
+
       - name: Verify cache files in working directory
         shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} test-cache
+
       - name: Verify cache files outside working directory
         shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} ~/test-cache
+
+      - name: Stop RustFS
+        if: always()
+        run: docker compose down

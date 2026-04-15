@@ -1,6 +1,6 @@
 # actions-s3-cache
 
-This action enables caching dependencies to s3 compatible storage, e.g. minio, AWS S3
+This action enables caching dependencies to S3-compatible storage, e.g. Amazon S3, Cloudflare R2
 
 It also has github [actions/cache@v2](https://github.com/actions/cache) fallback if s3 save & restore fails
 
@@ -20,13 +20,13 @@ jobs:
     runs-on: [ubuntu-latest]
 
     steps:
-      - uses: tespkg/actions-cache@v1
+      - uses: Madrona-Games/s3-actions-cache@v2
         with:
-          endpoint: play.min.io # optional, default s3.amazonaws.com
+          endpoint: s3.example.com # optional, default s3.amazonaws.com
           insecure: false # optional, use http instead of https. default false
-          accessKey: "Q3AM3UQ867SPQQA43P2F" # required
-          secretKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG" # required
-          sessionToken: "AQoDYXdzEJraDcqRtz123" # optional
+          accessKey: "mykey" # required
+          secretKey: "secret" # required
+          sessionToken: "token" # optional
           bucket: actions-cache # required
           use-fallback: true # optional, use github actions cache fallback, default true
           partSize: 256 # optional
@@ -42,14 +42,14 @@ jobs:
 You can also set env instead of using `with`:
 
 ```yaml
-      - uses: tespkg/actions-cache@v1
+      - uses: Madrona-Games/s3-actions-cache@v2
         env:
-          AWS_ACCESS_KEY_ID: "Q3AM3UQ867SPQQA43P2F"
-          AWS_SECRET_ACCESS_KEY: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG"
-          # AWS_SESSION_TOKEN: "xxx"
+          AWS_ACCESS_KEY_ID: "mykey"
+          AWS_SECRET_ACCESS_KEY: "secret"
+          # AWS_SESSION_TOKEN: "token"
           AWS_REGION: "us-east-1"
         with:
-          endpoint: play.min.io
+          endpoint: s3.example.com # optional, default s3.amazonaws.com
           bucket: actions-cache
           use-fallback: false
           key: test-${{ runner.os }}-${{ github.run_id }}
@@ -61,10 +61,10 @@ You can also set env instead of using `with`:
 To write to the cache only:
 
 ```yaml
-      - uses: tespkg/actions-cache/save@v1
+      - uses: Madrona-Games/s3-actions-cache/save@v2
         with:
-          accessKey: "Q3AM3UQ867SPQQA43P2F" # required
-          secretKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG" # required
+          accessKey: "mykey" # required
+          secretKey: "secret" # required
           bucket: actions-cache # required
           # actions/cache compatible properties: https://github.com/actions/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -75,10 +75,10 @@ To write to the cache only:
 To restore from the cache only:
 
 ```yaml
-      - uses: tespkg/actions-cache/restore@v1
+      - uses: Madrona-Games/s3-actions-cache/restore@v2
         with:
-          accessKey: "Q3AM3UQ867SPQQA43P2F" # required
-          secretKey: "zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG" # required
+          accessKey: "mykey" # required
+          secretKey: "secret" # required
           bucket: actions-cache # required
           # actions/cache compatible properties: https://github.com/actions/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -107,12 +107,12 @@ When using this with Amazon S3, the following permissions are necessary:
 This project follows semantic versioning. Backward incompatible changes will
 increase major version.
 
-There is also the `v1` compatible tag that's always pinned to the latest
-`v1.x.y` release.
+There is also the `v2` compatible tag that's always pinned to the latest
+`v2.x.y` release.
 
 It's done using:
 
 ```
-git tag -a v1 -f -m "v1 compatible release"
+git tag -a v2 -f -m "v2 compatible release"
 git push -f --tags
 ```

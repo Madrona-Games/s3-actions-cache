@@ -2,16 +2,13 @@ import * as cache from "@actions/cache";
 import * as utils from "@actions/cache/lib/internal/cacheUtils";
 import { extractTar, listTar } from "@actions/cache/lib/internal/tar";
 import * as core from "@actions/core";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
 import * as path from "node:path";
-import fs from "node:fs";
-import { Readable } from "node:stream";
-import { pipeline } from "node:stream/promises";
 import { State } from "./state";
 import { findObject, newS3Client } from "./s3-client";
 import { saveMatchedKey } from "./save-cache";
 import { formatSize, isGhes, setCacheHitOutput, setCacheSizeOutput } from "./output";
-import { getInput, getInputAsArray, getInputAsBoolean } from "./input";
+import { getInput, getInputAsArray, getInputAsBoolean, getInputAsInt } from "./input";
+import { parallelDownload } from "./download";
 
 process.on(
   "uncaughtException",
@@ -65,15 +62,18 @@ async function restoreCache() {
         `Downloading cache from s3 to ${archivePath}. bucket: ${bucket}, object: ${obj.Key}`,
       );
 
-      const response = await client.send(
-        new GetObjectCommand({
-          Bucket: bucket,
-          Key: obj.Key!,
-        }),
-      );
+      const downloadConcurrency = getInputAsInt("downloadConcurrency") ?? 16;
+      const chunkSizeMB = getInputAsInt("partSize") ?? 256;
 
-      const writeStream = fs.createWriteStream(archivePath);
-      await pipeline(response.Body as Readable, writeStream);
+      await parallelDownload({
+        client,
+        bucket,
+        key: obj.Key!,
+        filePath: archivePath,
+        fileSize: obj.Size,
+        chunkSizeMB,
+        concurrency: downloadConcurrency,
+      });
 
       if (core.isDebug()) {
         await listTar(archivePath, compressionMethod);

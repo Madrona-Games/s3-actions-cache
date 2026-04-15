@@ -1,4 +1,3 @@
-import { Readable } from "node:stream";
 import { setInput } from "./testUtils";
 
 describe("restore", () => {
@@ -18,6 +17,7 @@ describe("restore", () => {
     setInput("region", "us-east-1");
     setInput("sessionToken", "");
     setInput("partSize", "256");
+    setInput("downloadConcurrency", "16");
   }
 
   beforeEach(() => {
@@ -52,13 +52,10 @@ describe("restore", () => {
     sendResult?: any;
     coreMock?: ReturnType<typeof createCoreMock>;
     restoreCacheMock?: ReturnType<typeof vi.fn>;
+    parallelDownloadMock?: ReturnType<typeof vi.fn>;
   } = {}) {
     const coreMock = overrides.coreMock ?? createCoreMock();
-    const mockSend = vi.fn().mockResolvedValue(
-      overrides.sendResult ?? {
-        Body: Readable.from(Buffer.from("test-data")),
-      },
-    );
+    const mockSend = vi.fn().mockResolvedValue(overrides.sendResult ?? {});
     const findObjectMock = overrides.findObjectError
       ? vi.fn().mockRejectedValue(overrides.findObjectError)
       : vi.fn().mockResolvedValue(
@@ -73,6 +70,9 @@ describe("restore", () => {
         );
     const saveMatchedKeyMock = vi.fn();
     const restoreCacheMock = overrides.restoreCacheMock ?? vi.fn();
+    const parallelDownloadMock =
+      overrides.parallelDownloadMock ??
+      vi.fn().mockResolvedValue(undefined);
 
     vi.doMock("@actions/core", () => coreMock);
     vi.doMock("@actions/cache", () => ({
@@ -94,22 +94,11 @@ describe("restore", () => {
     vi.doMock("../src/save-cache", () => ({
       saveMatchedKey: saveMatchedKeyMock,
     }));
-    vi.doMock("node:fs", () => ({
-      default: {
-        createWriteStream: vi.fn().mockReturnValue({
-          on: vi.fn(),
-          once: vi.fn(),
-          emit: vi.fn(),
-          write: vi.fn(),
-          end: vi.fn(),
-        }),
-      },
-    }));
-    vi.doMock("node:stream/promises", () => ({
-      pipeline: vi.fn().mockResolvedValue(undefined),
+    vi.doMock("../src/download", () => ({
+      parallelDownload: parallelDownloadMock,
     }));
 
-    return { coreMock, mockSend, findObjectMock, saveMatchedKeyMock, restoreCacheMock };
+    return { coreMock, mockSend, findObjectMock, saveMatchedKeyMock, restoreCacheMock, parallelDownloadMock };
   }
 
   it("saves state for primary key and credentials on successful restore", async () => {
@@ -126,18 +115,52 @@ describe("restore", () => {
     });
   });
 
-  it("downloads and extracts cache from s3", async () => {
-    const { coreMock, mockSend } = createBaseMocks();
+  it("downloads and extracts cache from s3 using parallelDownload", async () => {
+    const { coreMock, parallelDownloadMock } = createBaseMocks();
 
     await import("../src/restore");
 
     await vi.waitFor(() => {
-      expect(mockSend).toHaveBeenCalled();
+      expect(parallelDownloadMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          bucket: "test-bucket",
+          key: "test-key/cache.tzst",
+          fileSize: 1024,
+          chunkSizeMB: 256,
+          concurrency: 16,
+        }),
+      );
       expect(coreMock.info).toHaveBeenCalledWith(
         expect.stringContaining("Downloading cache from s3"),
       );
       expect(coreMock.info).toHaveBeenCalledWith(
         "Cache restored from s3 successfully",
+      );
+    });
+  });
+
+  it("passes downloadConcurrency input to parallelDownload", async () => {
+    setInput("downloadConcurrency", "8");
+    const { parallelDownloadMock } = createBaseMocks();
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(parallelDownloadMock).toHaveBeenCalledWith(
+        expect.objectContaining({ concurrency: 8 }),
+      );
+    });
+  });
+
+  it("passes partSize input as chunkSizeMB to parallelDownload", async () => {
+    setInput("partSize", "128");
+    const { parallelDownloadMock } = createBaseMocks();
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(parallelDownloadMock).toHaveBeenCalledWith(
+        expect.objectContaining({ chunkSizeMB: 128 }),
       );
     });
   });
@@ -225,6 +248,21 @@ describe("restore", () => {
   it("sets cache-hit to false when findObject fails", async () => {
     const { coreMock } = createBaseMocks({
       findObjectError: new Error("Cache item not found"),
+    });
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.setOutput).toHaveBeenCalledWith("cache-hit", "false");
+      expect(coreMock.info).toHaveBeenCalledWith(
+        expect.stringContaining("Restore s3 cache failed"),
+      );
+    });
+  });
+
+  it("sets cache-hit to false when parallelDownload fails", async () => {
+    const { coreMock } = createBaseMocks({
+      parallelDownloadMock: vi.fn().mockRejectedValue(new Error("download failed")),
     });
 
     await import("../src/restore");

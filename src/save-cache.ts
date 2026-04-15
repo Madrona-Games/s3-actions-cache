@@ -81,6 +81,7 @@ export async function saveCache(standalone: boolean) {
 
       const object = path.join(key, cacheFileName).replaceAll("\\", "/");
       const partSize = (getInputAsInt("partSize") ?? 256) * 1024 * 1024;
+      const uploadConcurrency = getInputAsInt("uploadConcurrency") ?? 16;
 
       core.info(`Uploading tar to s3. Bucket: ${bucket}, Object: ${object}`);
 
@@ -93,8 +94,19 @@ export async function saveCache(standalone: boolean) {
           Body: fileStream,
         },
         partSize,
+        queueSize: uploadConcurrency,
         leavePartsOnError: false,
       });
+
+      upload.on("httpUploadProgress", (progress) => {
+        if (progress.loaded != null && progress.total != null) {
+          const pct = ((progress.loaded / progress.total) * 100).toFixed(1);
+          core.info(
+            `Upload progress: ${progress.loaded} / ${progress.total} bytes (${pct}%)`,
+          );
+        }
+      });
+
       await upload.done();
 
       core.info("Cache saved to s3 successfully");

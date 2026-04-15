@@ -57,14 +57,6 @@ inputs:
     description: "Number of parallel upload streams for multipart upload (default: 16). Higher values saturate 10 Gbps+ networks."
     required: false
     default: "16"
-  # zip-option:
-  #   description: zip options
-  #   required: false
-  #   default: -ryq
-  # unzip-option:
-  #   description: unzip options
-  #   required: false
-  #   default: -n
 outputs:
   cache-hit:
     description: "A boolean value to indicate an exact match was found for the primary key"

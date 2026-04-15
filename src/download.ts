@@ -1,21 +1,27 @@
 import * as core from "@actions/core";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { NodeHttpHandler } from "@smithy/node-http-handler";
 import fs from "node:fs";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
+import { S3BaseConfig } from "./s3-client";
 
 const PROGRESS_INTERVAL_MS = 5000;
 
 /**
- * Downloads an S3 object in parallel using byte-range requests, writing each
- * chunk directly to its correct offset in the output file.  This saturates
- * high-bandwidth networks (10 Gbps+) that a single TCP stream cannot fully
- * utilise due to congestion-window limits.
+ * Downloads an S3 object in parallel using byte-range requests.
+ *
+ * Each concurrent worker gets its **own** S3Client instance backed by its own
+ * NodeHttpHandler (and therefore its own https.Agent).  This is critical on
+ * 10 Gbps networks: a shared Agent means shared TCP congestion-window bookkeeping,
+ * so adding more concurrency to a single client does not increase throughput.
+ * Separate Agents each establish their own TCP streams with independent cwnd,
+ * allowing aggregate bandwidth to scale linearly with concurrency.
  *
  * Falls back to a single-stream download when the object size is unknown.
  */
 export async function parallelDownload({
-  client,
+  clientConfig,
   bucket,
   key,
   filePath,
@@ -23,7 +29,7 @@ export async function parallelDownload({
   chunkSizeMB = 256,
   concurrency = 16,
 }: {
-  client: S3Client;
+  clientConfig: S3BaseConfig;
   bucket: string;
   key: string;
   filePath: string;
@@ -34,19 +40,31 @@ export async function parallelDownload({
   // If size is unknown we can't do range requests — fall back to streaming.
   if (!fileSize || fileSize <= 0) {
     core.debug("Object size unknown, falling back to single-stream download");
-    await singleStreamDownload({ client, bucket, key, filePath });
+    const client = makeWorkerClient(clientConfig);
+    try {
+      await singleStreamDownload({ client, bucket, key, filePath });
+    } finally {
+      client.destroy();
+    }
     return;
   }
 
   const chunkSize = chunkSizeMB * 1024 * 1024;
   const chunks = buildChunks(fileSize, chunkSize);
+  const workerCount = Math.min(concurrency, chunks.length);
 
   core.info(
-    `Downloading ${chunks.length} chunks of ${chunkSizeMB} MB each with concurrency ${concurrency}`,
+    `Downloading ${chunks.length} chunks (${chunkSizeMB} MB each) with ${workerCount} independent TCP streams`,
   );
 
   // Pre-allocate the file so concurrent writers don't need to extend it.
   await preallocateFile(filePath, fileSize);
+
+  // Create one S3Client per worker slot — each gets its own NodeHttpHandler
+  // and https.Agent, giving it an independent TCP stream / congestion window.
+  const workerClients = Array.from({ length: workerCount }, () =>
+    makeWorkerClient(clientConfig),
+  );
 
   let bytesDownloaded = 0;
   const progressTimer = setInterval(() => {
@@ -57,29 +75,35 @@ export async function parallelDownload({
   }, PROGRESS_INTERVAL_MS);
 
   try {
-    // Process chunks in a sliding window of `concurrency` parallel requests.
     const fd = await fs.promises.open(filePath, "r+");
     try {
       let chunkIndex = 0;
       const inFlight = new Set<Promise<void>>();
 
-      const launchNext = () => {
+      const launchNext = (workerClient: S3Client) => {
         if (chunkIndex >= chunks.length) return;
         const { start, end } = chunks[chunkIndex++];
-        const p = downloadChunk({ client, bucket, key, start, end, fd })
+        const p = downloadChunk({
+          client: workerClient,
+          bucket,
+          key,
+          start,
+          end,
+          fd,
+        })
           .then((bytes) => {
             bytesDownloaded += bytes;
           })
           .finally(() => {
             inFlight.delete(p);
-            launchNext();
+            launchNext(workerClient);
           });
         inFlight.add(p);
       };
 
-      // Seed the initial batch.
-      for (let i = 0; i < concurrency && i < chunks.length; i++) {
-        launchNext();
+      // Seed one chunk per worker.
+      for (const workerClient of workerClients) {
+        launchNext(workerClient);
       }
 
       // Wait for all in-flight promises to complete.
@@ -91,6 +115,9 @@ export async function parallelDownload({
     }
   } finally {
     clearInterval(progressTimer);
+    for (const c of workerClients) {
+      c.destroy();
+    }
   }
 
   core.info(`Download complete: ${formatBytes(fileSize)}`);
@@ -99,6 +126,23 @@ export async function parallelDownload({
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Creates a dedicated S3Client with its own NodeHttpHandler.
+ * Each client maintains its own connection pool (https.Agent), so its TCP
+ * streams evolve independently — critical for 10 Gbps throughput.
+ */
+function makeWorkerClient(baseConfig: S3BaseConfig): S3Client {
+  return new S3Client({
+    ...baseConfig,
+    requestHandler: new NodeHttpHandler({
+      // Each worker only ever sends one request at a time, so 1 socket is enough.
+      // The OS assigns a distinct TCP 4-tuple per client → independent cwnd.
+      connectionTimeout: 10_000,
+      requestTimeout: 600_000, // 10 min – accommodate large chunks on slow links
+    }),
+  });
+}
 
 async function downloadChunk({
   client,

@@ -2,6 +2,8 @@ import * as core from "@actions/core";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
 import fs from "node:fs";
+import http from "node:http";
+import https from "node:https";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { S3BaseConfig } from "./s3-client";
@@ -26,7 +28,7 @@ export async function parallelDownload({
   key,
   filePath,
   fileSize,
-  chunkSizeMB = 256,
+  chunkSizeMB = 64,
   concurrency = 16,
 }: {
   clientConfig: S3BaseConfig;
@@ -131,8 +133,19 @@ export async function parallelDownload({
  * Creates a dedicated S3Client with its own NodeHttpHandler.
  * Each client maintains its own connection pool (https.Agent), so its TCP
  * streams evolve independently — critical for 10 Gbps throughput.
+ *
+ * A fresh Agent is created per worker with:
+ *  - keepAlive:true  — reuse the socket for retries without re-handshaking
+ *  - maxSockets:1    — one socket per worker, no connection-pool contention
  */
 function makeWorkerClient(baseConfig: S3BaseConfig): S3Client {
+  const isHttp = (baseConfig.endpoint as string | undefined)?.startsWith("http://");
+  const AgentClass = isHttp ? http.Agent : https.Agent;
+  const agent = new AgentClass({
+    keepAlive: true,
+    maxSockets: 1,
+  });
+
   return new S3Client({
     ...baseConfig,
     requestHandler: new NodeHttpHandler({
@@ -140,6 +153,7 @@ function makeWorkerClient(baseConfig: S3BaseConfig): S3Client {
       // The OS assigns a distinct TCP 4-tuple per client → independent cwnd.
       connectionTimeout: 10_000,
       requestTimeout: 600_000, // 10 min – accommodate large chunks on slow links
+      ...(isHttp ? { httpAgent: agent } : { httpsAgent: agent }),
     }),
   });
 }
@@ -171,15 +185,23 @@ async function downloadChunk({
   );
 
   const body = response.Body as Readable;
-  let offset = start;
 
-  for await (const chunk of body) {
-    const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-    await fd.write(buf, 0, buf.byteLength, offset);
-    offset += buf.byteLength;
+  // Collect all incoming network chunks into a single contiguous buffer, then
+  // issue ONE fd.write() for the entire chunk.  This avoids thousands of tiny
+  // async write syscalls (one per ~16 KB stream event) which serialise network
+  // and disk I/O and dominate CPU at 10 Gbps line rates.
+  const parts: Buffer[] = [];
+  let totalBytes = 0;
+  for await (const piece of body) {
+    const buf = Buffer.isBuffer(piece) ? piece : Buffer.from(piece);
+    parts.push(buf);
+    totalBytes += buf.byteLength;
   }
 
-  return offset - start;
+  const combined = parts.length === 1 ? parts[0] : Buffer.concat(parts, totalBytes);
+  await fd.write(combined, 0, combined.byteLength, start);
+
+  return combined.byteLength;
 }
 
 async function singleStreamDownload({

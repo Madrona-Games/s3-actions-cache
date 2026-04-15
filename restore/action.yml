@@ -41,9 +41,9 @@ inputs:
     required: false
     default: "true"
   partSize:
-    description: "Part size for multipart uploads in megabytes (default: 256MB)"
+    description: "Part size for multipart uploads in megabytes (default: 64MB)"
     required: false
-    default: "256"
+    default: "64"
   downloadConcurrency:
     description: "Number of parallel byte-range download streams (default: 16). Higher values saturate 10 Gbps+ networks."
     required: false

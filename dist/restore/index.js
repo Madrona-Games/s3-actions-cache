@@ -58420,7 +58420,7 @@ var require_dist_cjs71 = __commonJS({
       extensions.forEach((extension) => extension.configure(extensionConfiguration));
       return Object.assign(runtimeConfig2, regionConfigResolver.resolveAwsRegionExtensionConfiguration(extensionConfiguration), smithyClient.resolveDefaultRuntimeConfig(extensionConfiguration), protocolHttp.resolveHttpHandlerRuntimeConfig(extensionConfiguration), resolveHttpAuthRuntimeConfig5(extensionConfiguration));
     };
-    var S3Client2 = class extends smithyClient.Client {
+    var S3Client3 = class extends smithyClient.Client {
       config;
       constructor(...[configuration]) {
         const _config_0 = runtimeConfig.getRuntimeConfig(configuration || {});
@@ -59660,10 +59660,10 @@ var require_dist_cjs71 = __commonJS({
       return [middlewareEndpoint.getEndpointPlugin(config, Command2.getEndpointParameterInstructions())];
     }).s("AmazonS3", "WriteGetObjectResponse", {}).n("S3Client", "WriteGetObjectResponseCommand").sc(schemas_0.WriteGetObjectResponse$).build() {
     };
-    var paginateListBuckets = core.createPaginator(S3Client2, ListBucketsCommand, "ContinuationToken", "ContinuationToken", "MaxBuckets");
-    var paginateListDirectoryBuckets = core.createPaginator(S3Client2, ListDirectoryBucketsCommand, "ContinuationToken", "ContinuationToken", "MaxDirectoryBuckets");
-    var paginateListObjectsV2 = core.createPaginator(S3Client2, ListObjectsV2Command2, "ContinuationToken", "NextContinuationToken", "MaxKeys");
-    var paginateListParts = core.createPaginator(S3Client2, ListPartsCommand, "PartNumberMarker", "NextPartNumberMarker", "MaxParts");
+    var paginateListBuckets = core.createPaginator(S3Client3, ListBucketsCommand, "ContinuationToken", "ContinuationToken", "MaxBuckets");
+    var paginateListDirectoryBuckets = core.createPaginator(S3Client3, ListDirectoryBucketsCommand, "ContinuationToken", "ContinuationToken", "MaxDirectoryBuckets");
+    var paginateListObjectsV2 = core.createPaginator(S3Client3, ListObjectsV2Command2, "ContinuationToken", "NextContinuationToken", "MaxKeys");
+    var paginateListParts = core.createPaginator(S3Client3, ListPartsCommand, "PartNumberMarker", "NextPartNumberMarker", "MaxParts");
     var checkState$3 = async (client, input) => {
       let reason;
       try {
@@ -59875,7 +59875,7 @@ var require_dist_cjs71 = __commonJS({
       waitUntilObjectExists,
       waitUntilObjectNotExists
     };
-    var S3 = class extends S3Client2 {
+    var S3 = class extends S3Client3 {
     };
     smithyClient.createAggregatedClient(commands5, S3, { paginators, waiters });
     var BucketAbacStatus = {
@@ -60451,7 +60451,7 @@ var require_dist_cjs71 = __commonJS({
     exports2.RestoreObjectCommand = RestoreObjectCommand;
     exports2.RestoreRequestType = RestoreRequestType;
     exports2.S3 = S3;
-    exports2.S3Client = S3Client2;
+    exports2.S3Client = S3Client3;
     exports2.S3TablesBucketType = S3TablesBucketType;
     exports2.SelectObjectContentCommand = SelectObjectContentCommand;
     exports2.ServerSideEncryption = ServerSideEncryption;
@@ -95619,10 +95619,7 @@ function restoreCacheV2(paths_1, primaryKey_1, restoreKeys_1, options_1) {
 }
 
 // src/restore.ts
-var import_client_s32 = __toESM(require_dist_cjs71());
 var path7 = __toESM(require("node:path"));
-var import_node_fs2 = __toESM(require("node:fs"));
-var import_promises = require("node:stream/promises");
 
 // src/s3-client.ts
 var import_client_s3 = __toESM(require_dist_cjs71());
@@ -95751,6 +95748,131 @@ function saveMatchedKey(matchedKey) {
   return saveState("matched-key" /* MatchedKey */, matchedKey);
 }
 
+// src/download.ts
+var import_client_s32 = __toESM(require_dist_cjs71());
+var import_node_fs2 = __toESM(require("node:fs"));
+var import_promises = require("node:stream/promises");
+var PROGRESS_INTERVAL_MS = 5e3;
+async function parallelDownload({
+  client,
+  bucket,
+  key,
+  filePath,
+  fileSize,
+  chunkSizeMB = 256,
+  concurrency = 16
+}) {
+  if (!fileSize || fileSize <= 0) {
+    debug("Object size unknown, falling back to single-stream download");
+    await singleStreamDownload({ client, bucket, key, filePath });
+    return;
+  }
+  const chunkSize = chunkSizeMB * 1024 * 1024;
+  const chunks = buildChunks(fileSize, chunkSize);
+  info(
+    `Downloading ${chunks.length} chunks of ${chunkSizeMB} MB each with concurrency ${concurrency}`
+  );
+  await preallocateFile(filePath, fileSize);
+  let bytesDownloaded = 0;
+  const progressTimer = setInterval(() => {
+    const pct = (bytesDownloaded / fileSize * 100).toFixed(1);
+    info(
+      `Download progress: ${formatBytes(bytesDownloaded)} / ${formatBytes(fileSize)} (${pct}%)`
+    );
+  }, PROGRESS_INTERVAL_MS);
+  try {
+    const fd = await import_node_fs2.default.promises.open(filePath, "r+");
+    try {
+      let chunkIndex = 0;
+      const inFlight = /* @__PURE__ */ new Set();
+      const launchNext = () => {
+        if (chunkIndex >= chunks.length) return;
+        const { start, end } = chunks[chunkIndex++];
+        const p5 = downloadChunk({ client, bucket, key, start, end, fd }).then((bytes) => {
+          bytesDownloaded += bytes;
+        }).finally(() => {
+          inFlight.delete(p5);
+          launchNext();
+        });
+        inFlight.add(p5);
+      };
+      for (let i5 = 0; i5 < concurrency && i5 < chunks.length; i5++) {
+        launchNext();
+      }
+      while (inFlight.size > 0) {
+        await Promise.race(inFlight);
+      }
+    } finally {
+      await fd.close();
+    }
+  } finally {
+    clearInterval(progressTimer);
+  }
+  info(`Download complete: ${formatBytes(fileSize)}`);
+}
+async function downloadChunk({
+  client,
+  bucket,
+  key,
+  start,
+  end,
+  fd
+}) {
+  const range3 = `bytes=${start}-${end}`;
+  debug(`Fetching range ${range3}`);
+  const response = await client.send(
+    new import_client_s32.GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Range: range3
+    })
+  );
+  const body2 = response.Body;
+  let offset = start;
+  for await (const chunk of body2) {
+    const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    await fd.write(buf, 0, buf.byteLength, offset);
+    offset += buf.byteLength;
+  }
+  return offset - start;
+}
+async function singleStreamDownload({
+  client,
+  bucket,
+  key,
+  filePath
+}) {
+  const response = await client.send(
+    new import_client_s32.GetObjectCommand({ Bucket: bucket, Key: key })
+  );
+  const writeStream = import_node_fs2.default.createWriteStream(filePath);
+  await (0, import_promises.pipeline)(response.Body, writeStream);
+}
+async function preallocateFile(filePath, size) {
+  const fd = await import_node_fs2.default.promises.open(filePath, "w");
+  try {
+    await fd.truncate(size);
+  } finally {
+    await fd.close();
+  }
+}
+function buildChunks(fileSize, chunkSize) {
+  const chunks = [];
+  let start = 0;
+  while (start < fileSize) {
+    const end = Math.min(start + chunkSize - 1, fileSize - 1);
+    chunks.push({ start, end });
+    start = end + 1;
+  }
+  return chunks;
+}
+function formatBytes(bytes) {
+  if (bytes >= 1024 ** 3) return (bytes / 1024 ** 3).toFixed(2) + " GB";
+  if (bytes >= 1024 ** 2) return (bytes / 1024 ** 2).toFixed(2) + " MB";
+  if (bytes >= 1024) return (bytes / 1024).toFixed(2) + " KB";
+  return bytes + " B";
+}
+
 // src/restore.ts
 process.on(
   "uncaughtException",
@@ -95797,14 +95919,17 @@ async function restoreCache2() {
       info(
         `Downloading cache from s3 to ${archivePath}. bucket: ${bucket}, object: ${obj.Key}`
       );
-      const response = await client.send(
-        new import_client_s32.GetObjectCommand({
-          Bucket: bucket,
-          Key: obj.Key
-        })
-      );
-      const writeStream = import_node_fs2.default.createWriteStream(archivePath);
-      await (0, import_promises.pipeline)(response.Body, writeStream);
+      const downloadConcurrency = getInputAsInt("downloadConcurrency") ?? 16;
+      const chunkSizeMB = getInputAsInt("partSize") ?? 256;
+      await parallelDownload({
+        client,
+        bucket,
+        key: obj.Key,
+        filePath: archivePath,
+        fileSize: obj.Size,
+        chunkSizeMB,
+        concurrency: downloadConcurrency
+      });
       if (isDebug()) {
         await listTar(archivePath, compressionMethod);
       }

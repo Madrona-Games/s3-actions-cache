@@ -33,10 +33,12 @@ vi.mock("@actions/cache/lib/internal/tar", () => ({
 }));
 
 const mockUploadDone = vi.fn().mockResolvedValue(undefined);
+const mockUploadOn = vi.fn().mockReturnThis();
 vi.mock("@aws-sdk/lib-storage", () => ({
   Upload: class MockUpload {
     constructor(public config: any) {}
     done = mockUploadDone;
+    on = mockUploadOn;
   },
 }));
 
@@ -70,6 +72,7 @@ describe("save-cache", () => {
     setInput("path", "src");
     setInput("use-fallback", "false");
     setInput("partSize", "256");
+    setInput("uploadConcurrency", "16");
     setInput("endpoint", "s3.amazonaws.com");
     setInput("accessKey", "test-access");
     setInput("secretKey", "test-secret");

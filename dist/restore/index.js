@@ -1072,14 +1072,14 @@ var require_util = __commonJS({
         }
         const port = url2.port != null ? url2.port : url2.protocol === "https:" ? 443 : 80;
         let origin = url2.origin != null ? url2.origin : `${url2.protocol || ""}//${url2.hostname || ""}:${port}`;
-        let path8 = url2.path != null ? url2.path : `${url2.pathname || ""}${url2.search || ""}`;
+        let path9 = url2.path != null ? url2.path : `${url2.pathname || ""}${url2.search || ""}`;
         if (origin[origin.length - 1] === "/") {
           origin = origin.slice(0, origin.length - 1);
         }
-        if (path8 && path8[0] !== "/") {
-          path8 = `/${path8}`;
+        if (path9 && path9[0] !== "/") {
+          path9 = `/${path9}`;
         }
-        return new URL(`${origin}${path8}`);
+        return new URL(`${origin}${path9}`);
       }
       if (!isHttpOrHttpsPrefixed(url2.origin || url2.protocol)) {
         throw new InvalidArgumentError("Invalid URL protocol: the URL must start with `http:` or `https:`.");
@@ -1530,39 +1530,39 @@ var require_diagnostics = __commonJS({
       });
       diagnosticsChannel.channel("undici:client:sendHeaders").subscribe((evt) => {
         const {
-          request: { method, path: path8, origin }
+          request: { method, path: path9, origin }
         } = evt;
-        debuglog("sending request to %s %s/%s", method, origin, path8);
+        debuglog("sending request to %s %s/%s", method, origin, path9);
       });
       diagnosticsChannel.channel("undici:request:headers").subscribe((evt) => {
         const {
-          request: { method, path: path8, origin },
+          request: { method, path: path9, origin },
           response: { statusCode }
         } = evt;
         debuglog(
           "received response to %s %s/%s - HTTP %d",
           method,
           origin,
-          path8,
+          path9,
           statusCode
         );
       });
       diagnosticsChannel.channel("undici:request:trailers").subscribe((evt) => {
         const {
-          request: { method, path: path8, origin }
+          request: { method, path: path9, origin }
         } = evt;
-        debuglog("trailers received from %s %s/%s", method, origin, path8);
+        debuglog("trailers received from %s %s/%s", method, origin, path9);
       });
       diagnosticsChannel.channel("undici:request:error").subscribe((evt) => {
         const {
-          request: { method, path: path8, origin },
+          request: { method, path: path9, origin },
           error: error3
         } = evt;
         debuglog(
           "request to %s %s/%s errored - %s",
           method,
           origin,
-          path8,
+          path9,
           error3.message
         );
       });
@@ -1611,9 +1611,9 @@ var require_diagnostics = __commonJS({
         });
         diagnosticsChannel.channel("undici:client:sendHeaders").subscribe((evt) => {
           const {
-            request: { method, path: path8, origin }
+            request: { method, path: path9, origin }
           } = evt;
-          debuglog("sending request to %s %s/%s", method, origin, path8);
+          debuglog("sending request to %s %s/%s", method, origin, path9);
         });
       }
       diagnosticsChannel.channel("undici:websocket:open").subscribe((evt) => {
@@ -1676,7 +1676,7 @@ var require_request = __commonJS({
     var kHandler = /* @__PURE__ */ Symbol("handler");
     var Request2 = class {
       constructor(origin, {
-        path: path8,
+        path: path9,
         method,
         body: body2,
         headers,
@@ -1691,11 +1691,11 @@ var require_request = __commonJS({
         expectContinue,
         servername
       }, handler) {
-        if (typeof path8 !== "string") {
+        if (typeof path9 !== "string") {
           throw new InvalidArgumentError("path must be a string");
-        } else if (path8[0] !== "/" && !(path8.startsWith("http://") || path8.startsWith("https://")) && method !== "CONNECT") {
+        } else if (path9[0] !== "/" && !(path9.startsWith("http://") || path9.startsWith("https://")) && method !== "CONNECT") {
           throw new InvalidArgumentError("path must be an absolute URL or start with a slash");
-        } else if (invalidPathRegex.test(path8)) {
+        } else if (invalidPathRegex.test(path9)) {
           throw new InvalidArgumentError("invalid request path");
         }
         if (typeof method !== "string") {
@@ -1761,7 +1761,7 @@ var require_request = __commonJS({
         this.completed = false;
         this.aborted = false;
         this.upgrade = upgrade || null;
-        this.path = query ? buildURL(path8, query) : path8;
+        this.path = query ? buildURL(path9, query) : path9;
         this.origin = origin;
         this.idempotent = idempotent == null ? method === "HEAD" || method === "GET" : idempotent;
         this.blocking = blocking == null ? false : blocking;
@@ -6287,7 +6287,7 @@ var require_client_h1 = __commonJS({
       return method !== "GET" && method !== "HEAD" && method !== "OPTIONS" && method !== "TRACE" && method !== "CONNECT";
     }
     function writeH1(client, request) {
-      const { method, path: path8, host, upgrade, blocking, reset } = request;
+      const { method, path: path9, host, upgrade, blocking, reset } = request;
       let { body: body2, headers, contentLength: contentLength2 } = request;
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH" || method === "QUERY" || method === "PROPFIND" || method === "PROPPATCH";
       if (util5.isFormDataLike(body2)) {
@@ -6353,7 +6353,7 @@ var require_client_h1 = __commonJS({
       if (blocking) {
         socket[kBlocking] = true;
       }
-      let header = `${method} ${path8} HTTP/1.1\r
+      let header = `${method} ${path9} HTTP/1.1\r
 `;
       if (typeof host === "string") {
         header += `host: ${host}\r
@@ -6879,7 +6879,7 @@ var require_client_h2 = __commonJS({
     }
     function writeH2(client, request) {
       const session = client[kHTTP2Session];
-      const { method, path: path8, host, upgrade, expectContinue, signal, headers: reqHeaders } = request;
+      const { method, path: path9, host, upgrade, expectContinue, signal, headers: reqHeaders } = request;
       let { body: body2 } = request;
       if (upgrade) {
         util5.errorRequest(client, request, new Error("Upgrade not supported for H2"));
@@ -6946,7 +6946,7 @@ var require_client_h2 = __commonJS({
         });
         return true;
       }
-      headers[HTTP2_HEADER_PATH] = path8;
+      headers[HTTP2_HEADER_PATH] = path9;
       headers[HTTP2_HEADER_SCHEME] = "https";
       const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH";
       if (body2 && typeof body2.read === "function") {
@@ -7299,9 +7299,9 @@ var require_redirect_handler = __commonJS({
           return this.handler.onHeaders(statusCode, headers, resume, statusText);
         }
         const { origin, pathname, search } = util5.parseURL(new URL(this.location, this.opts.origin && new URL(this.opts.path, this.opts.origin)));
-        const path8 = search ? `${pathname}${search}` : pathname;
+        const path9 = search ? `${pathname}${search}` : pathname;
         this.opts.headers = cleanRequestHeaders(this.opts.headers, statusCode === 303, this.opts.origin !== origin);
-        this.opts.path = path8;
+        this.opts.path = path9;
         this.opts.origin = origin;
         this.opts.maxRedirections = 0;
         this.opts.query = null;
@@ -8536,10 +8536,10 @@ var require_proxy_agent = __commonJS({
         };
         const {
           origin,
-          path: path8 = "/",
+          path: path9 = "/",
           headers = {}
         } = opts;
-        opts.path = origin + path8;
+        opts.path = origin + path9;
         if (!("host" in headers) && !("Host" in headers)) {
           const { host } = new URL3(origin);
           headers.host = host;
@@ -10460,20 +10460,20 @@ var require_mock_utils = __commonJS({
       }
       return true;
     }
-    function safeUrl(path8) {
-      if (typeof path8 !== "string") {
-        return path8;
+    function safeUrl(path9) {
+      if (typeof path9 !== "string") {
+        return path9;
       }
-      const pathSegments = path8.split("?");
+      const pathSegments = path9.split("?");
       if (pathSegments.length !== 2) {
-        return path8;
+        return path9;
       }
       const qp = new URLSearchParams(pathSegments.pop());
       qp.sort();
       return [...pathSegments, qp.toString()].join("?");
     }
-    function matchKey(mockDispatch2, { path: path8, method, body: body2, headers }) {
-      const pathMatch = matchValue(mockDispatch2.path, path8);
+    function matchKey(mockDispatch2, { path: path9, method, body: body2, headers }) {
+      const pathMatch = matchValue(mockDispatch2.path, path9);
       const methodMatch = matchValue(mockDispatch2.method, method);
       const bodyMatch = typeof mockDispatch2.body !== "undefined" ? matchValue(mockDispatch2.body, body2) : true;
       const headersMatch = matchHeaders(mockDispatch2, headers);
@@ -10495,7 +10495,7 @@ var require_mock_utils = __commonJS({
     function getMockDispatch(mockDispatches, key) {
       const basePath = key.query ? buildURL(key.path, key.query) : key.path;
       const resolvedPath2 = typeof basePath === "string" ? safeUrl(basePath) : basePath;
-      let matchedMockDispatches = mockDispatches.filter(({ consumed }) => !consumed).filter(({ path: path8 }) => matchValue(safeUrl(path8), resolvedPath2));
+      let matchedMockDispatches = mockDispatches.filter(({ consumed }) => !consumed).filter(({ path: path9 }) => matchValue(safeUrl(path9), resolvedPath2));
       if (matchedMockDispatches.length === 0) {
         throw new MockNotMatchedError(`Mock dispatch not matched for path '${resolvedPath2}'`);
       }
@@ -10533,9 +10533,9 @@ var require_mock_utils = __commonJS({
       }
     }
     function buildKey(opts) {
-      const { path: path8, method, body: body2, headers, query } = opts;
+      const { path: path9, method, body: body2, headers, query } = opts;
       return {
-        path: path8,
+        path: path9,
         method,
         body: body2,
         headers,
@@ -10998,10 +10998,10 @@ var require_pending_interceptors_formatter = __commonJS({
       }
       format(pendingInterceptors) {
         const withPrettyHeaders = pendingInterceptors.map(
-          ({ method, path: path8, data: { statusCode }, persist, times, timesInvoked, origin }) => ({
+          ({ method, path: path9, data: { statusCode }, persist, times, timesInvoked, origin }) => ({
             Method: method,
             Origin: origin,
-            Path: path8,
+            Path: path9,
             "Status code": statusCode,
             Persistent: persist ? PERSISTENT : NOT_PERSISTENT,
             Invocations: timesInvoked,
@@ -15882,9 +15882,9 @@ var require_util6 = __commonJS({
         }
       }
     }
-    function validateCookiePath(path8) {
-      for (let i5 = 0; i5 < path8.length; ++i5) {
-        const code = path8.charCodeAt(i5);
+    function validateCookiePath(path9) {
+      for (let i5 = 0; i5 < path9.length; ++i5) {
+        const code = path9.charCodeAt(i5);
         if (code < 32 || // exclude CTLs (0-31)
         code === 127 || // DEL
         code === 59) {
@@ -18561,11 +18561,11 @@ var require_undici = __commonJS({
           if (typeof opts.path !== "string") {
             throw new InvalidArgumentError("invalid opts.path");
           }
-          let path8 = opts.path;
+          let path9 = opts.path;
           if (!opts.path.startsWith("/")) {
-            path8 = `/${path8}`;
+            path9 = `/${path9}`;
           }
-          url2 = new URL(util5.parseOrigin(url2).origin + path8);
+          url2 = new URL(util5.parseOrigin(url2).origin + path9);
         } else {
           if (!opts) {
             opts = typeof url2 === "object" ? url2 : {};
@@ -18863,7 +18863,7 @@ var require_minimatch = __commonJS({
   "node_modules/minimatch/minimatch.js"(exports2, module2) {
     module2.exports = minimatch2;
     minimatch2.Minimatch = Minimatch2;
-    var path8 = (function() {
+    var path9 = (function() {
       try {
         return require("path");
       } catch (e5) {
@@ -18871,7 +18871,7 @@ var require_minimatch = __commonJS({
     })() || {
       sep: "/"
     };
-    minimatch2.sep = path8.sep;
+    minimatch2.sep = path9.sep;
     var GLOBSTAR = minimatch2.GLOBSTAR = Minimatch2.GLOBSTAR = {};
     var expand = require_brace_expansion();
     var plTypes = {
@@ -18960,8 +18960,8 @@ var require_minimatch = __commonJS({
       assertValidPattern(pattern);
       if (!options) options = {};
       pattern = pattern.trim();
-      if (!options.allowWindowsEscape && path8.sep !== "/") {
-        pattern = pattern.split(path8.sep).join("/");
+      if (!options.allowWindowsEscape && path9.sep !== "/") {
+        pattern = pattern.split(path9.sep).join("/");
       }
       this.options = options;
       this.maxGlobstarRecursion = options.maxGlobstarRecursion !== void 0 ? options.maxGlobstarRecursion : 200;
@@ -19332,8 +19332,8 @@ var require_minimatch = __commonJS({
       if (this.empty) return f5 === "";
       if (f5 === "/" && partial) return true;
       var options = this.options;
-      if (path8.sep !== "/") {
-        f5 = f5.split(path8.sep).join("/");
+      if (path9.sep !== "/") {
+        f5 = f5.split(path9.sep).join("/");
       }
       f5 = f5.split(slashSplit);
       this.debug(this.pattern, "split", f5);
@@ -21940,7 +21940,7 @@ var require_has_flag = __commonJS({
 var require_supports_color = __commonJS({
   "node_modules/supports-color/index.js"(exports2, module2) {
     "use strict";
-    var os7 = require("os");
+    var os8 = require("os");
     var tty = require("tty");
     var hasFlag = require_has_flag();
     var { env } = process;
@@ -21988,7 +21988,7 @@ var require_supports_color = __commonJS({
         return min;
       }
       if (process.platform === "win32") {
-        const osRelease = os7.release().split(".");
+        const osRelease = os8.release().split(".");
         if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
           return Number(osRelease[2]) >= 14931 ? 3 : 2;
         }
@@ -28558,12 +28558,12 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             const password = request.password ?? "";
             auth = `${username}:${password}`;
           }
-          let path8 = request.path;
+          let path9 = request.path;
           if (queryString) {
-            path8 += `?${queryString}`;
+            path9 += `?${queryString}`;
           }
           if (request.fragment) {
-            path8 += `#${request.fragment}`;
+            path9 += `#${request.fragment}`;
           }
           let hostname = request.hostname ?? "";
           if (hostname[0] === "[" && hostname.endsWith("]")) {
@@ -28575,7 +28575,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             headers: request.headers,
             host: hostname,
             method: request.method,
-            path: path8,
+            path: path9,
             port: request.port,
             agent,
             auth
@@ -28858,16 +28858,16 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
             reject(err);
           };
           const queryString = querystringBuilder.buildQueryString(query || {});
-          let path8 = request.path;
+          let path9 = request.path;
           if (queryString) {
-            path8 += `?${queryString}`;
+            path9 += `?${queryString}`;
           }
           if (request.fragment) {
-            path8 += `#${request.fragment}`;
+            path9 += `#${request.fragment}`;
           }
           const req = session.request({
             ...request.headers,
-            [http22.constants.HTTP2_HEADER_PATH]: path8,
+            [http22.constants.HTTP2_HEADER_PATH]: path9,
             [http22.constants.HTTP2_HEADER_METHOD]: method
           });
           session.ref();
@@ -29054,13 +29054,13 @@ var require_dist_cjs11 = __commonJS({
           const abortError = buildAbortError(abortSignal);
           return Promise.reject(abortError);
         }
-        let path8 = request.path;
+        let path9 = request.path;
         const queryString = querystringBuilder.buildQueryString(request.query || {});
         if (queryString) {
-          path8 += `?${queryString}`;
+          path9 += `?${queryString}`;
         }
         if (request.fragment) {
-          path8 += `#${request.fragment}`;
+          path9 += `#${request.fragment}`;
         }
         let auth = "";
         if (request.username != null || request.password != null) {
@@ -29069,7 +29069,7 @@ var require_dist_cjs11 = __commonJS({
           auth = `${username}:${password}@`;
         }
         const { port, method } = request;
-        const url2 = `${request.protocol}//${auth}${request.hostname}${port ? `:${port}` : ""}${path8}`;
+        const url2 = `${request.protocol}//${auth}${request.hostname}${port ? `:${port}` : ""}${path9}`;
         const body2 = method === "GET" || method === "HEAD" ? void 0 : request.body;
         const requestOptions = {
           body: body2,
@@ -29950,13 +29950,13 @@ function __disposeResources(env) {
   }
   return next();
 }
-function __rewriteRelativeImportExtension(path8, preserveJsx) {
-  if (typeof path8 === "string" && /^\.\.?\//.test(path8)) {
-    return path8.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m5, tsx, d5, ext, cm) {
+function __rewriteRelativeImportExtension(path9, preserveJsx) {
+  if (typeof path9 === "string" && /^\.\.?\//.test(path9)) {
+    return path9.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m5, tsx, d5, ext, cm) {
       return tsx ? preserveJsx ? ".jsx" : ".js" : d5 && (!ext || !cm) ? m5 : d5 + ext + "." + cm.toLowerCase() + "js";
     });
   }
-  return path8;
+  return path9;
 }
 var extendStatics, __assign, __createBinding, __setModuleDefault, ownKeys, _SuppressedError, tslib_es6_default;
 var init_tslib_es6 = __esm({
@@ -34247,11 +34247,11 @@ var init_HttpBindingProtocol = __esm({
           const opTraits = translateTraits(operationSchema.traits);
           if (opTraits.http) {
             request.method = opTraits.http[0];
-            const [path8, search] = opTraits.http[1].split("?");
+            const [path9, search] = opTraits.http[1].split("?");
             if (request.path == "/") {
-              request.path = path8;
+              request.path = path9;
             } else {
-              request.path += path8;
+              request.path += path9;
             }
             const traitSearchParams = new URLSearchParams(search ?? "");
             Object.assign(query, Object.fromEntries(traitSearchParams));
@@ -34647,8 +34647,8 @@ var init_requestBuilder = __esm({
         return this;
       }
       p(memberName, labelValueProvider, uriLabel, isGreedyLabel) {
-        this.resolvePathStack.push((path8) => {
-          this.path = resolvedPath(path8, this.input, memberName, labelValueProvider, uriLabel, isGreedyLabel);
+        this.resolvePathStack.push((path9) => {
+          this.path = resolvedPath(path9, this.input, memberName, labelValueProvider, uriLabel, isGreedyLabel);
         });
         return this;
       }
@@ -35593,9 +35593,9 @@ var require_dist_cjs28 = __commonJS({
       const segments = arn.split(":");
       if (segments.length < 6 || segments[0] !== "arn")
         throw new Error("Malformed ARN");
-      const [, partition, service, region, accountId, ...resource] = segments;
+      const [, partition2, service, region, accountId, ...resource] = segments;
       return {
-        partition,
+        partition: partition2,
         service,
         region,
         accountId,
@@ -35603,11 +35603,11 @@ var require_dist_cjs28 = __commonJS({
       };
     };
     var build = (arnObject) => {
-      const { partition = "aws", service, region, accountId, resource } = arnObject;
+      const { partition: partition2 = "aws", service, region, accountId, resource } = arnObject;
       if ([service, region, accountId, resource].some((segment) => typeof segment !== "string")) {
         throw new Error("Input ARN object is invalid");
       }
-      return `arn:${partition}:${service}:${region}:${accountId}:${resource}`;
+      return `arn:${partition2}:${service}:${region}:${accountId}:${resource}`;
     };
     exports2.build = build;
     exports2.parse = parse2;
@@ -36569,11 +36569,11 @@ var init_SmithyRpcV2CborProtocol = __esm({
           }
         }
         const { service, operation: operation2 } = (0, import_util_middleware3.getSmithyContext)(context3);
-        const path8 = `/service/${service}/operation/${operation2}`;
+        const path9 = `/service/${service}/operation/${operation2}`;
         if (request.path.endsWith("/")) {
-          request.path += path8.slice(1);
+          request.path += path9.slice(1);
         } else {
-          request.path += path8;
+          request.path += path9;
         }
         return request;
       }
@@ -40503,10 +40503,10 @@ ${longDate}
 ${credentialScope}
 ${utilHexEncoding.toHex(hashedRequest)}`;
       }
-      getCanonicalPath({ path: path8 }) {
+      getCanonicalPath({ path: path9 }) {
         if (this.uriEscapePath) {
           const normalizedPathSegments = [];
-          for (const pathSegment of path8.split("/")) {
+          for (const pathSegment of path9.split("/")) {
             if (pathSegment?.length === 0)
               continue;
             if (pathSegment === ".")
@@ -40517,11 +40517,11 @@ ${utilHexEncoding.toHex(hashedRequest)}`;
               normalizedPathSegments.push(pathSegment);
             }
           }
-          const normalizedPath = `${path8?.startsWith("/") ? "/" : ""}${normalizedPathSegments.join("/")}${normalizedPathSegments.length > 0 && path8?.endsWith("/") ? "/" : ""}`;
+          const normalizedPath = `${path9?.startsWith("/") ? "/" : ""}${normalizedPathSegments.join("/")}${normalizedPathSegments.length > 0 && path9?.endsWith("/") ? "/" : ""}`;
           const doubleEncoded = utilUriEscape.escapeUri(normalizedPath);
           return doubleEncoded.replace(/%2F/g, "/");
         }
-        return path8;
+        return path9;
       }
       validateResolvedCredentials(credentials) {
         if (typeof credentials !== "object" || typeof credentials.accessKeyId !== "string" || typeof credentials.secretAccessKey !== "string") {
@@ -40982,9 +40982,9 @@ var init_createPaginator = __esm({
       command = withCommand(command) ?? command;
       return await client.send(command, ...args);
     };
-    get = (fromObject, path8) => {
+    get = (fromObject, path9) => {
       let cursor2 = fromObject;
-      const pathComponents = path8.split(".");
+      const pathComponents = path9.split(".");
       for (const step of pathComponents) {
         if (!cursor2 || typeof cursor2 !== "object") {
           return void 0;
@@ -41893,18 +41893,18 @@ var require_dist_cjs33 = __commonJS({
       }
       return void 0;
     }
-    var getAttrPathList = (path8) => {
-      const parts = path8.split(".");
+    var getAttrPathList = (path9) => {
+      const parts = path9.split(".");
       const pathList = [];
       for (const part of parts) {
         const squareBracketIndex = part.indexOf("[");
         if (squareBracketIndex !== -1) {
           if (part.indexOf("]") !== part.length - 1) {
-            throw new EndpointError(`Path: '${path8}' does not end with ']'`);
+            throw new EndpointError(`Path: '${path9}' does not end with ']'`);
           }
           const arrayIndex = part.slice(squareBracketIndex + 1, -1);
           if (Number.isNaN(parseInt(arrayIndex))) {
-            throw new EndpointError(`Invalid array index: '${arrayIndex}' in path: '${path8}'`);
+            throw new EndpointError(`Invalid array index: '${arrayIndex}' in path: '${path9}'`);
           }
           if (squareBracketIndex !== 0) {
             pathList.push(part.slice(0, squareBracketIndex));
@@ -41916,9 +41916,9 @@ var require_dist_cjs33 = __commonJS({
       }
       return pathList;
     };
-    var getAttr = (value, path8) => getAttrPathList(path8).reduce((acc, index) => {
+    var getAttr = (value, path9) => getAttrPathList(path9).reduce((acc, index) => {
       if (typeof acc !== "object") {
-        throw new EndpointError(`Index '${index}' in '${path8}' not found in '${JSON.stringify(value)}'`);
+        throw new EndpointError(`Index '${index}' in '${path9}' not found in '${JSON.stringify(value)}'`);
       } else if (Array.isArray(acc)) {
         return acc[parseInt(index)];
       }
@@ -41955,8 +41955,8 @@ var require_dist_cjs33 = __commonJS({
             return value;
           }
           if (typeof value === "object" && "hostname" in value) {
-            const { hostname: hostname2, port, protocol: protocol2 = "", path: path8 = "", query = {} } = value;
-            const url2 = new URL(`${protocol2}//${hostname2}${port ? `:${port}` : ""}${path8}`);
+            const { hostname: hostname2, port, protocol: protocol2 = "", path: path9 = "", query = {} } = value;
+            const url2 = new URL(`${protocol2}//${hostname2}${port ? `:${port}` : ""}${path9}`);
             url2.search = Object.entries(query).map(([k5, v5]) => `${k5}=${v5}`).join("&");
             return url2;
           }
@@ -42346,12 +42346,12 @@ var require_dist_cjs34 = __commonJS({
       const segments = value.split(ARN_DELIMITER);
       if (segments.length < 6)
         return null;
-      const [arn, partition2, service, region, accountId, ...resourcePath] = segments;
-      if (arn !== "arn" || partition2 === "" || service === "" || resourcePath.join(ARN_DELIMITER) === "")
+      const [arn, partition3, service, region, accountId, ...resourcePath] = segments;
+      if (arn !== "arn" || partition3 === "" || service === "" || resourcePath.join(ARN_DELIMITER) === "")
         return null;
       const resourceId = resourcePath.map((resource) => resource.split(RESOURCE_DELIMITER)).flat();
       return {
-        partition: partition2,
+        partition: partition3,
         service,
         region,
         accountId,
@@ -42638,10 +42638,10 @@ var require_dist_cjs34 = __commonJS({
     };
     var selectedPartitionsInfo = partitionsInfo;
     var selectedUserAgentPrefix = "";
-    var partition = (value) => {
+    var partition2 = (value) => {
       const { partitions: partitions2 } = selectedPartitionsInfo;
-      for (const partition2 of partitions2) {
-        const { regions, outputs } = partition2;
+      for (const partition3 of partitions2) {
+        const { regions, outputs } = partition3;
         for (const [region, regionData] of Object.entries(regions)) {
           if (region === value) {
             return {
@@ -42651,15 +42651,15 @@ var require_dist_cjs34 = __commonJS({
           }
         }
       }
-      for (const partition2 of partitions2) {
-        const { regionRegex, outputs } = partition2;
+      for (const partition3 of partitions2) {
+        const { regionRegex, outputs } = partition3;
         if (new RegExp(regionRegex).test(value)) {
           return {
             ...outputs
           };
         }
       }
-      const DEFAULT_PARTITION = partitions2.find((partition2) => partition2.id === "aws");
+      const DEFAULT_PARTITION = partitions2.find((partition3) => partition3.id === "aws");
       if (!DEFAULT_PARTITION) {
         throw new Error("Provided region was not found in the partition array or regex, and default partition with id 'aws' doesn't exist.");
       }
@@ -42678,7 +42678,7 @@ var require_dist_cjs34 = __commonJS({
     var awsEndpointFunctions5 = {
       isVirtualHostableS3Bucket,
       parseArn,
-      partition
+      partition: partition2
     };
     utilEndpoints.customEndpointFunctions.aws = awsEndpointFunctions5;
     var resolveDefaultAwsRegionalEndpointsConfig = (input) => {
@@ -42704,7 +42704,7 @@ var require_dist_cjs34 = __commonJS({
     exports2.resolveEndpoint = utilEndpoints.resolveEndpoint;
     exports2.awsEndpointFunctions = awsEndpointFunctions5;
     exports2.getUserAgentPrefix = getUserAgentPrefix;
-    exports2.partition = partition;
+    exports2.partition = partition2;
     exports2.resolveDefaultAwsRegionalEndpointsConfig = resolveDefaultAwsRegionalEndpointsConfig;
     exports2.setPartitionInfo = setPartitionInfo;
     exports2.toEndpointV1 = toEndpointV12;
@@ -43411,22 +43411,22 @@ var require_dist_cjs38 = __commonJS({
       }
     };
     var getRegionInfo = (region, { useFipsEndpoint = false, useDualstackEndpoint = false, signingService, regionHash, partitionHash }) => {
-      const partition = getResolvedPartition(region, { partitionHash });
-      const resolvedRegion = region in regionHash ? region : partitionHash[partition]?.endpoint ?? region;
+      const partition2 = getResolvedPartition(region, { partitionHash });
+      const resolvedRegion = region in regionHash ? region : partitionHash[partition2]?.endpoint ?? region;
       const hostnameOptions = { useFipsEndpoint, useDualstackEndpoint };
       const regionHostname = getHostnameFromVariants(regionHash[resolvedRegion]?.variants, hostnameOptions);
-      const partitionHostname = getHostnameFromVariants(partitionHash[partition]?.variants, hostnameOptions);
+      const partitionHostname = getHostnameFromVariants(partitionHash[partition2]?.variants, hostnameOptions);
       const hostname = getResolvedHostname(resolvedRegion, { regionHostname, partitionHostname });
       if (hostname === void 0) {
         throw new Error(`Endpoint resolution failed for: ${{ resolvedRegion, useFipsEndpoint, useDualstackEndpoint }}`);
       }
       const signingRegion = getResolvedSigningRegion(hostname, {
         signingRegion: regionHash[resolvedRegion]?.signingRegion,
-        regionRegex: partitionHash[partition].regionRegex,
+        regionRegex: partitionHash[partition2].regionRegex,
         useFipsEndpoint
       });
       return {
-        partition,
+        partition: partition2,
         signingService,
         hostname,
         ...signingRegion && { signingRegion },
@@ -43705,14 +43705,14 @@ var require_readFile = __commonJS({
     var promises_1 = require("node:fs/promises");
     exports2.filePromises = {};
     exports2.fileIntercept = {};
-    var readFile = (path8, options) => {
-      if (exports2.fileIntercept[path8] !== void 0) {
-        return exports2.fileIntercept[path8];
+    var readFile = (path9, options) => {
+      if (exports2.fileIntercept[path9] !== void 0) {
+        return exports2.fileIntercept[path9];
       }
-      if (!exports2.filePromises[path8] || options?.ignoreCache) {
-        exports2.filePromises[path8] = (0, promises_1.readFile)(path8, "utf8");
+      if (!exports2.filePromises[path9] || options?.ignoreCache) {
+        exports2.filePromises[path9] = (0, promises_1.readFile)(path9, "utf8");
       }
-      return exports2.filePromises[path8];
+      return exports2.filePromises[path9];
     };
     exports2.readFile = readFile;
   }
@@ -43725,7 +43725,7 @@ var require_dist_cjs42 = __commonJS({
     var getHomeDir = require_getHomeDir();
     var getSSOTokenFilepath = require_getSSOTokenFilepath();
     var getSSOTokenFromFile = require_getSSOTokenFromFile();
-    var path8 = require("path");
+    var path9 = require("path");
     var types = require_dist_cjs();
     var readFile = require_readFile();
     var ENV_PROFILE = "AWS_PROFILE";
@@ -43747,9 +43747,9 @@ var require_dist_cjs42 = __commonJS({
       ...data2.default && { default: data2.default }
     });
     var ENV_CONFIG_PATH = "AWS_CONFIG_FILE";
-    var getConfigFilepath = () => process.env[ENV_CONFIG_PATH] || path8.join(getHomeDir.getHomeDir(), ".aws", "config");
+    var getConfigFilepath = () => process.env[ENV_CONFIG_PATH] || path9.join(getHomeDir.getHomeDir(), ".aws", "config");
     var ENV_CREDENTIALS_PATH = "AWS_SHARED_CREDENTIALS_FILE";
-    var getCredentialsFilepath = () => process.env[ENV_CREDENTIALS_PATH] || path8.join(getHomeDir.getHomeDir(), ".aws", "credentials");
+    var getCredentialsFilepath = () => process.env[ENV_CREDENTIALS_PATH] || path9.join(getHomeDir.getHomeDir(), ".aws", "credentials");
     var prefixKeyRegex = /^([\w-]+)\s(["'])?([\w-@\+\.%:/]+)\2$/;
     var profileNameBlockList = ["__proto__", "profile __proto__"];
     var parseIni = (iniData) => {
@@ -43804,11 +43804,11 @@ var require_dist_cjs42 = __commonJS({
       const relativeHomeDirPrefix = "~/";
       let resolvedFilepath = filepath;
       if (filepath.startsWith(relativeHomeDirPrefix)) {
-        resolvedFilepath = path8.join(homeDir, filepath.slice(2));
+        resolvedFilepath = path9.join(homeDir, filepath.slice(2));
       }
       let resolvedConfigFilepath = configFilepath;
       if (configFilepath.startsWith(relativeHomeDirPrefix)) {
-        resolvedConfigFilepath = path8.join(homeDir, configFilepath.slice(2));
+        resolvedConfigFilepath = path9.join(homeDir, configFilepath.slice(2));
       }
       const parsedFiles = await Promise.all([
         readFile.readFile(resolvedConfigFilepath, {
@@ -43847,8 +43847,8 @@ var require_dist_cjs42 = __commonJS({
       getFileRecord() {
         return readFile.fileIntercept;
       },
-      interceptFile(path9, contents) {
-        readFile.fileIntercept[path9] = Promise.resolve(contents);
+      interceptFile(path10, contents) {
+        readFile.fileIntercept[path10] = Promise.resolve(contents);
       },
       getTokenRecord() {
         return getSSOTokenFromFile.tokenIntercept;
@@ -44125,9 +44125,9 @@ var require_dist_cjs45 = __commonJS({
     var DOTS_PATTERN = /\.\./;
     var isDnsCompatibleBucketName = (bucketName) => DOMAIN_PATTERN.test(bucketName) && !IP_ADDRESS_PATTERN.test(bucketName) && !DOTS_PATTERN.test(bucketName);
     var isArnBucketName = (bucketName) => {
-      const [arn, partition, service, , , bucket] = bucketName.split(":");
+      const [arn, partition2, service, , , bucket] = bucketName.split(":");
       const isArn = arn === "arn" && bucketName.split(":").length >= 6;
-      const isValidArn = Boolean(isArn && partition && service && bucket);
+      const isValidArn = Boolean(isArn && partition2 && service && bucket);
       if (isArn && !isValidArn) {
         throw new Error(`Invalid ARN: ${bucketName} was an invalid ARN.`);
       }
@@ -44173,8 +44173,8 @@ var require_dist_cjs45 = __commonJS({
               return endpoint.url.href;
             }
             if ("hostname" in endpoint) {
-              const { protocol, hostname, port, path: path8 } = endpoint;
-              return `${protocol}//${hostname}${port ? ":" + port : ""}${path8}`;
+              const { protocol, hostname, port, path: path9 } = endpoint;
+              return `${protocol}//${hostname}${port ? ":" + port : ""}${path9}`;
             }
           }
           return endpoint;
@@ -56987,9 +56987,9 @@ var require_dist_cjs63 = __commonJS({
         throw new Error("Expect 's3-posts' in Outpost ARN service component");
       }
     };
-    var validatePartition = (partition, options) => {
-      if (partition !== options.clientPartition) {
-        throw new Error(`Partition in ARN is incompatible, got "${partition}" but expected "${options.clientPartition}"`);
+    var validatePartition = (partition2, options) => {
+      if (partition2 !== options.clientPartition) {
+        throw new Error(`Partition in ARN is incompatible, got "${partition2}" but expected "${options.clientPartition}"`);
       }
     };
     var validateRegion = (region, options) => {
@@ -57077,9 +57077,9 @@ var require_dist_cjs63 = __commonJS({
       const hostnameSuffix = isCustomEndpoint ? baseHostname : getSuffixForArnEndpoint(baseHostname)[1];
       const { pathStyleEndpoint, accelerateEndpoint = false, fipsEndpoint = false, tlsCompatible = true, bucketName, clientPartition = "aws" } = options;
       validateArnEndpointOptions({ pathStyleEndpoint, accelerateEndpoint, tlsCompatible });
-      const { service, partition, accountId, region, resource } = bucketName;
+      const { service, partition: partition2, accountId, region, resource } = bucketName;
       validateService(service);
-      validatePartition(partition, { clientPartition });
+      validatePartition(partition2, { clientPartition });
       validateAccountId(accountId);
       const { accesspointName, outpostId } = getArnResources(resource);
       if (service === "s3-object-lambda") {
@@ -57160,7 +57160,7 @@ var require_dist_cjs63 = __commonJS({
           const clientRegion = await options.region();
           const useDualstackEndpoint = await options.useDualstackEndpoint();
           const useFipsEndpoint = await options.useFipsEndpoint();
-          const { partition, signingRegion = clientRegion } = await options.regionInfoProvider(clientRegion, { useDualstackEndpoint, useFipsEndpoint }) || {};
+          const { partition: partition2, signingRegion = clientRegion } = await options.regionInfoProvider(clientRegion, { useDualstackEndpoint, useFipsEndpoint }) || {};
           const useArnRegion = await options.useArnRegion();
           const { hostname, bucketEndpoint, signingRegion: modifiedSigningRegion, signingService } = bucketHostname({
             bucketName: bucketArn,
@@ -57171,7 +57171,7 @@ var require_dist_cjs63 = __commonJS({
             pathStyleEndpoint: options.forcePathStyle,
             tlsCompatible: request.protocol === "https:",
             useArnRegion,
-            clientPartition: partition,
+            clientPartition: partition2,
             clientSigningRegion: signingRegion,
             clientRegion,
             isCustomEndpoint: options.isCustomEndpoint,
@@ -67148,15 +67148,15 @@ function getRequestUrl(baseUri, operationSpec, operationArguments, fallbackObjec
   let isAbsolutePath = false;
   let requestUrl = replaceAll(baseUri, urlReplacements);
   if (operationSpec.path) {
-    let path8 = replaceAll(operationSpec.path, urlReplacements);
-    if (operationSpec.path === "/{nextLink}" && path8.startsWith("/")) {
-      path8 = path8.substring(1);
+    let path9 = replaceAll(operationSpec.path, urlReplacements);
+    if (operationSpec.path === "/{nextLink}" && path9.startsWith("/")) {
+      path9 = path9.substring(1);
     }
-    if (isAbsoluteUrl(path8)) {
-      requestUrl = path8;
+    if (isAbsoluteUrl(path9)) {
+      requestUrl = path9;
       isAbsolutePath = true;
     } else {
-      requestUrl = appendPath(requestUrl, path8);
+      requestUrl = appendPath(requestUrl, path9);
     }
   }
   const { queryParams, sequenceParams } = calculateQueryParameters(operationSpec, operationArguments, fallbackObject);
@@ -67202,9 +67202,9 @@ function appendPath(url2, pathToAppend) {
   }
   const searchStart = pathToAppend.indexOf("?");
   if (searchStart !== -1) {
-    const path8 = pathToAppend.substring(0, searchStart);
+    const path9 = pathToAppend.substring(0, searchStart);
     const search = pathToAppend.substring(searchStart + 1);
-    newPath = newPath + path8;
+    newPath = newPath + path9;
     if (search) {
       parsedUrl.search = parsedUrl.search ? `${parsedUrl.search}&${search}` : search;
     }
@@ -69212,16 +69212,16 @@ var MatcherView = class {
    * @returns {string|undefined}
    */
   getCurrentTag() {
-    const path8 = this._matcher.path;
-    return path8.length > 0 ? path8[path8.length - 1].tag : void 0;
+    const path9 = this._matcher.path;
+    return path9.length > 0 ? path9[path9.length - 1].tag : void 0;
   }
   /**
    * Get current namespace.
    * @returns {string|undefined}
    */
   getCurrentNamespace() {
-    const path8 = this._matcher.path;
-    return path8.length > 0 ? path8[path8.length - 1].namespace : void 0;
+    const path9 = this._matcher.path;
+    return path9.length > 0 ? path9[path9.length - 1].namespace : void 0;
   }
   /**
    * Get current node's attribute value.
@@ -69229,9 +69229,9 @@ var MatcherView = class {
    * @returns {*}
    */
   getAttrValue(attrName) {
-    const path8 = this._matcher.path;
-    if (path8.length === 0) return void 0;
-    return path8[path8.length - 1].values?.[attrName];
+    const path9 = this._matcher.path;
+    if (path9.length === 0) return void 0;
+    return path9[path9.length - 1].values?.[attrName];
   }
   /**
    * Check if current node has an attribute.
@@ -69239,9 +69239,9 @@ var MatcherView = class {
    * @returns {boolean}
    */
   hasAttr(attrName) {
-    const path8 = this._matcher.path;
-    if (path8.length === 0) return false;
-    const current = path8[path8.length - 1];
+    const path9 = this._matcher.path;
+    if (path9.length === 0) return false;
+    const current = path9[path9.length - 1];
     return current.values !== void 0 && attrName in current.values;
   }
   /**
@@ -69249,18 +69249,18 @@ var MatcherView = class {
    * @returns {number}
    */
   getPosition() {
-    const path8 = this._matcher.path;
-    if (path8.length === 0) return -1;
-    return path8[path8.length - 1].position ?? 0;
+    const path9 = this._matcher.path;
+    if (path9.length === 0) return -1;
+    return path9[path9.length - 1].position ?? 0;
   }
   /**
    * Get current node's repeat counter (occurrence count of this tag name).
    * @returns {number}
    */
   getCounter() {
-    const path8 = this._matcher.path;
-    if (path8.length === 0) return -1;
-    return path8[path8.length - 1].counter ?? 0;
+    const path9 = this._matcher.path;
+    if (path9.length === 0) return -1;
+    return path9[path9.length - 1].counter ?? 0;
   }
   /**
    * Get current node's sibling index (alias for getPosition).
@@ -72607,9 +72607,9 @@ var StorageSharedKeyCredentialPolicy = class extends CredentialPolicy {
    * @param request -
    */
   getCanonicalizedResourceString(request) {
-    const path8 = getURLPath(request.url) || "/";
+    const path9 = getURLPath(request.url) || "/";
     let canonicalizedResourceString = "";
-    canonicalizedResourceString += `/${this.factory.accountName}${path8}`;
+    canonicalizedResourceString += `/${this.factory.accountName}${path9}`;
     const queries = getURLQueries(request.url);
     const lowercaseQueries = {};
     if (queries) {
@@ -73107,9 +73107,9 @@ function storageSharedKeyCredentialPolicy(options) {
     return canonicalizedHeadersStringToSign;
   }
   function getCanonicalizedResourceString(request) {
-    const path8 = getURLPath(request.url) || "/";
+    const path9 = getURLPath(request.url) || "/";
     let canonicalizedResourceString = "";
-    canonicalizedResourceString += `/${options.accountName}${path8}`;
+    canonicalizedResourceString += `/${options.accountName}${path9}`;
     const queries = getURLQueries(request.url);
     const lowercaseQueries = {};
     if (queries) {
@@ -87050,10 +87050,10 @@ var StorageContextClient = class extends StorageClient {
 // node_modules/@azure/storage-blob/dist/esm/utils/utils.common.js
 function escapeURLPath(url2) {
   const urlParsed = new URL(url2);
-  let path8 = urlParsed.pathname;
-  path8 = path8 || "/";
-  path8 = escape(path8);
-  urlParsed.pathname = path8;
+  let path9 = urlParsed.pathname;
+  path9 = path9 || "/";
+  path9 = escape(path9);
+  urlParsed.pathname = path9;
   return urlParsed.toString();
 }
 function getProxyUriFromDevConnString(connectionString) {
@@ -87138,9 +87138,9 @@ function escape(text) {
 }
 function appendToURLPath(url2, name) {
   const urlParsed = new URL(url2);
-  let path8 = urlParsed.pathname;
-  path8 = path8 ? path8.endsWith("/") ? `${path8}${name}` : `${path8}/${name}` : name;
-  urlParsed.pathname = path8;
+  let path9 = urlParsed.pathname;
+  path9 = path9 ? path9.endsWith("/") ? `${path9}${name}` : `${path9}/${name}` : name;
+  urlParsed.pathname = path9;
   return urlParsed.toString();
 }
 function setURLParameter2(url2, name, value) {
@@ -95619,7 +95619,7 @@ function restoreCacheV2(paths_1, primaryKey_1, restoreKeys_1, options_1) {
 }
 
 // src/restore.ts
-var path7 = __toESM(require("node:path"));
+var path8 = __toESM(require("node:path"));
 
 // src/s3-client.ts
 var import_client_s3 = __toESM(require_dist_cjs71());
@@ -95757,7 +95757,10 @@ var import_node_http_handler5 = __toESM(require_dist_cjs10());
 var import_node_fs2 = __toESM(require("node:fs"));
 var import_node_http2 = __toESM(require("node:http"));
 var import_node_https2 = __toESM(require("node:https"));
+var import_node_os3 = __toESM(require("node:os"));
+var import_node_path = __toESM(require("node:path"));
 var import_promises = require("node:stream/promises");
+var import_node_worker_threads = require("node:worker_threads");
 var PROGRESS_INTERVAL_MS = 5e3;
 async function parallelDownload({
   clientConfig,
@@ -95770,7 +95773,7 @@ async function parallelDownload({
 }) {
   if (!fileSize || fileSize <= 0) {
     debug("Object size unknown, falling back to single-stream download");
-    const client = makeWorkerClient(clientConfig);
+    const client = makeClient(clientConfig);
     try {
       await singleStreamDownload({ client, bucket, key, filePath });
     } finally {
@@ -95779,16 +95782,14 @@ async function parallelDownload({
     return;
   }
   const chunkSize = chunkSizeMB * 1024 * 1024;
-  const chunks = buildChunks(fileSize, chunkSize);
-  const workerCount = Math.min(concurrency, chunks.length);
+  const allChunks = buildChunks(fileSize, chunkSize);
+  const threadCount = Math.min(import_node_os3.default.cpus().length, allChunks.length, concurrency);
+  const streamsPerWorker = Math.max(1, Math.floor(concurrency / threadCount));
   info(
-    `Downloading ${chunks.length} chunks (${chunkSizeMB} MB each) with ${workerCount} independent TCP streams`
+    `Downloading ${allChunks.length} chunks (${chunkSizeMB} MB each) across ${threadCount} worker threads \xD7 ${streamsPerWorker} streams each`
   );
   await preallocateFile(filePath, fileSize);
-  const workerClients = Array.from(
-    { length: workerCount },
-    () => makeWorkerClient(clientConfig)
-  );
+  const workerChunks = partition(allChunks, threadCount);
   let bytesDownloaded = 0;
   const progressTimer = setInterval(() => {
     const pct = (bytesDownloaded / fileSize * 100).toFixed(1);
@@ -95797,92 +95798,86 @@ async function parallelDownload({
     );
   }, PROGRESS_INTERVAL_MS);
   try {
-    const fd = await import_node_fs2.default.promises.open(filePath, "r+");
-    try {
-      let chunkIndex = 0;
-      const inFlight = /* @__PURE__ */ new Set();
-      const launchNext = (workerClient) => {
-        if (chunkIndex >= chunks.length) return;
-        const { start, end } = chunks[chunkIndex++];
-        const p5 = downloadChunk({
-          client: workerClient,
+    await Promise.all(
+      workerChunks.map(
+        (chunks) => runWorker({
+          clientConfig,
           bucket,
           key,
-          start,
-          end,
-          fd
-        }).then((bytes) => {
-          bytesDownloaded += bytes;
-        }).finally(() => {
-          inFlight.delete(p5);
-          launchNext(workerClient);
-        });
-        inFlight.add(p5);
-      };
-      for (const workerClient of workerClients) {
-        launchNext(workerClient);
-      }
-      while (inFlight.size > 0) {
-        await Promise.race(inFlight);
-      }
-    } finally {
-      await fd.close();
-    }
+          filePath,
+          chunks,
+          concurrency: streamsPerWorker,
+          onProgress: (bytes) => {
+            bytesDownloaded += bytes;
+          }
+        })
+      )
+    );
   } finally {
     clearInterval(progressTimer);
-    for (const c5 of workerClients) {
-      c5.destroy();
-    }
   }
   info(`Download complete: ${formatBytes(fileSize)}`);
 }
-function makeWorkerClient(baseConfig) {
+function resolveWorkerPath() {
+  const distWorker = import_node_path.default.resolve(
+    import_node_path.default.dirname(__filename),
+    "..",
+    "download-worker",
+    "index.js"
+  );
+  if (import_node_fs2.default.existsSync(distWorker)) return distWorker;
+  return import_node_path.default.resolve(__dirname, "download-worker.ts");
+}
+function runWorker({
+  clientConfig,
+  bucket,
+  key,
+  filePath,
+  chunks,
+  concurrency,
+  onProgress
+}) {
+  return new Promise((resolve2, reject) => {
+    const workerInput = {
+      clientConfig,
+      bucket,
+      key,
+      filePath,
+      chunks,
+      concurrency
+    };
+    const worker = new import_node_worker_threads.Worker(resolveWorkerPath(), {
+      workerData: workerInput,
+      // Allow ts-node / tsx to execute TypeScript worker sources in dev/test.
+      execArgv: resolveWorkerPath().endsWith(".ts") ? ["--require", "ts-node/register"] : []
+    });
+    worker.on("message", (msg) => {
+      if (msg.type === "progress" && msg.bytes !== void 0) {
+        onProgress(msg.bytes);
+      } else if (msg.type === "done") {
+        resolve2();
+      } else if (msg.type === "error") {
+        reject(new Error(msg.message));
+      }
+    });
+    worker.on("error", reject);
+    worker.on("exit", (code) => {
+      if (code !== 0) reject(new Error(`Worker exited with code ${code}`));
+    });
+  });
+}
+function makeClient(baseConfig) {
   const isHttp = baseConfig.endpoint?.startsWith("http://");
   const AgentClass = isHttp ? import_node_http2.default.Agent : import_node_https2.default.Agent;
-  const agent = new AgentClass({
-    keepAlive: true,
-    maxSockets: 1
-  });
+  const agent = new AgentClass({ keepAlive: true, maxSockets: 1 });
   return new import_client_s32.S3Client({
     ...baseConfig,
     requestHandler: new import_node_http_handler5.NodeHttpHandler({
-      // Each worker only ever sends one request at a time, so 1 socket is enough.
-      // The OS assigns a distinct TCP 4-tuple per client → independent cwnd.
       connectionTimeout: 1e4,
       requestTimeout: 6e5,
-      // 10 min – accommodate large chunks on slow links
       ...isHttp ? { httpAgent: agent } : { httpsAgent: agent }
     })
   });
-}
-async function downloadChunk({
-  client,
-  bucket,
-  key,
-  start,
-  end,
-  fd
-}) {
-  const range3 = `bytes=${start}-${end}`;
-  debug(`Fetching range ${range3}`);
-  const response = await client.send(
-    new import_client_s32.GetObjectCommand({
-      Bucket: bucket,
-      Key: key,
-      Range: range3
-    })
-  );
-  const body2 = response.Body;
-  const parts = [];
-  let totalBytes = 0;
-  for await (const piece of body2) {
-    const buf = Buffer.isBuffer(piece) ? piece : Buffer.from(piece);
-    parts.push(buf);
-    totalBytes += buf.byteLength;
-  }
-  const combined = parts.length === 1 ? parts[0] : Buffer.concat(parts, totalBytes);
-  await fd.write(combined, 0, combined.byteLength, start);
-  return combined.byteLength;
 }
 async function singleStreamDownload({
   client,
@@ -95913,6 +95908,11 @@ function buildChunks(fileSize, chunkSize) {
     start = end + 1;
   }
   return chunks;
+}
+function partition(items, n5) {
+  const buckets = Array.from({ length: n5 }, () => []);
+  items.forEach((item, i5) => buckets[i5 % n5].push(item));
+  return buckets.filter((b5) => b5.length > 0);
 }
 function formatBytes(bytes) {
   if (bytes >= 1024 ** 3) return (bytes / 1024 ** 3).toFixed(2) + " GB";
@@ -95952,7 +95952,7 @@ async function restoreCache2() {
       const client = newS3Client();
       const compressionMethod = await getCompressionMethod();
       const cacheFileName = getCacheFileName(compressionMethod);
-      const archivePath = path7.join(
+      const archivePath = path8.join(
         await createTempDirectory(),
         cacheFileName
       ).replaceAll("\\", "/");

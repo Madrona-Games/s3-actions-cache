@@ -1,18 +1,27 @@
 import { parallelDownload } from "../src/download";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { Readable } from "node:stream";
 import type { S3BaseConfig } from "../src/s3-client";
 
-// Hoist mocks so they are available inside vi.mock factories (which are hoisted too)
-const { mockSend, mockDestroy, s3ClientInstances } = vi.hoisted(() => ({
-  mockSend: vi.fn(),
-  mockDestroy: vi.fn(),
-  s3ClientInstances: { count: 0 },
+// ---------------------------------------------------------------------------
+// Hoisted mocks
+// ---------------------------------------------------------------------------
+
+const { mockWorkerInstances, mockFsExistsSync } = vi.hoisted(() => ({
+  mockWorkerInstances: [] as Array<{
+    on: ReturnType<typeof vi.fn>;
+    _emit: (event: string, ...args: any[]) => void;
+  }>,
+  mockFsExistsSync: vi.fn().mockReturnValue(true), // default: bundled worker exists
 }));
 
 vi.mock("@actions/core", () => ({
   debug: vi.fn(),
   info: vi.fn(),
+}));
+
+vi.mock("node:os", () => ({
+  default: { cpus: () => [1, 2, 3, 4] }, // 4 logical CPUs
+  cpus: () => [1, 2, 3, 4],
 }));
 
 vi.mock("node:fs", async (importOriginal) => {
@@ -21,9 +30,14 @@ vi.mock("node:fs", async (importOriginal) => {
     ...actual,
     default: {
       ...actual,
+      existsSync: mockFsExistsSync,
       createWriteStream: vi.fn(),
       promises: {
-        open: vi.fn(),
+        open: vi.fn().mockResolvedValue({
+          truncate: vi.fn().mockResolvedValue(undefined),
+          close: vi.fn().mockResolvedValue(undefined),
+          write: vi.fn().mockResolvedValue({ bytesWritten: 0, buffer: Buffer.alloc(0) }),
+        }),
       },
     },
   };
@@ -33,27 +47,54 @@ vi.mock("node:stream/promises", () => ({
   pipeline: vi.fn().mockResolvedValue(undefined),
 }));
 
-// Mock NodeHttpHandler so we don't make real HTTP connections in tests
 vi.mock("@smithy/node-http-handler", () => ({
   NodeHttpHandler: class MockNodeHttpHandler {
     constructor(_opts?: any) {}
   },
 }));
 
-// Mock S3Client as a class — mockSend/mockDestroy/s3ClientInstances are hoisted so available here
 vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@aws-sdk/client-s3")>();
   return {
     ...actual,
     S3Client: class MockS3Client {
-      constructor(_config?: any) {
-        s3ClientInstances.count++;
-      }
-      send = mockSend;
-      destroy = mockDestroy;
+      send = vi.fn().mockResolvedValue({
+        Body: Readable.from(Buffer.from("data")),
+      });
+      destroy = vi.fn();
     },
   };
 });
+
+// Mock Worker so tests never spawn real threads.
+// Each constructed Worker is stored in mockWorkerInstances so tests can
+// drive its lifecycle by calling _emit().
+vi.mock("node:worker_threads", () => ({
+  Worker: class MockWorker {
+    private handlers: Record<string, ((...args: any[]) => void)[]> = {};
+
+    constructor(_script: string, _opts?: any) {
+      const self = this;
+      mockWorkerInstances.push({
+        on: vi.fn((event: string, cb: (...args: any[]) => void) => {
+          self.handlers[event] = self.handlers[event] ?? [];
+          self.handlers[event].push(cb);
+        }),
+        _emit: (event: string, ...args: any[]) => {
+          (self.handlers[event] ?? []).forEach((cb) => cb(...args));
+        },
+      });
+    }
+
+    on(event: string, cb: (...args: any[]) => void) {
+      const instance = mockWorkerInstances[mockWorkerInstances.length - 1];
+      instance.on(event, cb);
+      return this;
+    }
+  },
+  workerData: {},
+  parentPort: { postMessage: vi.fn() },
+}));
 
 import fs from "node:fs";
 import { pipeline } from "node:stream/promises";
@@ -68,35 +109,28 @@ const baseConfig: S3BaseConfig = {
   },
 };
 
-function makeFileHandleMock() {
-  return {
-    write: vi.fn().mockResolvedValue({ bytesWritten: 0, buffer: Buffer.alloc(0) }),
-    close: vi.fn().mockResolvedValue(undefined),
-    truncate: vi.fn().mockResolvedValue(undefined),
-  };
+// Helper: resolve the Worker created at index i and make it emit "done".
+function resolveWorker(index: number) {
+  // Use setImmediate so the Worker constructor has time to register handlers.
+  setImmediate(() => {
+    mockWorkerInstances[index]._emit("message", { type: "done" });
+  });
 }
 
 describe("parallelDownload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    s3ClientInstances.count = 0;
-    // Default: return a readable body for GetObjectCommand
-    mockSend.mockImplementation(async (cmd: any) => {
-      if (cmd instanceof GetObjectCommand) {
-        return { Body: Readable.from(Buffer.from("chunk-data")) };
-      }
-      throw new Error("Unexpected command");
-    });
+    mockWorkerInstances.length = 0;
+    mockFsExistsSync.mockReturnValue(true);
   });
 
+  // -------------------------------------------------------------------------
+  // Fallback (unknown file size)
+  // -------------------------------------------------------------------------
   describe("when fileSize is unknown", () => {
     it("falls back to single-stream download via pipeline", async () => {
       const writeStreamMock = {
-        on: vi.fn(),
-        once: vi.fn(),
-        emit: vi.fn(),
-        write: vi.fn(),
-        end: vi.fn(),
+        on: vi.fn(), once: vi.fn(), emit: vi.fn(), write: vi.fn(), end: vi.fn(),
       };
       vi.mocked(fs.createWriteStream).mockReturnValue(writeStreamMock as any);
 
@@ -129,147 +163,45 @@ describe("parallelDownload", () => {
     });
   });
 
+  // -------------------------------------------------------------------------
+  // Parallel path (known file size)
+  // -------------------------------------------------------------------------
   describe("when fileSize is known", () => {
-    it("pre-allocates the file then opens it for writing", async () => {
-      const preallocHandle = makeFileHandleMock();
-      const writeHandle = makeFileHandleMock();
+    it("pre-allocates the file before spawning workers", async () => {
+      const preallocHandle = {
+        truncate: vi.fn().mockResolvedValue(undefined),
+        close: vi.fn().mockResolvedValue(undefined),
+        write: vi.fn(),
+      };
+      vi.mocked(fs.promises.open).mockResolvedValueOnce(preallocHandle as any);
 
-      vi.mocked(fs.promises.open)
-        .mockResolvedValueOnce(preallocHandle as any)
-        .mockResolvedValueOnce(writeHandle as any);
-
-      mockSend.mockResolvedValue({ Body: Readable.from(Buffer.from("hello")) });
-
-      await parallelDownload({
+      const downloadPromise = parallelDownload({
         clientConfig: baseConfig,
-        bucket: "my-bucket",
-        key: "my-key",
-        filePath: "/tmp/out.tzst",
+        bucket: "b",
+        key: "k",
+        filePath: "/out",
         fileSize: 5,
         chunkSizeMB: 1,
         concurrency: 2,
       });
 
-      expect(vi.mocked(fs.promises.open)).toHaveBeenNthCalledWith(1, "/tmp/out.tzst", "w");
+      // Resolve the single worker that gets spawned.
+      resolveWorker(0);
+      await downloadPromise;
+
+      expect(vi.mocked(fs.promises.open)).toHaveBeenCalledWith("/out", "w");
       expect(preallocHandle.truncate).toHaveBeenCalledWith(5);
       expect(preallocHandle.close).toHaveBeenCalled();
-      expect(vi.mocked(fs.promises.open)).toHaveBeenNthCalledWith(2, "/tmp/out.tzst", "r+");
-      expect(writeHandle.close).toHaveBeenCalled();
-    });
-
-    it("issues a Range header for each chunk", async () => {
-      const preallocHandle = makeFileHandleMock();
-      const writeHandle = makeFileHandleMock();
-      vi.mocked(fs.promises.open)
-        .mockResolvedValueOnce(preallocHandle as any)
-        .mockResolvedValueOnce(writeHandle as any);
-
-      mockSend.mockResolvedValue({
-        Body: Readable.from(Buffer.from("A".repeat(1024 * 1024))),
-      });
-
-      const fileSize = 3 * 1024 * 1024;
-      await parallelDownload({
-        clientConfig: baseConfig,
-        bucket: "b",
-        key: "k",
-        filePath: "/out",
-        fileSize,
-        chunkSizeMB: 1,
-        concurrency: 3,
-      });
-
-      const ranges = mockSend.mock.calls.map((c: any) => c[0].input.Range);
-      expect(ranges).toContain("bytes=0-1048575");
-      expect(ranges).toContain("bytes=1048576-2097151");
-      expect(ranges).toContain("bytes=2097152-3145727");
-    });
-
-    it("writes chunk data at the correct file offset", async () => {
-      const preallocHandle = makeFileHandleMock();
-      const writeHandle = makeFileHandleMock();
-      vi.mocked(fs.promises.open)
-        .mockResolvedValueOnce(preallocHandle as any)
-        .mockResolvedValueOnce(writeHandle as any);
-
-      const data = Buffer.from([0x01, 0x02, 0x03, 0x04]);
-      mockSend.mockResolvedValue({ Body: Readable.from(data) });
-
-      await parallelDownload({
-        clientConfig: baseConfig,
-        bucket: "b",
-        key: "k",
-        filePath: "/out",
-        fileSize: 4,
-        chunkSizeMB: 1,
-        concurrency: 1,
-      });
-
-      expect(writeHandle.write).toHaveBeenCalledWith(
-        expect.any(Buffer),
-        0,
-        4,
-        0,
-      );
-    });
-
-    it("creates one S3Client per worker slot", async () => {
-      const preallocHandle = makeFileHandleMock();
-      const writeHandle = makeFileHandleMock();
-      vi.mocked(fs.promises.open)
-        .mockResolvedValueOnce(preallocHandle as any)
-        .mockResolvedValueOnce(writeHandle as any);
-
-      mockSend.mockResolvedValue({ Body: Readable.from(Buffer.from("x")) });
-
-      const fileSize = 4 * 1024 * 1024; // 4 chunks of 1 MB
-      const concurrency = 4;
-      await parallelDownload({
-        clientConfig: baseConfig,
-        bucket: "b",
-        key: "k",
-        filePath: "/out",
-        fileSize,
-        chunkSizeMB: 1,
-        concurrency,
-      });
-
-      // S3Client constructor should have been called once per worker slot
-      expect(s3ClientInstances.count).toBe(concurrency);
-    });
-
-    it("destroys all worker clients after download", async () => {
-      const preallocHandle = makeFileHandleMock();
-      const writeHandle = makeFileHandleMock();
-      vi.mocked(fs.promises.open)
-        .mockResolvedValueOnce(preallocHandle as any)
-        .mockResolvedValueOnce(writeHandle as any);
-
-      mockSend.mockResolvedValue({ Body: Readable.from(Buffer.from("x")) });
-
-      await parallelDownload({
-        clientConfig: baseConfig,
-        bucket: "b",
-        key: "k",
-        filePath: "/out",
-        fileSize: 4,
-        chunkSizeMB: 1,
-        concurrency: 1,
-      });
-
-      expect(mockDestroy).toHaveBeenCalled();
     });
 
     it("does not use pipeline (single-stream) when size is known", async () => {
-      const preallocHandle = makeFileHandleMock();
-      const writeHandle = makeFileHandleMock();
-      vi.mocked(fs.promises.open)
-        .mockResolvedValueOnce(preallocHandle as any)
-        .mockResolvedValueOnce(writeHandle as any);
+      const preallocHandle = {
+        truncate: vi.fn().mockResolvedValue(undefined),
+        close: vi.fn().mockResolvedValue(undefined),
+      };
+      vi.mocked(fs.promises.open).mockResolvedValueOnce(preallocHandle as any);
 
-      mockSend.mockResolvedValue({ Body: Readable.from(Buffer.from("data")) });
-
-      await parallelDownload({
+      const downloadPromise = parallelDownload({
         clientConfig: baseConfig,
         bucket: "b",
         key: "k",
@@ -279,7 +211,136 @@ describe("parallelDownload", () => {
         concurrency: 1,
       });
 
+      resolveWorker(0);
+      await downloadPromise;
+
       expect(pipeline).not.toHaveBeenCalled();
+    });
+
+    it("spawns at most os.cpus().length worker threads", async () => {
+      const preallocHandle = {
+        truncate: vi.fn().mockResolvedValue(undefined),
+        close: vi.fn().mockResolvedValue(undefined),
+      };
+      vi.mocked(fs.promises.open).mockResolvedValueOnce(preallocHandle as any);
+
+      // 32 chunks, 8 concurrency, 4 CPUs → 4 workers
+      const fileSize = 32 * 1024 * 1024;
+      const downloadPromise = parallelDownload({
+        clientConfig: baseConfig,
+        bucket: "b",
+        key: "k",
+        filePath: "/out",
+        fileSize,
+        chunkSizeMB: 1,
+        concurrency: 8,
+      });
+
+      // Resolve all workers (up to 4 because os.cpus() returns 4).
+      for (let i = 0; i < 4; i++) resolveWorker(i);
+      await downloadPromise;
+
+      expect(mockWorkerInstances.length).toBeLessThanOrEqual(4);
+    });
+
+    it("accumulates progress reported by workers", async () => {
+      const preallocHandle = {
+        truncate: vi.fn().mockResolvedValue(undefined),
+        close: vi.fn().mockResolvedValue(undefined),
+      };
+      vi.mocked(fs.promises.open).mockResolvedValueOnce(preallocHandle as any);
+
+      const downloadPromise = parallelDownload({
+        clientConfig: baseConfig,
+        bucket: "b",
+        key: "k",
+        filePath: "/out",
+        fileSize: 4,
+        chunkSizeMB: 1,
+        concurrency: 1,
+      });
+
+      setImmediate(() => {
+        mockWorkerInstances[0]._emit("message", { type: "progress", bytes: 4 });
+        mockWorkerInstances[0]._emit("message", { type: "done" });
+      });
+
+      // Should not throw
+      await expect(downloadPromise).resolves.toBeUndefined();
+    });
+
+    it("rejects if a worker emits an error message", async () => {
+      const preallocHandle = {
+        truncate: vi.fn().mockResolvedValue(undefined),
+        close: vi.fn().mockResolvedValue(undefined),
+      };
+      vi.mocked(fs.promises.open).mockResolvedValueOnce(preallocHandle as any);
+
+      const downloadPromise = parallelDownload({
+        clientConfig: baseConfig,
+        bucket: "b",
+        key: "k",
+        filePath: "/out",
+        fileSize: 4,
+        chunkSizeMB: 1,
+        concurrency: 1,
+      });
+
+      setImmediate(() => {
+        mockWorkerInstances[0]._emit("message", { type: "error", message: "boom" });
+      });
+
+      await expect(downloadPromise).rejects.toThrow("boom");
+    });
+
+    it("rejects if a worker exits with non-zero code", async () => {
+      const preallocHandle = {
+        truncate: vi.fn().mockResolvedValue(undefined),
+        close: vi.fn().mockResolvedValue(undefined),
+      };
+      vi.mocked(fs.promises.open).mockResolvedValueOnce(preallocHandle as any);
+
+      const downloadPromise = parallelDownload({
+        clientConfig: baseConfig,
+        bucket: "b",
+        key: "k",
+        filePath: "/out",
+        fileSize: 4,
+        chunkSizeMB: 1,
+        concurrency: 1,
+      });
+
+      setImmediate(() => {
+        mockWorkerInstances[0]._emit("exit", 1);
+      });
+
+      await expect(downloadPromise).rejects.toThrow("Worker exited with code 1");
+    });
+
+    it("uses the bundled worker path when dist file exists", async () => {
+      mockFsExistsSync.mockReturnValue(true);
+
+      const preallocHandle = {
+        truncate: vi.fn().mockResolvedValue(undefined),
+        close: vi.fn().mockResolvedValue(undefined),
+      };
+      vi.mocked(fs.promises.open).mockResolvedValueOnce(preallocHandle as any);
+
+      const downloadPromise = parallelDownload({
+        clientConfig: baseConfig,
+        bucket: "b",
+        key: "k",
+        filePath: "/out",
+        fileSize: 4,
+        chunkSizeMB: 1,
+        concurrency: 1,
+      });
+
+      resolveWorker(0);
+      await downloadPromise;
+
+      // Worker was constructed — path resolution didn't throw.
+      expect(mockWorkerInstances.length).toBe(1);
     });
   });
 });

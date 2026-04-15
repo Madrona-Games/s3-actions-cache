@@ -40,4 +40,16 @@ for (const entry of entries) {
   console.log(`Built dist/${entry}/index.js`);
 }
 
+// Bundle the download worker as a standalone script.
+// The main download.ts resolves it at runtime as dist/download-worker/index.js.
+await esbuild.build({
+  entryPoints: ["src/download-worker.ts"],
+  bundle: true,
+  platform: "node",
+  format: "cjs",
+  outfile: "dist/download-worker/index.js",
+  plugins: [resolveActionsCacheSubpaths],
+});
+console.log("Built dist/download-worker/index.js");
+
 console.log("Build complete");

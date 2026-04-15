@@ -4,21 +4,31 @@ import { NodeHttpHandler } from "@smithy/node-http-handler";
 import fs from "node:fs";
 import http from "node:http";
 import https from "node:https";
+import os from "node:os";
+import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
+import { Worker } from "node:worker_threads";
+import type { ChunkRange, WorkerInput } from "./download-worker";
 import { S3BaseConfig } from "./s3-client";
 
 const PROGRESS_INTERVAL_MS = 5000;
 
 /**
- * Downloads an S3 object in parallel using byte-range requests.
+ * Downloads an S3 object in parallel using byte-range requests distributed
+ * across multiple worker threads.
  *
- * Each concurrent worker gets its **own** S3Client instance backed by its own
- * NodeHttpHandler (and therefore its own https.Agent).  This is critical on
- * 10 Gbps networks: a shared Agent means shared TCP congestion-window bookkeeping,
- * so adding more concurrency to a single client does not increase throughput.
- * Separate Agents each establish their own TCP streams with independent cwnd,
- * allowing aggregate bandwidth to scale linearly with concurrency.
+ * WHY WORKER THREADS:
+ * Node.js has a single-threaded event loop.  Even with many concurrent HTTP
+ * requests, all network I/O callbacks, buffer copies, and SDK middleware run
+ * on ONE core.  On a 10 Gbps local link this saturates that core at ~1 Gbps.
+ *
+ * By spawning N worker threads (one per CPU core) each with its own V8 isolate
+ * and event loop, all network processing runs in parallel across cores, allowing
+ * aggregate throughput to scale linearly toward line rate.
+ *
+ * Each worker owns `concurrency / threadCount` S3 clients (each with an
+ * independent http(s).Agent and TCP stream), ensuring full connection isolation.
  *
  * Falls back to a single-stream download when the object size is unknown.
  */
@@ -42,7 +52,7 @@ export async function parallelDownload({
   // If size is unknown we can't do range requests — fall back to streaming.
   if (!fileSize || fileSize <= 0) {
     core.debug("Object size unknown, falling back to single-stream download");
-    const client = makeWorkerClient(clientConfig);
+    const client = makeClient(clientConfig);
     try {
       await singleStreamDownload({ client, bucket, key, filePath });
     } finally {
@@ -52,21 +62,25 @@ export async function parallelDownload({
   }
 
   const chunkSize = chunkSizeMB * 1024 * 1024;
-  const chunks = buildChunks(fileSize, chunkSize);
-  const workerCount = Math.min(concurrency, chunks.length);
+  const allChunks = buildChunks(fileSize, chunkSize);
+
+  // Number of worker threads: one per logical CPU, but no more than the
+  // number of chunks (no point spawning idle workers).
+  const threadCount = Math.min(os.cpus().length, allChunks.length, concurrency);
+
+  // Streams per worker: divide concurrency evenly, giving at least 1.
+  const streamsPerWorker = Math.max(1, Math.floor(concurrency / threadCount));
 
   core.info(
-    `Downloading ${chunks.length} chunks (${chunkSizeMB} MB each) with ${workerCount} independent TCP streams`,
+    `Downloading ${allChunks.length} chunks (${chunkSizeMB} MB each) across ` +
+      `${threadCount} worker threads × ${streamsPerWorker} streams each`,
   );
 
-  // Pre-allocate the file so concurrent writers don't need to extend it.
+  // Pre-allocate the file so all workers can write at arbitrary offsets.
   await preallocateFile(filePath, fileSize);
 
-  // Create one S3Client per worker slot — each gets its own NodeHttpHandler
-  // and https.Agent, giving it an independent TCP stream / congestion window.
-  const workerClients = Array.from({ length: workerCount }, () =>
-    makeWorkerClient(clientConfig),
-  );
+  // Divide chunks evenly across workers.
+  const workerChunks = partition(allChunks, threadCount);
 
   let bytesDownloaded = 0;
   const progressTimer = setInterval(() => {
@@ -77,131 +91,115 @@ export async function parallelDownload({
   }, PROGRESS_INTERVAL_MS);
 
   try {
-    const fd = await fs.promises.open(filePath, "r+");
-    try {
-      let chunkIndex = 0;
-      const inFlight = new Set<Promise<void>>();
-
-      const launchNext = (workerClient: S3Client) => {
-        if (chunkIndex >= chunks.length) return;
-        const { start, end } = chunks[chunkIndex++];
-        const p = downloadChunk({
-          client: workerClient,
+    await Promise.all(
+      workerChunks.map((chunks) =>
+        runWorker({
+          clientConfig,
           bucket,
           key,
-          start,
-          end,
-          fd,
-        })
-          .then((bytes) => {
+          filePath,
+          chunks,
+          concurrency: streamsPerWorker,
+          onProgress: (bytes) => {
             bytesDownloaded += bytes;
-          })
-          .finally(() => {
-            inFlight.delete(p);
-            launchNext(workerClient);
-          });
-        inFlight.add(p);
-      };
-
-      // Seed one chunk per worker.
-      for (const workerClient of workerClients) {
-        launchNext(workerClient);
-      }
-
-      // Wait for all in-flight promises to complete.
-      while (inFlight.size > 0) {
-        await Promise.race(inFlight);
-      }
-    } finally {
-      await fd.close();
-    }
+          },
+        }),
+      ),
+    );
   } finally {
     clearInterval(progressTimer);
-    for (const c of workerClients) {
-      c.destroy();
-    }
   }
 
   core.info(`Download complete: ${formatBytes(fileSize)}`);
 }
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Worker management
 // ---------------------------------------------------------------------------
 
 /**
- * Creates a dedicated S3Client with its own NodeHttpHandler.
- * Each client maintains its own connection pool (https.Agent), so its TCP
- * streams evolve independently — critical for 10 Gbps throughput.
+ * Resolves the path to the bundled download-worker script.
  *
- * A fresh Agent is created per worker with:
- *  - keepAlive:true  — reuse the socket for retries without re-handshaking
- *  - maxSockets:1    — one socket per worker, no connection-pool contention
+ * In production (esbuild bundle) the worker is emitted alongside this file as
+ * `../download-worker/index.js`.  In tests (ts-node / vitest) the TypeScript
+ * source is used directly.
  */
-function makeWorkerClient(baseConfig: S3BaseConfig): S3Client {
+function resolveWorkerPath(): string {
+  // __filename in CJS bundle is the bundle's absolute path.
+  // Walk up one directory (dist/restore/ → dist/) then into download-worker/.
+  const distWorker = path.resolve(
+    path.dirname(__filename),
+    "..",
+    "download-worker",
+    "index.js",
+  );
+  if (fs.existsSync(distWorker)) return distWorker;
+
+  // Development / test: resolve TypeScript source relative to this file.
+  return path.resolve(__dirname, "download-worker.ts");
+}
+
+function runWorker({
+  clientConfig,
+  bucket,
+  key,
+  filePath,
+  chunks,
+  concurrency,
+  onProgress,
+}: WorkerInput & { onProgress: (bytes: number) => void }): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const workerInput: WorkerInput = {
+      clientConfig,
+      bucket,
+      key,
+      filePath,
+      chunks,
+      concurrency,
+    };
+
+    const worker = new Worker(resolveWorkerPath(), {
+      workerData: workerInput,
+      // Allow ts-node / tsx to execute TypeScript worker sources in dev/test.
+      execArgv: resolveWorkerPath().endsWith(".ts")
+        ? ["--require", "ts-node/register"]
+        : [],
+    });
+
+    worker.on("message", (msg: { type: string; bytes?: number; message?: string }) => {
+      if (msg.type === "progress" && msg.bytes !== undefined) {
+        onProgress(msg.bytes);
+      } else if (msg.type === "done") {
+        resolve();
+      } else if (msg.type === "error") {
+        reject(new Error(msg.message));
+      }
+    });
+
+    worker.on("error", reject);
+    worker.on("exit", (code) => {
+      if (code !== 0) reject(new Error(`Worker exited with code ${code}`));
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Helpers shared with fallback / single-stream path
+// ---------------------------------------------------------------------------
+
+function makeClient(baseConfig: S3BaseConfig): S3Client {
   const isHttp = (baseConfig.endpoint as string | undefined)?.startsWith("http://");
   const AgentClass = isHttp ? http.Agent : https.Agent;
-  const agent = new AgentClass({
-    keepAlive: true,
-    maxSockets: 1,
-  });
+  const agent = new AgentClass({ keepAlive: true, maxSockets: 1 });
 
   return new S3Client({
     ...baseConfig,
     requestHandler: new NodeHttpHandler({
-      // Each worker only ever sends one request at a time, so 1 socket is enough.
-      // The OS assigns a distinct TCP 4-tuple per client → independent cwnd.
       connectionTimeout: 10_000,
-      requestTimeout: 600_000, // 10 min – accommodate large chunks on slow links
+      requestTimeout: 600_000,
       ...(isHttp ? { httpAgent: agent } : { httpsAgent: agent }),
     }),
   });
-}
-
-async function downloadChunk({
-  client,
-  bucket,
-  key,
-  start,
-  end,
-  fd,
-}: {
-  client: S3Client;
-  bucket: string;
-  key: string;
-  start: number;
-  end: number;
-  fd: fs.promises.FileHandle;
-}): Promise<number> {
-  const range = `bytes=${start}-${end}`;
-  core.debug(`Fetching range ${range}`);
-
-  const response = await client.send(
-    new GetObjectCommand({
-      Bucket: bucket,
-      Key: key,
-      Range: range,
-    }),
-  );
-
-  const body = response.Body as Readable;
-
-  // Collect all incoming network chunks into a single contiguous buffer, then
-  // issue ONE fd.write() for the entire chunk.  This avoids thousands of tiny
-  // async write syscalls (one per ~16 KB stream event) which serialise network
-  // and disk I/O and dominate CPU at 10 Gbps line rates.
-  const parts: Buffer[] = [];
-  let totalBytes = 0;
-  for await (const piece of body) {
-    const buf = Buffer.isBuffer(piece) ? piece : Buffer.from(piece);
-    parts.push(buf);
-    totalBytes += buf.byteLength;
-  }
-
-  const combined = parts.length === 1 ? parts[0] : Buffer.concat(parts, totalBytes);
-  await fd.write(combined, 0, combined.byteLength, start);
-
-  return combined.byteLength;
 }
 
 async function singleStreamDownload({
@@ -234,8 +232,8 @@ async function preallocateFile(filePath: string, size: number): Promise<void> {
 function buildChunks(
   fileSize: number,
   chunkSize: number,
-): { start: number; end: number }[] {
-  const chunks: { start: number; end: number }[] = [];
+): ChunkRange[] {
+  const chunks: ChunkRange[] = [];
   let start = 0;
   while (start < fileSize) {
     const end = Math.min(start + chunkSize - 1, fileSize - 1);
@@ -243,6 +241,13 @@ function buildChunks(
     start = end + 1;
   }
   return chunks;
+}
+
+/** Splits `items` into `n` roughly-equal sub-arrays (round-robin). */
+function partition<T>(items: T[], n: number): T[][] {
+  const buckets: T[][] = Array.from({ length: n }, () => []);
+  items.forEach((item, i) => buckets[i % n].push(item));
+  return buckets.filter((b) => b.length > 0);
 }
 
 function formatBytes(bytes: number): string {

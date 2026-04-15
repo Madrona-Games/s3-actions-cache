@@ -1,9 +1,15 @@
 import { CompressionMethod } from "@actions/cache/lib/internal/constants";
 import * as utils from "@actions/cache/lib/internal/cacheUtils";
 import * as core from "@actions/core";
-import * as minio from "minio";
+import {
+  S3Client,
+  ListObjectsV2Command,
+  _Object,
+} from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 import { State } from "./state";
-import path from "path";
+import path from "node:path";
+import fs from "node:fs";
 import { createTar, listTar } from "@actions/cache/lib/internal/tar";
 import * as cache from "@actions/cache";
 
@@ -19,13 +25,11 @@ export function getInput(key: string, envKey?: string) {
   if (envKey) {
     result = process.env[envKey];
   }
-  if (result === undefined) {
-    result = core.getInput(key);
-  }
+  result ??= core.getInput(key);
   return result;
 }
 
-export function newMinio({
+export function newS3Client({
   accessKey,
   secretKey,
   sessionToken,
@@ -35,16 +39,29 @@ export function newMinio({
   secretKey?: string;
   sessionToken?: string;
   region?: string;
-} = {}) {
-  return new minio.Client({
-    endPoint: core.getInput("endpoint"),
-    port: getInputAsInt("port"),
-    useSSL: !getInputAsBoolean("insecure"),
-    accessKey: accessKey ?? getInput("accessKey", "AWS_ACCESS_KEY_ID"),
-    secretKey: secretKey ?? getInput("secretKey", "AWS_SECRET_ACCESS_KEY"),
-    sessionToken: sessionToken ?? getInput("sessionToken", "AWS_SESSION_TOKEN"),
-    region: region ?? getInput("region", "AWS_REGION"),
-    partSize: (getInputAsInt("partSize") ?? 256) * 1024 * 1024,
+} = {}): S3Client {
+  const endPoint = core.getInput("endpoint");
+  const port = getInputAsInt("port");
+  const insecure = getInputAsBoolean("insecure");
+  const protocol = insecure ? "http" : "https";
+  const endpoint = port
+    ? `${protocol}://${endPoint}:${port}`
+    : `${protocol}://${endPoint}`;
+
+  const resolvedRegion =
+    region ?? (getInput("region", "AWS_REGION") || "us-east-1");
+
+  return new S3Client({
+    endpoint,
+    region: resolvedRegion,
+    forcePathStyle: true,
+    credentials: {
+      accessKeyId: accessKey ?? getInput("accessKey", "AWS_ACCESS_KEY_ID") ?? "",
+      secretAccessKey:
+        secretKey ?? getInput("secretKey", "AWS_SECRET_ACCESS_KEY") ?? "",
+      sessionToken:
+        sessionToken ?? (getInput("sessionToken", "AWS_SESSION_TOKEN") || undefined),
+    },
   });
 }
 
@@ -70,8 +87,8 @@ export function getInputAsInt(
   name: string,
   options?: core.InputOptions,
 ): number | undefined {
-  const value = parseInt(core.getInput(name, options));
-  if (isNaN(value) || value < 0) {
+  const value = Number.parseInt(core.getInput(name, options));
+  if (Number.isNaN(value) || value < 0) {
     return undefined;
   }
   return value;
@@ -82,7 +99,7 @@ export function formatSize(value?: number, format = "bi") {
   const [multiple, k, suffix] = (
     format === "bi" ? [1000, "k", "B"] : [1024, "K", "iB"]
   ) as [number, string, string];
-  const exp = (Math.log(value) / Math.log(multiple)) | 0;
+  const exp = Math.trunc(Math.log(value) / Math.log(multiple));
   const size = Number((value / Math.pow(multiple, exp)).toFixed(2));
   return (
     size +
@@ -99,12 +116,12 @@ export function setCacheSizeOutput(cacheSize: number): void {
 }
 
 type FindObjectResult = {
-  item: minio.BucketItem;
+  item: _Object;
   matchingKey: string;
 };
 
 export async function findObject(
-  mc: minio.Client,
+  client: S3Client,
   bucket: string,
   key: string,
   restoreKeys: string[],
@@ -114,7 +131,7 @@ export async function findObject(
   core.debug("Restore keys: " + JSON.stringify(restoreKeys));
 
   core.debug(`Finding exact macth for: ${key}`);
-  const exactMatch = await listObjects(mc, bucket, key);
+  const exactMatch = await listObjects(client, bucket, key);
   core.debug(`Found ${JSON.stringify(exactMatch, null, 2)}`);
   if (exactMatch.length) {
     const result = { item: exactMatch[0], matchingKey: key };
@@ -125,14 +142,15 @@ export async function findObject(
   for (const restoreKey of restoreKeys) {
     const fn = utils.getCacheFileName(compressionMethod);
     core.debug(`Finding object with prefix: ${restoreKey}`);
-    let objects = await listObjects(mc, bucket, restoreKey);
-    objects = objects.filter((o) => o.name!.includes(fn));
+    let objects = await listObjects(client, bucket, restoreKey);
+    objects = objects.filter((o) => o.Key!.includes(fn));
     core.debug(`Found ${JSON.stringify(objects, null, 2)}`);
     if (objects.length < 1) {
       continue;
     }
-    const sorted = objects.sort(
-      (a, b) => b.lastModified!.getTime() - a.lastModified!.getTime(),
+    const sorted = objects.toSorted(
+      (a, b) =>
+        (b.LastModified?.getTime() ?? 0) - (a.LastModified?.getTime() ?? 0),
     );
     const result = { item: sorted[0], matchingKey: restoreKey };
     core.debug(`Using latest ${JSON.stringify(result)}`);
@@ -141,35 +159,31 @@ export async function findObject(
   throw new Error("Cache item not found");
 }
 
-export function listObjects(
-  mc: minio.Client,
+export async function listObjects(
+  client: S3Client,
   bucket: string,
   prefix: string,
-): Promise<minio.BucketItem[]> {
-  return new Promise((resolve, reject) => {
-    const h = mc.listObjectsV2(bucket, prefix, true);
-    const r: minio.BucketItem[] = [];
-    let resolved = false;
-    const timeout = setTimeout(() => {
-      if (!resolved) {
-        reject(new Error("list objects no result after 10 seconds"));
-      }
-    }, 10000);
+): Promise<_Object[]> {
+  const results: _Object[] = [];
+  let continuationToken: string | undefined;
 
-    h.on("data", (obj) => {
-      r.push(obj);
-    });
-    h.on("error", (e) => {
-      resolved = true;
-      reject(e);
-      clearTimeout(timeout);
-    });
-    h.on("end", () => {
-      resolved = true;
-      resolve(r);
-      clearTimeout(timeout);
-    });
-  });
+  do {
+    const response = await client.send(
+      new ListObjectsV2Command({
+        Bucket: bucket,
+        Prefix: prefix,
+        ContinuationToken: continuationToken,
+      }),
+    );
+    if (response.Contents) {
+      results.push(...response.Contents);
+    }
+    continuationToken = response.IsTruncated
+      ? response.NextContinuationToken
+      : undefined;
+  } while (continuationToken);
+
+  return results;
 }
 
 export function saveMatchedKey(matchedKey: string) {
@@ -206,7 +220,7 @@ export async function saveCache(standalone: boolean) {
     const paths = getInputAsArray("path");
 
     try {
-      const mc = newMinio({
+      const client = newS3Client({
         // Inputs are re-evaluted before the post action, so we want the original keys & tokens
         accessKey: standalone
           ? getInput("accessKey", "AWS_ACCESS_KEY_ID")
@@ -242,9 +256,23 @@ export async function saveCache(standalone: boolean) {
       }
 
       const object = path.join(key, cacheFileName).replaceAll("\\", "/");
+      const partSize = (getInputAsInt("partSize") ?? 256) * 1024 * 1024;
 
       core.info(`Uploading tar to s3. Bucket: ${bucket}, Object: ${object}`);
-      await mc.fPutObject(bucket, object, archivePath, {});
+
+      const fileStream = fs.createReadStream(archivePath);
+      const upload = new Upload({
+        client,
+        params: {
+          Bucket: bucket,
+          Key: object,
+          Body: fileStream,
+        },
+        partSize,
+        leavePartsOnError: false,
+      });
+      await upload.done();
+
       core.info("Cache saved to s3 successfully");
     } catch (e) {
       core.info("Save s3 cache failed: " + e.message + "\n" + e.stack);

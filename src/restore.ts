@@ -2,7 +2,11 @@ import * as cache from "@actions/cache";
 import * as utils from "@actions/cache/lib/internal/cacheUtils";
 import { extractTar, listTar } from "@actions/cache/lib/internal/tar";
 import * as core from "@actions/core";
-import * as path from "path";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import * as path from "node:path";
+import fs from "node:fs";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
 import { State } from "./state";
 import {
   findObject,
@@ -11,7 +15,7 @@ import {
   getInputAsArray,
   getInputAsBoolean,
   isGhes,
-  newMinio,
+  newS3Client,
   saveMatchedKey,
   setCacheHitOutput,
   setCacheSizeOutput,
@@ -47,7 +51,7 @@ async function restoreCache() {
       );
       core.saveState(State.Region, getInput("region", "AWS_REGION"));
 
-      const mc = newMinio();
+      const client = newS3Client();
 
       const compressionMethod = await utils.getCompressionMethod();
       const cacheFileName = utils.getCacheFileName(compressionMethod);
@@ -57,7 +61,7 @@ async function restoreCache() {
       ).replaceAll("\\", "/");
 
       const { item: obj, matchingKey } = await findObject(
-        mc,
+        client,
         bucket,
         key,
         restoreKeys,
@@ -66,19 +70,28 @@ async function restoreCache() {
       core.debug("found cache object");
       saveMatchedKey(matchingKey);
       core.info(
-        `Downloading cache from s3 to ${archivePath}. bucket: ${bucket}, object: ${obj.name}`,
+        `Downloading cache from s3 to ${archivePath}. bucket: ${bucket}, object: ${obj.Key}`,
       );
-      await mc.fGetObject(bucket, obj.name!, archivePath);
+
+      const response = await client.send(
+        new GetObjectCommand({
+          Bucket: bucket,
+          Key: obj.Key!,
+        }),
+      );
+
+      const writeStream = fs.createWriteStream(archivePath);
+      await pipeline(response.Body as Readable, writeStream);
 
       if (core.isDebug()) {
         await listTar(archivePath, compressionMethod);
       }
 
-      core.info(`Cache Size: ${formatSize(obj.size)} (${obj.size} bytes)`);
+      core.info(`Cache Size: ${formatSize(obj.Size)} (${obj.Size} bytes)`);
 
       await extractTar(archivePath, compressionMethod);
       setCacheHitOutput(matchingKey === key);
-      setCacheSizeOutput(obj.size);
+      setCacheSizeOutput(obj.Size!);
       core.info("Cache restored from s3 successfully");
     } catch (e) {
       core.info("Restore s3 cache failed: " + e.message);

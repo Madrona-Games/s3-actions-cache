@@ -96210,7 +96210,7 @@ function getInputAsInt(name, options) {
 }
 
 // src/s3-client.ts
-function newS3Client({
+function newS3ClientConfig({
   accessKey,
   secretKey,
   sessionToken,
@@ -96222,7 +96222,7 @@ function newS3Client({
   const protocol = insecure ? "http" : "https";
   const endpoint = port ? `${protocol}://${endPoint}:${port}` : `${protocol}://${endPoint}`;
   const resolvedRegion = region || getInput2("region", "AWS_REGION") || "us-east-1";
-  return new import_client_s3.S3Client({
+  return {
     endpoint,
     region: resolvedRegion,
     forcePathStyle: true,
@@ -96231,7 +96231,10 @@ function newS3Client({
       secretAccessKey: secretKey ?? getInput2("secretKey", "AWS_SECRET_ACCESS_KEY") ?? "",
       sessionToken: sessionToken ?? (getInput2("sessionToken", "AWS_SESSION_TOKEN") || void 0)
     }
-  });
+  };
+}
+function newS3Client(options = {}) {
+  return new import_client_s3.S3Client(newS3ClientConfig(options));
 }
 
 // src/output.ts

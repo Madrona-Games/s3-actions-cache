@@ -3,12 +3,15 @@ import * as utils from "@actions/cache/lib/internal/cacheUtils";
 import * as core from "@actions/core";
 import {
   S3Client,
+  S3ClientConfig,
   ListObjectsV2Command,
   _Object,
 } from "@aws-sdk/client-s3";
 import { getInput, getInputAsInt, getInputAsBoolean } from "./input";
 
-export function newS3Client({
+export type S3BaseConfig = Omit<S3ClientConfig, "requestHandler">;
+
+export function newS3ClientConfig({
   accessKey,
   secretKey,
   sessionToken,
@@ -18,7 +21,7 @@ export function newS3Client({
   secretKey?: string;
   sessionToken?: string;
   region?: string;
-} = {}): S3Client {
+} = {}): S3BaseConfig {
   const endPoint = core.getInput("endpoint");
   const port = getInputAsInt("port");
   const insecure = getInputAsBoolean("insecure");
@@ -30,7 +33,7 @@ export function newS3Client({
   const resolvedRegion =
     region || getInput("region", "AWS_REGION") || "us-east-1";
 
-  return new S3Client({
+  return {
     endpoint,
     region: resolvedRegion,
     forcePathStyle: true,
@@ -41,7 +44,16 @@ export function newS3Client({
       sessionToken:
         sessionToken ?? (getInput("sessionToken", "AWS_SESSION_TOKEN") || undefined),
     },
-  });
+  };
+}
+
+export function newS3Client(options: {
+  accessKey?: string;
+  secretKey?: string;
+  sessionToken?: string;
+  region?: string;
+} = {}): S3Client {
+  return new S3Client(newS3ClientConfig(options));
 }
 
 type FindObjectResult = {

@@ -89,6 +89,12 @@ describe("restore", () => {
     }));
     vi.doMock("../src/s3-client", () => ({
       newS3Client: vi.fn().mockReturnValue({ send: mockSend }),
+      newS3ClientConfig: vi.fn().mockReturnValue({
+        endpoint: "https://s3.amazonaws.com",
+        region: "us-east-1",
+        forcePathStyle: true,
+        credentials: { accessKeyId: "test-access", secretAccessKey: "test-secret" },
+      }),
       findObject: findObjectMock,
     }));
     vi.doMock("../src/save-cache", () => ({

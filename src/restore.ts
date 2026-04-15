@@ -9,6 +9,7 @@ import { saveMatchedKey } from "./save-cache";
 import { formatSize, isGhes, setCacheHitOutput, setCacheSizeOutput } from "./output";
 import { getInput, getInputAsArray, getInputAsBoolean, getInputAsInt } from "./input";
 import { parallelDownload } from "./download";
+import { newS3ClientConfig } from "./s3-client";
 
 process.on(
   "uncaughtException",
@@ -40,6 +41,7 @@ async function restoreCache() {
       );
       core.saveState(State.Region, getInput("region", "AWS_REGION"));
 
+      const clientConfig = newS3ClientConfig();
       const client = newS3Client();
 
       const compressionMethod = await utils.getCompressionMethod();
@@ -66,7 +68,7 @@ async function restoreCache() {
       const chunkSizeMB = getInputAsInt("partSize") ?? 256;
 
       await parallelDownload({
-        client,
+        clientConfig,
         bucket,
         key: obj.Key!,
         filePath: archivePath,

@@ -28462,7 +28462,7 @@ var require_dist_cjs10 = __commonJS({
     var DEFAULT_REQUEST_TIMEOUT = 0;
     var hAgent = void 0;
     var hRequest = void 0;
-    var NodeHttpHandler = class _NodeHttpHandler {
+    var NodeHttpHandler2 = class _NodeHttpHandler {
       config;
       configProvider;
       socketWarningTimestamp = 0;
@@ -28992,7 +28992,7 @@ or increase socketAcquisitionWarningTimeout=(millis) in the NodeHttpHandler conf
     }
     exports2.DEFAULT_REQUEST_TIMEOUT = DEFAULT_REQUEST_TIMEOUT;
     exports2.NodeHttp2Handler = NodeHttp2Handler;
-    exports2.NodeHttpHandler = NodeHttpHandler;
+    exports2.NodeHttpHandler = NodeHttpHandler2;
     exports2.streamCollector = streamCollector5;
   }
 });
@@ -95648,7 +95648,7 @@ function getInputAsInt(name, options) {
 }
 
 // src/s3-client.ts
-function newS3Client({
+function newS3ClientConfig({
   accessKey,
   secretKey,
   sessionToken,
@@ -95660,7 +95660,7 @@ function newS3Client({
   const protocol = insecure ? "http" : "https";
   const endpoint = port ? `${protocol}://${endPoint}:${port}` : `${protocol}://${endPoint}`;
   const resolvedRegion = region || getInput2("region", "AWS_REGION") || "us-east-1";
-  return new import_client_s3.S3Client({
+  return {
     endpoint,
     region: resolvedRegion,
     forcePathStyle: true,
@@ -95669,7 +95669,10 @@ function newS3Client({
       secretAccessKey: secretKey ?? getInput2("secretKey", "AWS_SECRET_ACCESS_KEY") ?? "",
       sessionToken: sessionToken ?? (getInput2("sessionToken", "AWS_SESSION_TOKEN") || void 0)
     }
-  });
+  };
+}
+function newS3Client(options = {}) {
+  return new import_client_s3.S3Client(newS3ClientConfig(options));
 }
 async function findObject(client, bucket, key, restoreKeys, compressionMethod) {
   debug("Key: " + JSON.stringify(key));
@@ -95750,11 +95753,12 @@ function saveMatchedKey(matchedKey) {
 
 // src/download.ts
 var import_client_s32 = __toESM(require_dist_cjs71());
+var import_node_http_handler5 = __toESM(require_dist_cjs10());
 var import_node_fs2 = __toESM(require("node:fs"));
 var import_promises = require("node:stream/promises");
 var PROGRESS_INTERVAL_MS = 5e3;
 async function parallelDownload({
-  client,
+  clientConfig,
   bucket,
   key,
   filePath,
@@ -95764,15 +95768,25 @@ async function parallelDownload({
 }) {
   if (!fileSize || fileSize <= 0) {
     debug("Object size unknown, falling back to single-stream download");
-    await singleStreamDownload({ client, bucket, key, filePath });
+    const client = makeWorkerClient(clientConfig);
+    try {
+      await singleStreamDownload({ client, bucket, key, filePath });
+    } finally {
+      client.destroy();
+    }
     return;
   }
   const chunkSize = chunkSizeMB * 1024 * 1024;
   const chunks = buildChunks(fileSize, chunkSize);
+  const workerCount = Math.min(concurrency, chunks.length);
   info(
-    `Downloading ${chunks.length} chunks of ${chunkSizeMB} MB each with concurrency ${concurrency}`
+    `Downloading ${chunks.length} chunks (${chunkSizeMB} MB each) with ${workerCount} independent TCP streams`
   );
   await preallocateFile(filePath, fileSize);
+  const workerClients = Array.from(
+    { length: workerCount },
+    () => makeWorkerClient(clientConfig)
+  );
   let bytesDownloaded = 0;
   const progressTimer = setInterval(() => {
     const pct = (bytesDownloaded / fileSize * 100).toFixed(1);
@@ -95785,19 +95799,26 @@ async function parallelDownload({
     try {
       let chunkIndex = 0;
       const inFlight = /* @__PURE__ */ new Set();
-      const launchNext = () => {
+      const launchNext = (workerClient) => {
         if (chunkIndex >= chunks.length) return;
         const { start, end } = chunks[chunkIndex++];
-        const p5 = downloadChunk({ client, bucket, key, start, end, fd }).then((bytes) => {
+        const p5 = downloadChunk({
+          client: workerClient,
+          bucket,
+          key,
+          start,
+          end,
+          fd
+        }).then((bytes) => {
           bytesDownloaded += bytes;
         }).finally(() => {
           inFlight.delete(p5);
-          launchNext();
+          launchNext(workerClient);
         });
         inFlight.add(p5);
       };
-      for (let i5 = 0; i5 < concurrency && i5 < chunks.length; i5++) {
-        launchNext();
+      for (const workerClient of workerClients) {
+        launchNext(workerClient);
       }
       while (inFlight.size > 0) {
         await Promise.race(inFlight);
@@ -95807,8 +95828,23 @@ async function parallelDownload({
     }
   } finally {
     clearInterval(progressTimer);
+    for (const c5 of workerClients) {
+      c5.destroy();
+    }
   }
   info(`Download complete: ${formatBytes(fileSize)}`);
+}
+function makeWorkerClient(baseConfig) {
+  return new import_client_s32.S3Client({
+    ...baseConfig,
+    requestHandler: new import_node_http_handler5.NodeHttpHandler({
+      // Each worker only ever sends one request at a time, so 1 socket is enough.
+      // The OS assigns a distinct TCP 4-tuple per client → independent cwnd.
+      connectionTimeout: 1e4,
+      requestTimeout: 6e5
+      // 10 min – accommodate large chunks on slow links
+    })
+  });
 }
 async function downloadChunk({
   client,
@@ -95900,6 +95936,7 @@ async function restoreCache2() {
         getInput2("sessionToken", "AWS_SESSION_TOKEN")
       );
       saveState("region" /* Region */, getInput2("region", "AWS_REGION"));
+      const clientConfig = newS3ClientConfig();
       const client = newS3Client();
       const compressionMethod = await getCompressionMethod();
       const cacheFileName = getCacheFileName(compressionMethod);
@@ -95922,7 +95959,7 @@ async function restoreCache2() {
       const downloadConcurrency = getInputAsInt("downloadConcurrency") ?? 16;
       const chunkSizeMB = getInputAsInt("partSize") ?? 256;
       await parallelDownload({
-        client,
+        clientConfig,
         bucket,
         key: obj.Key,
         filePath: archivePath,

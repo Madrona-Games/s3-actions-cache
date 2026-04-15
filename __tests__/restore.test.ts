@@ -51,6 +51,7 @@ describe("restore", () => {
     findObjectError?: Error;
     sendResult?: any;
     coreMock?: ReturnType<typeof createCoreMock>;
+    restoreCacheMock?: ReturnType<typeof vi.fn>;
   } = {}) {
     const coreMock = overrides.coreMock ?? createCoreMock();
     const mockSend = vi.fn().mockResolvedValue(
@@ -71,10 +72,11 @@ describe("restore", () => {
           },
         );
     const saveMatchedKeyMock = vi.fn();
+    const restoreCacheMock = overrides.restoreCacheMock ?? vi.fn();
 
     vi.doMock("@actions/core", () => coreMock);
     vi.doMock("@actions/cache", () => ({
-      restoreCache: vi.fn(),
+      restoreCache: restoreCacheMock,
     }));
     vi.doMock("@actions/cache/lib/internal/cacheUtils", () => ({
       getCompressionMethod: vi.fn().mockResolvedValue("zstd"),
@@ -107,7 +109,7 @@ describe("restore", () => {
       pipeline: vi.fn().mockResolvedValue(undefined),
     }));
 
-    return { coreMock, mockSend, findObjectMock, saveMatchedKeyMock };
+    return { coreMock, mockSend, findObjectMock, saveMatchedKeyMock, restoreCacheMock };
   }
 
   it("saves state for primary key and credentials on successful restore", async () => {
@@ -238,17 +240,13 @@ describe("restore", () => {
   it("uses fallback cache when enabled and s3 restore fails", async () => {
     setInput("use-fallback", "true");
 
-    const { coreMock } = createBaseMocks({
-      findObjectError: new Error("Cache item not found"),
-    });
-
     // Ensure not GHES
     process.env["GITHUB_SERVER_URL"] = "https://github.com";
 
-    const restoreCacheMock = vi.fn().mockResolvedValue("test-key");
-    vi.doMock("@actions/cache", () => ({
-      restoreCache: restoreCacheMock,
-    }));
+    const { coreMock, restoreCacheMock } = createBaseMocks({
+      findObjectError: new Error("Cache item not found"),
+      restoreCacheMock: vi.fn().mockResolvedValue("test-key"),
+    });
 
     await import("../src/restore");
 
@@ -266,11 +264,8 @@ describe("restore", () => {
 
     const { coreMock } = createBaseMocks({
       findObjectError: new Error("Cache item not found"),
+      restoreCacheMock: vi.fn().mockResolvedValue("test-key"),
     });
-
-    vi.doMock("@actions/cache", () => ({
-      restoreCache: vi.fn().mockResolvedValue("test-key"),
-    }));
 
     await import("../src/restore");
 
@@ -286,11 +281,8 @@ describe("restore", () => {
 
     const { coreMock } = createBaseMocks({
       findObjectError: new Error("Cache item not found"),
+      restoreCacheMock: vi.fn().mockResolvedValue(undefined),
     });
-
-    vi.doMock("@actions/cache", () => ({
-      restoreCache: vi.fn().mockResolvedValue(undefined),
-    }));
 
     await import("../src/restore");
 

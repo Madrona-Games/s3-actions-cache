@@ -81,76 +81,6 @@ jobs:
             exit 1
           fi
 
-  e2e-save-restore:
-    name: E2E Save & Restore
-    needs: [unit-tests, build]
-    runs-on: ubuntu-latest
-    env:
-      AWS_DEFAULT_REGION: us-east-1
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Start RustFS
-        run: docker compose up -d --wait
-
-      - name: Create test bucket
-        run: aws --endpoint-url http://localhost:9000 s3 mb s3://actions-cache
-        env:
-          AWS_ACCESS_KEY_ID: rustfsadmin
-          AWS_SECRET_ACCESS_KEY: rustfsadmin
-
-      - name: Generate files in working directory
-        run: scripts/create-cache-files.sh ${{ runner.os }} test-cache
-
-      - name: Generate files outside working directory
-        run: scripts/create-cache-files.sh ${{ runner.os }} ~/test-cache
-
-      - name: Save cache
-        uses: ./
-        with:
-          endpoint: localhost
-          port: "9000"
-          insecure: true
-          accessKey: "rustfsadmin"
-          secretKey: "rustfsadmin"
-          bucket: actions-cache
-          use-fallback: false
-          key: test-${{ runner.os }}-${{ github.run_id }}
-          path: |
-            test-cache
-            ~/test-cache
-
-      - name: Remove cached files
-        run: |
-          rm -rf test-cache
-          rm -rf ~/test-cache
-
-      - name: Restore cache
-        uses: ./
-        with:
-          endpoint: localhost
-          port: "9000"
-          insecure: true
-          accessKey: "rustfsadmin"
-          secretKey: "rustfsadmin"
-          bucket: actions-cache
-          use-fallback: false
-          key: test-${{ runner.os }}-${{ github.run_id }}
-          path: |
-            test-cache
-            ~/test-cache
-
-      - name: Verify cache files in working directory
-        run: scripts/verify-cache-files.sh ${{ runner.os }} test-cache
-
-      - name: Verify cache files outside working directory
-        run: scripts/verify-cache-files.sh ${{ runner.os }} ~/test-cache
-
-      - name: Stop RustFS
-        if: always()
-        run: docker compose down
-
   e2e-restore-keys:
     name: E2E Restore Keys
     needs: [unit-tests, build]
@@ -177,7 +107,7 @@ jobs:
         run: scripts/create-cache-files.sh ${{ runner.os }} ~/test-cache
 
       - name: Save cache
-        uses: ./
+        uses: ./save/
         with:
           endpoint: localhost
           port: "9000"
@@ -197,7 +127,7 @@ jobs:
           rm -rf ~/test-cache
 
       - name: Restore cache with restore keys
-        uses: ./
+        uses: ./restore/
         with:
           endpoint: localhost
           port: "9000"

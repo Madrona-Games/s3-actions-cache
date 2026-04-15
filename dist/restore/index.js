@@ -39,8 +39,8 @@ var require_tunnel = __commonJS({
     "use strict";
     var net = require("net");
     var tls = require("tls");
-    var http3 = require("http");
-    var https3 = require("https");
+    var http4 = require("http");
+    var https4 = require("https");
     var events2 = require("events");
     var assert = require("assert");
     var util5 = require("util");
@@ -50,24 +50,24 @@ var require_tunnel = __commonJS({
     exports2.httpsOverHttps = httpsOverHttps2;
     function httpOverHttp2(options) {
       var agent = new TunnelingAgent(options);
-      agent.request = http3.request;
+      agent.request = http4.request;
       return agent;
     }
     function httpsOverHttp2(options) {
       var agent = new TunnelingAgent(options);
-      agent.request = http3.request;
+      agent.request = http4.request;
       agent.createSocket = createSecureSocket;
       agent.defaultPort = 443;
       return agent;
     }
     function httpOverHttps2(options) {
       var agent = new TunnelingAgent(options);
-      agent.request = https3.request;
+      agent.request = https4.request;
       return agent;
     }
     function httpsOverHttps2(options) {
       var agent = new TunnelingAgent(options);
-      agent.request = https3.request;
+      agent.request = https4.request;
       agent.createSocket = createSecureSocket;
       agent.defaultPort = 443;
       return agent;
@@ -76,7 +76,7 @@ var require_tunnel = __commonJS({
       var self2 = this;
       self2.options = options || {};
       self2.proxyOptions = self2.options.proxy || {};
-      self2.maxSockets = self2.options.maxSockets || http3.Agent.defaultMaxSockets;
+      self2.maxSockets = self2.options.maxSockets || http4.Agent.defaultMaxSockets;
       self2.requests = [];
       self2.sockets = [];
       self2.on("free", function onFree(socket, host, port, localAddress) {
@@ -7405,7 +7405,7 @@ var require_client = __commonJS({
     "use strict";
     var assert = require("node:assert");
     var net = require("node:net");
-    var http3 = require("node:http");
+    var http4 = require("node:http");
     var util5 = require_util();
     var { channels } = require_diagnostics();
     var Request2 = require_request();
@@ -7593,7 +7593,7 @@ var require_client = __commonJS({
         this[kUrl] = util5.parseOrigin(url2);
         this[kConnector] = connect2;
         this[kPipelining] = pipelining != null ? pipelining : 1;
-        this[kMaxHeadersSize] = maxHeaderSize || http3.maxHeaderSize;
+        this[kMaxHeadersSize] = maxHeaderSize || http4.maxHeaderSize;
         this[kKeepAliveDefaultTimeout] = keepAliveTimeout == null ? 4e3 : keepAliveTimeout;
         this[kKeepAliveMaxTimeout] = keepAliveMaxTimeout == null ? 6e5 : keepAliveMaxTimeout;
         this[kKeepAliveTimeoutThreshold] = keepAliveTimeoutThreshold == null ? 2e3 : keepAliveTimeoutThreshold;
@@ -22256,8 +22256,8 @@ var require_helpers = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.req = exports2.json = exports2.toBuffer = void 0;
-    var http3 = __importStar2(require("http"));
-    var https3 = __importStar2(require("https"));
+    var http4 = __importStar2(require("http"));
+    var https4 = __importStar2(require("https"));
     async function toBuffer(stream2) {
       let length = 0;
       const chunks = [];
@@ -22282,7 +22282,7 @@ var require_helpers = __commonJS({
     exports2.json = json;
     function req(url2, opts = {}) {
       const href = typeof url2 === "string" ? url2 : url2.href;
-      const req2 = (href.startsWith("https:") ? https3 : http3).request(url2, opts);
+      const req2 = (href.startsWith("https:") ? https4 : http4).request(url2, opts);
       const promise = new Promise((resolve2, reject) => {
         req2.once("response", resolve2).once("error", reject).end();
       });
@@ -22330,11 +22330,11 @@ var require_dist = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Agent = void 0;
     var net = __importStar2(require("net"));
-    var http3 = __importStar2(require("http"));
+    var http4 = __importStar2(require("http"));
     var https_1 = require("https");
     __exportStar2(require_helpers(), exports2);
     var INTERNAL = /* @__PURE__ */ Symbol("AgentBaseInternalState");
-    var Agent3 = class extends http3.Agent {
+    var Agent3 = class extends http4.Agent {
       constructor(opts) {
         super(opts);
         this[INTERNAL] = {};
@@ -22406,7 +22406,7 @@ var require_dist = __commonJS({
         const fakeSocket = this.incrementSockets(name);
         Promise.resolve().then(() => this.connect(req, connectOpts)).then((socket) => {
           this.decrementSockets(name, fakeSocket);
-          if (socket instanceof http3.Agent) {
+          if (socket instanceof http4.Agent) {
             try {
               return socket.addRequest(req, connectOpts);
             } catch (err) {
@@ -51215,12 +51215,12 @@ var require_dist_cjs49 = __commonJS({
     var propertyProvider = require_dist_cjs41();
     var url2 = require("url");
     var buffer3 = require("buffer");
-    var http3 = require("http");
+    var http4 = require("http");
     var nodeConfigProvider = require_dist_cjs43();
     var urlParser = require_dist_cjs25();
     function httpRequest(options) {
       return new Promise((resolve2, reject) => {
-        const req = http3.request({
+        const req = http4.request({
           method: "GET",
           ...options,
           hostname: options.hostname?.replace(/^\[(.+)\]$/, "$1")
@@ -95755,6 +95755,8 @@ function saveMatchedKey(matchedKey) {
 var import_client_s32 = __toESM(require_dist_cjs71());
 var import_node_http_handler5 = __toESM(require_dist_cjs10());
 var import_node_fs2 = __toESM(require("node:fs"));
+var import_node_http2 = __toESM(require("node:http"));
+var import_node_https2 = __toESM(require("node:https"));
 var import_promises = require("node:stream/promises");
 var PROGRESS_INTERVAL_MS = 5e3;
 async function parallelDownload({
@@ -95763,7 +95765,7 @@ async function parallelDownload({
   key,
   filePath,
   fileSize,
-  chunkSizeMB = 256,
+  chunkSizeMB = 64,
   concurrency = 16
 }) {
   if (!fileSize || fileSize <= 0) {
@@ -95835,14 +95837,21 @@ async function parallelDownload({
   info(`Download complete: ${formatBytes(fileSize)}`);
 }
 function makeWorkerClient(baseConfig) {
+  const isHttp = baseConfig.endpoint?.startsWith("http://");
+  const AgentClass = isHttp ? import_node_http2.default.Agent : import_node_https2.default.Agent;
+  const agent = new AgentClass({
+    keepAlive: true,
+    maxSockets: 1
+  });
   return new import_client_s32.S3Client({
     ...baseConfig,
     requestHandler: new import_node_http_handler5.NodeHttpHandler({
       // Each worker only ever sends one request at a time, so 1 socket is enough.
       // The OS assigns a distinct TCP 4-tuple per client → independent cwnd.
       connectionTimeout: 1e4,
-      requestTimeout: 6e5
+      requestTimeout: 6e5,
       // 10 min – accommodate large chunks on slow links
+      ...isHttp ? { httpAgent: agent } : { httpsAgent: agent }
     })
   });
 }
@@ -95864,13 +95873,16 @@ async function downloadChunk({
     })
   );
   const body2 = response.Body;
-  let offset = start;
-  for await (const chunk of body2) {
-    const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-    await fd.write(buf, 0, buf.byteLength, offset);
-    offset += buf.byteLength;
+  const parts = [];
+  let totalBytes = 0;
+  for await (const piece of body2) {
+    const buf = Buffer.isBuffer(piece) ? piece : Buffer.from(piece);
+    parts.push(buf);
+    totalBytes += buf.byteLength;
   }
-  return offset - start;
+  const combined = parts.length === 1 ? parts[0] : Buffer.concat(parts, totalBytes);
+  await fd.write(combined, 0, combined.byteLength, start);
+  return combined.byteLength;
 }
 async function singleStreamDownload({
   client,

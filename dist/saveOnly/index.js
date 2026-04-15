@@ -96291,6 +96291,7 @@ async function saveCache3(standalone) {
       }
       const object = import_node_path.default.join(key, cacheFileName).replaceAll("\\", "/");
       const partSize = (getInputAsInt("partSize") ?? 256) * 1024 * 1024;
+      const uploadConcurrency = getInputAsInt("uploadConcurrency") ?? 16;
       info(`Uploading tar to s3. Bucket: ${bucket}, Object: ${object}`);
       const fileStream = import_node_fs2.default.createReadStream(archivePath);
       const upload = new import_lib_storage.Upload({
@@ -96301,7 +96302,16 @@ async function saveCache3(standalone) {
           Body: fileStream
         },
         partSize,
+        queueSize: uploadConcurrency,
         leavePartsOnError: false
+      });
+      upload.on("httpUploadProgress", (progress) => {
+        if (progress.loaded != null && progress.total != null) {
+          const pct = (progress.loaded / progress.total * 100).toFixed(1);
+          info(
+            `Upload progress: ${progress.loaded} / ${progress.total} bytes (${pct}%)`
+          );
+        }
       });
       await upload.done();
       info("Cache saved to s3 successfully");

@@ -1,61 +1,10 @@
-import * as core from "@actions/core";
-import * as cache from "@actions/cache";
-import * as utils from "@actions/cache/lib/internal/cacheUtils";
-import * as tar from "@actions/cache/lib/internal/tar";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { Readable } from "node:stream";
-import { State } from "../src/state";
 import { setInput } from "./testUtils";
-
-// Must mock modules before importing the module under test
-vi.mock("@actions/core");
-vi.mock("@actions/cache");
-vi.mock("@actions/cache/lib/internal/cacheUtils", () => ({
-  getCompressionMethod: vi.fn().mockResolvedValue("zstd"),
-  getCacheFileName: vi.fn().mockReturnValue("cache.tzst"),
-  createTempDirectory: vi.fn().mockResolvedValue("/tmp/cache-dir"),
-}));
-vi.mock("@actions/cache/lib/internal/tar", () => ({
-  extractTar: vi.fn().mockResolvedValue(undefined),
-  listTar: vi.fn().mockResolvedValue(undefined),
-}));
-
-const mockSend = vi.fn();
-vi.mock("../src/s3-client", () => ({
-  newS3Client: vi.fn().mockReturnValue({ send: mockSend }),
-  findObject: vi.fn(),
-}));
-vi.mock("../src/save-cache", () => ({
-  saveMatchedKey: vi.fn(),
-}));
-vi.mock("node:fs", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("node:fs")>();
-  return {
-    ...actual,
-    default: {
-      ...actual,
-      createWriteStream: vi.fn().mockReturnValue({
-        on: vi.fn(),
-        once: vi.fn(),
-        emit: vi.fn(),
-        write: vi.fn(),
-        end: vi.fn(),
-      }),
-    },
-  };
-});
-vi.mock("node:stream/promises", () => ({
-  pipeline: vi.fn().mockResolvedValue(undefined),
-}));
 
 describe("restore", () => {
   const originalEnv = process.env;
 
-  beforeEach(() => {
-    process.env = { ...originalEnv };
-    vi.clearAllMocks();
-
-    // Default inputs
+  function setupInputs() {
     setInput("bucket", "test-bucket");
     setInput("key", "test-key");
     setInput("path", "src");
@@ -69,58 +18,345 @@ describe("restore", () => {
     setInput("region", "us-east-1");
     setInput("sessionToken", "");
     setInput("partSize", "256");
+  }
+
+  beforeEach(() => {
+    process.env = { ...originalEnv };
+    vi.resetModules();
+    setupInputs();
   });
 
   afterEach(() => {
     process.env = originalEnv;
   });
 
-  it("saves state for primary key and credentials", async () => {
-    const { findObject } = await import("../src/s3-client");
-    vi.mocked(findObject).mockResolvedValue({
-      item: {
-        Key: "test-key/cache.tzst",
-        LastModified: new Date(),
-        Size: 1024,
+  function createCoreMock() {
+    return {
+      getInput: vi.fn().mockImplementation((name: string) => {
+        return (
+          process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || ""
+        );
+      }),
+      saveState: vi.fn(),
+      info: vi.fn(),
+      debug: vi.fn(),
+      setFailed: vi.fn(),
+      setOutput: vi.fn(),
+      isDebug: vi.fn().mockReturnValue(false),
+    };
+  }
+
+  function createBaseMocks(overrides: {
+    findObjectResult?: any;
+    findObjectError?: Error;
+    sendResult?: any;
+    coreMock?: ReturnType<typeof createCoreMock>;
+  } = {}) {
+    const coreMock = overrides.coreMock ?? createCoreMock();
+    const mockSend = vi.fn().mockResolvedValue(
+      overrides.sendResult ?? {
+        Body: Readable.from(Buffer.from("test-data")),
       },
-      matchingKey: "test-key",
-    });
+    );
+    const findObjectMock = overrides.findObjectError
+      ? vi.fn().mockRejectedValue(overrides.findObjectError)
+      : vi.fn().mockResolvedValue(
+          overrides.findObjectResult ?? {
+            item: {
+              Key: "test-key/cache.tzst",
+              LastModified: new Date(),
+              Size: 1024,
+            },
+            matchingKey: "test-key",
+          },
+        );
+    const saveMatchedKeyMock = vi.fn();
 
-    mockSend.mockResolvedValue({
-      Body: Readable.from(Buffer.from("test-data")),
-    });
-
-    // Dynamic import to trigger the module execution
-    // We need to reset modules to re-execute restore.ts
-    vi.resetModules();
-
-    // Re-setup mocks after reset
-    vi.doMock("@actions/core", () => {
-      const mCore = {
-        getInput: vi.fn().mockImplementation((name: string) => {
-          return process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
+    vi.doMock("@actions/core", () => coreMock);
+    vi.doMock("@actions/cache", () => ({
+      restoreCache: vi.fn(),
+    }));
+    vi.doMock("@actions/cache/lib/internal/cacheUtils", () => ({
+      getCompressionMethod: vi.fn().mockResolvedValue("zstd"),
+      getCacheFileName: vi.fn().mockReturnValue("cache.tzst"),
+      createTempDirectory: vi.fn().mockResolvedValue("/tmp/cache-dir"),
+    }));
+    vi.doMock("@actions/cache/lib/internal/tar", () => ({
+      extractTar: vi.fn().mockResolvedValue(undefined),
+      listTar: vi.fn().mockResolvedValue(undefined),
+    }));
+    vi.doMock("../src/s3-client", () => ({
+      newS3Client: vi.fn().mockReturnValue({ send: mockSend }),
+      findObject: findObjectMock,
+    }));
+    vi.doMock("../src/save-cache", () => ({
+      saveMatchedKey: saveMatchedKeyMock,
+    }));
+    vi.doMock("node:fs", () => ({
+      default: {
+        createWriteStream: vi.fn().mockReturnValue({
+          on: vi.fn(),
+          once: vi.fn(),
+          emit: vi.fn(),
+          write: vi.fn(),
+          end: vi.fn(),
         }),
-        saveState: vi.fn(),
-        info: vi.fn(),
-        debug: vi.fn(),
-        setFailed: vi.fn(),
-        setOutput: vi.fn(),
-        isDebug: vi.fn().mockReturnValue(false),
-      };
-      return mCore;
-    });
+      },
+    }));
+    vi.doMock("node:stream/promises", () => ({
+      pipeline: vi.fn().mockResolvedValue(undefined),
+    }));
 
-    // Since restore.ts executes on import, we test the individual functions instead
-    // The restore module auto-executes, so we test the building blocks
-    expect(true).toBe(true); // Placeholder - individual functions tested in other suites
+    return { coreMock, mockSend, findObjectMock, saveMatchedKeyMock };
+  }
+
+  it("saves state for primary key and credentials on successful restore", async () => {
+    const { coreMock } = createBaseMocks();
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.saveState).toHaveBeenCalledWith("primary-key", "test-key");
+      expect(coreMock.saveState).toHaveBeenCalledWith("access-key", "test-access");
+      expect(coreMock.saveState).toHaveBeenCalledWith("secret-key", "test-secret");
+      expect(coreMock.saveState).toHaveBeenCalledWith("session-token", "");
+      expect(coreMock.saveState).toHaveBeenCalledWith("region", "us-east-1");
+    });
+  });
+
+  it("downloads and extracts cache from s3", async () => {
+    const { coreMock, mockSend } = createBaseMocks();
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(mockSend).toHaveBeenCalled();
+      expect(coreMock.info).toHaveBeenCalledWith(
+        expect.stringContaining("Downloading cache from s3"),
+      );
+      expect(coreMock.info).toHaveBeenCalledWith(
+        "Cache restored from s3 successfully",
+      );
+    });
   });
 
   it("sets cache-hit output to true on exact key match", async () => {
-    const { setCacheHitOutput } = await import("../src/output");
-    const { default: output } = await import("../src/output");
+    const { coreMock } = createBaseMocks({
+      findObjectResult: {
+        item: {
+          Key: "test-key/cache.tzst",
+          LastModified: new Date(),
+          Size: 1024,
+        },
+        matchingKey: "test-key",
+      },
+    });
 
-    // The setCacheHitOutput function is tested in output.test.ts
-    // Here we verify the integration expectation
-    expect(true).toBe(true);
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.setOutput).toHaveBeenCalledWith("cache-hit", "true");
+    });
+  });
+
+  it("sets cache-hit output to false on partial key match", async () => {
+    const { coreMock } = createBaseMocks({
+      findObjectResult: {
+        item: {
+          Key: "restore-prefix/cache.tzst",
+          LastModified: new Date(),
+          Size: 512,
+        },
+        matchingKey: "restore-prefix",
+      },
+    });
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.setOutput).toHaveBeenCalledWith("cache-hit", "false");
+    });
+  });
+
+  it("sets cache-size output", async () => {
+    const { coreMock } = createBaseMocks({
+      findObjectResult: {
+        item: {
+          Key: "test-key/cache.tzst",
+          LastModified: new Date(),
+          Size: 2048,
+        },
+        matchingKey: "test-key",
+      },
+    });
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.setOutput).toHaveBeenCalledWith("cache-size", "2048");
+    });
+  });
+
+  it("calls saveMatchedKey with the matching key", async () => {
+    const { saveMatchedKeyMock } = createBaseMocks();
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(saveMatchedKeyMock).toHaveBeenCalledWith("test-key");
+    });
+  });
+
+  it("lists tar when debug is enabled", async () => {
+    const coreMock = createCoreMock();
+    coreMock.isDebug.mockReturnValue(true);
+    createBaseMocks({ coreMock });
+
+    await import("../src/restore");
+
+    const { listTar } = await import("@actions/cache/lib/internal/tar");
+    await vi.waitFor(() => {
+      expect(listTar).toHaveBeenCalled();
+    });
+  });
+
+  it("sets cache-hit to false when findObject fails", async () => {
+    const { coreMock } = createBaseMocks({
+      findObjectError: new Error("Cache item not found"),
+    });
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.setOutput).toHaveBeenCalledWith("cache-hit", "false");
+      expect(coreMock.info).toHaveBeenCalledWith(
+        expect.stringContaining("Restore s3 cache failed"),
+      );
+    });
+  });
+
+  it("uses fallback cache when enabled and s3 restore fails", async () => {
+    setInput("use-fallback", "true");
+
+    const { coreMock } = createBaseMocks({
+      findObjectError: new Error("Cache item not found"),
+    });
+
+    // Ensure not GHES
+    process.env["GITHUB_SERVER_URL"] = "https://github.com";
+
+    const restoreCacheMock = vi.fn().mockResolvedValue("test-key");
+    vi.doMock("@actions/cache", () => ({
+      restoreCache: restoreCacheMock,
+    }));
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(restoreCacheMock).toHaveBeenCalled();
+      expect(coreMock.info).toHaveBeenCalledWith(
+        "Restore cache using fallback cache",
+      );
+    });
+  });
+
+  it("sets cache-hit true when fallback matches exact key", async () => {
+    setInput("use-fallback", "true");
+    process.env["GITHUB_SERVER_URL"] = "https://github.com";
+
+    const { coreMock } = createBaseMocks({
+      findObjectError: new Error("Cache item not found"),
+    });
+
+    vi.doMock("@actions/cache", () => ({
+      restoreCache: vi.fn().mockResolvedValue("test-key"),
+    }));
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      // First call sets false (s3 failure), second sets true (fallback exact match)
+      expect(coreMock.setOutput).toHaveBeenCalledWith("cache-hit", "true");
+    });
+  });
+
+  it("reports fallback cache failure when no match found", async () => {
+    setInput("use-fallback", "true");
+    process.env["GITHUB_SERVER_URL"] = "https://github.com";
+
+    const { coreMock } = createBaseMocks({
+      findObjectError: new Error("Cache item not found"),
+    });
+
+    vi.doMock("@actions/cache", () => ({
+      restoreCache: vi.fn().mockResolvedValue(undefined),
+    }));
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.info).toHaveBeenCalledWith("Fallback cache restore failed");
+    });
+  });
+
+  it("warns when fallback is used on GHES", async () => {
+    setInput("use-fallback", "true");
+    process.env["GITHUB_SERVER_URL"] = "https://ghes.example.com";
+
+    const { coreMock } = createBaseMocks({
+      findObjectError: new Error("Cache item not found"),
+    });
+
+    // Need to add warning to the core mock
+    coreMock.warning = vi.fn();
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.warning).toHaveBeenCalledWith(
+        "Cache fallback is not supported on Github Enterpise.",
+      );
+    });
+  });
+
+  it("registers uncaughtException handler", async () => {
+    const processOnSpy = vi.spyOn(process, "on");
+
+    createBaseMocks();
+
+    await import("../src/restore");
+
+    expect(processOnSpy).toHaveBeenCalledWith(
+      "uncaughtException",
+      expect.any(Function),
+    );
+
+    processOnSpy.mockRestore();
+  });
+
+  it("calls setFailed when bucket input is missing and throws", async () => {
+    // Remove the bucket input to trigger the outer catch
+    delete process.env["INPUT_BUCKET"];
+
+    const coreMock = createCoreMock();
+    // Make getInput throw for required inputs
+    coreMock.getInput.mockImplementation((name: string, opts?: { required?: boolean }) => {
+      if (opts?.required && name === "bucket") {
+        throw new Error("Input required and not supplied: bucket");
+      }
+      return (
+        process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || ""
+      );
+    });
+
+    createBaseMocks({ coreMock });
+
+    await import("../src/restore");
+
+    await vi.waitFor(() => {
+      expect(coreMock.setFailed).toHaveBeenCalledWith(
+        "Input required and not supplied: bucket",
+      );
+    });
   });
 });

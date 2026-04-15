@@ -4,7 +4,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc && ncc build -o dist/restore src/restore.ts && ncc build -o dist/save src/save.ts && ncc build -o dist/saveOnly src/saveOnly.ts",
-    "test": "tsc --noEmit && vitest run --coverage"
+    "test": "tsc --noEmit && vitest run --coverage",
+    "test:unit": "tsc --noEmit && vitest run --coverage",
+    "test:integration": "vitest run --config vitest.config.integration.ts"
   },
   "dependencies": {
     "@actions/cache": "^6.0.0",

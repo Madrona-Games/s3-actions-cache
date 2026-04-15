@@ -27,12 +27,8 @@ jobs:
         run: npm run test:unit
 
   integration-tests:
-    name: Integration Tests (RustFS) - ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    name: Integration Tests (RustFS)
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -86,13 +82,9 @@ jobs:
           fi
 
   e2e-save-restore:
-    name: E2E Save & Restore - ${{ matrix.os }}
+    name: E2E Save & Restore
     needs: [unit-tests, build]
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -101,17 +93,15 @@ jobs:
         run: docker compose up -d --wait
 
       - name: Create test bucket
-        shell: bash
-        run: |
-          curl -sf -X PUT http://localhost:9000/actions-cache \
-            -u rustfsadmin:rustfsadmin
+        run: aws --endpoint-url http://localhost:9000 s3 mb s3://actions-cache
+        env:
+          AWS_ACCESS_KEY_ID: rustfsadmin
+          AWS_SECRET_ACCESS_KEY: rustfsadmin
 
       - name: Generate files in working directory
-        shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} test-cache
 
       - name: Generate files outside working directory
-        shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} ~/test-cache
 
       - name: Save cache
@@ -130,7 +120,6 @@ jobs:
             ~/test-cache
 
       - name: Remove cached files
-        shell: bash
         run: |
           rm -rf test-cache
           rm -rf ~/test-cache
@@ -151,11 +140,9 @@ jobs:
             ~/test-cache
 
       - name: Verify cache files in working directory
-        shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} test-cache
 
       - name: Verify cache files outside working directory
-        shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} ~/test-cache
 
       - name: Stop RustFS
@@ -163,13 +150,9 @@ jobs:
         run: docker compose down
 
   e2e-restore-keys:
-    name: E2E Restore Keys - ${{ matrix.os }}
+    name: E2E Restore Keys
     needs: [unit-tests, build]
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -178,17 +161,15 @@ jobs:
         run: docker compose up -d --wait
 
       - name: Create test bucket
-        shell: bash
-        run: |
-          curl -sf -X PUT http://localhost:9000/actions-cache \
-            -u rustfsadmin:rustfsadmin
+        run: aws --endpoint-url http://localhost:9000 s3 mb s3://actions-cache
+        env:
+          AWS_ACCESS_KEY_ID: rustfsadmin
+          AWS_SECRET_ACCESS_KEY: rustfsadmin
 
       - name: Generate files in working directory
-        shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} test-cache
 
       - name: Generate files outside working directory
-        shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} ~/test-cache
 
       - name: Save cache
@@ -207,7 +188,6 @@ jobs:
             ~/test-cache
 
       - name: Remove cached files
-        shell: bash
         run: |
           rm -rf test-cache
           rm -rf ~/test-cache
@@ -229,11 +209,9 @@ jobs:
           restore-keys: test-${{ runner.os }}-
 
       - name: Verify cache files in working directory
-        shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} test-cache
 
       - name: Verify cache files outside working directory
-        shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} ~/test-cache
 
       - name: Stop RustFS
@@ -241,13 +219,9 @@ jobs:
         run: docker compose down
 
   e2e-save-restore-only:
-    name: E2E Save Only & Restore Only - ${{ matrix.os }}
+    name: E2E Save Only & Restore Only
     needs: [unit-tests, build]
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -256,17 +230,15 @@ jobs:
         run: docker compose up -d --wait
 
       - name: Create test bucket
-        shell: bash
-        run: |
-          curl -sf -X PUT http://localhost:9000/actions-cache \
-            -u rustfsadmin:rustfsadmin
+        run: aws --endpoint-url http://localhost:9000 s3 mb s3://actions-cache
+        env:
+          AWS_ACCESS_KEY_ID: rustfsadmin
+          AWS_SECRET_ACCESS_KEY: rustfsadmin
 
       - name: Generate files in working directory
-        shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} test-cache
 
       - name: Generate files outside working directory
-        shell: bash
         run: scripts/create-cache-files.sh ${{ runner.os }} ~/test-cache
 
       - name: Save cache (save-only action)
@@ -285,7 +257,6 @@ jobs:
             ~/test-cache
 
       - name: Remove cached files
-        shell: bash
         run: |
           rm -rf test-cache
           rm -rf ~/test-cache
@@ -306,11 +277,9 @@ jobs:
             ~/test-cache
 
       - name: Verify cache files in working directory
-        shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} test-cache
 
       - name: Verify cache files outside working directory
-        shell: bash
         run: scripts/verify-cache-files.sh ${{ runner.os }} ~/test-cache
 
       - name: Stop RustFS

@@ -8,18 +8,10 @@ import fs from "node:fs";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { State } from "./state";
-import {
-  findObject,
-  formatSize,
-  getInput,
-  getInputAsArray,
-  getInputAsBoolean,
-  isGhes,
-  newS3Client,
-  saveMatchedKey,
-  setCacheHitOutput,
-  setCacheSizeOutput,
-} from "./utils";
+import { findObject, newS3Client } from "./s3-client";
+import { saveMatchedKey } from "./save-cache";
+import { formatSize, isGhes, setCacheHitOutput, setCacheSizeOutput } from "./output";
+import { getInput, getInputAsArray, getInputAsBoolean } from "./input";
 
 process.on(
   "uncaughtException",

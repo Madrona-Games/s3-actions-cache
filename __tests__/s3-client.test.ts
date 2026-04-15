@@ -1,8 +1,8 @@
 import { getCompressionMethod } from "@actions/cache/lib/internal/cacheUtils";
 import { S3Client } from "@aws-sdk/client-s3";
-import { findObject } from "./utils";
+import { findObject } from "../src/s3-client";
 
-describe("utils", () => {
+describe("s3-client", () => {
   test("getLatestObj", async () => {
     const client = new S3Client({
       endpoint: "https://play.min.io",

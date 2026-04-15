@@ -95662,7 +95662,7 @@ function newS3Client({
   const insecure = getInputAsBoolean("insecure");
   const protocol = insecure ? "http" : "https";
   const endpoint = port ? `${protocol}://${endPoint}:${port}` : `${protocol}://${endPoint}`;
-  const resolvedRegion = region ?? (getInput2("region", "AWS_REGION") || "us-east-1");
+  const resolvedRegion = region || getInput2("region", "AWS_REGION") || "us-east-1";
   return new import_client_s3.S3Client({
     endpoint,
     region: resolvedRegion,

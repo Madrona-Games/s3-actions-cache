@@ -28,7 +28,7 @@ export function newS3Client({
     : `${protocol}://${endPoint}`;
 
   const resolvedRegion =
-    region ?? (getInput("region", "AWS_REGION") || "us-east-1");
+    region || getInput("region", "AWS_REGION") || "us-east-1";
 
   return new S3Client({
     endpoint,

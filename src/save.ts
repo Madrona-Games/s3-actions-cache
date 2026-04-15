@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import { saveCache } from "./utils";
+import { saveCache } from "./save-cache";
 
 process.on(
     "uncaughtException",

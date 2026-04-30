@@ -31996,43 +31996,43 @@ var init_awsExpectUnion = __esm({
   }
 });
 
-// node_modules/@aws-sdk/xml-builder/node_modules/fast-xml-parser/lib/fxp.cjs
+// node_modules/fast-xml-parser/lib/fxp.cjs
 var require_fxp = __commonJS({
-  "node_modules/@aws-sdk/xml-builder/node_modules/fast-xml-parser/lib/fxp.cjs"(exports2, module2) {
+  "node_modules/fast-xml-parser/lib/fxp.cjs"(exports2, module2) {
     (() => {
       "use strict";
-      var t5 = { d: (e6, i6) => {
-        for (var n6 in i6) t5.o(i6, n6) && !t5.o(e6, n6) && Object.defineProperty(e6, n6, { enumerable: true, get: i6[n6] });
+      var t5 = { d: (e6, n6) => {
+        for (var i6 in n6) t5.o(n6, i6) && !t5.o(e6, i6) && Object.defineProperty(e6, i6, { enumerable: true, get: n6[i6] });
       }, o: (t6, e6) => Object.prototype.hasOwnProperty.call(t6, e6), r: (t6) => {
         "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t6, Symbol.toStringTag, { value: "Module" }), Object.defineProperty(t6, "__esModule", { value: true });
       } }, e5 = {};
-      t5.r(e5), t5.d(e5, { XMLBuilder: () => $t, XMLParser: () => gt, XMLValidator: () => It });
-      const i5 = ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD", n5 = new RegExp("^[" + i5 + "][" + i5 + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040]*$");
+      t5.r(e5), t5.d(e5, { XMLBuilder: () => Bt, XMLParser: () => Tt, XMLValidator: () => Ut });
+      const n5 = ":A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD", i5 = new RegExp("^[" + n5 + "][" + n5 + "\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040]*$");
       function s5(t6, e6) {
-        const i6 = [];
-        let n6 = e6.exec(t6);
-        for (; n6; ) {
+        const n6 = [];
+        let i6 = e6.exec(t6);
+        for (; i6; ) {
           const s6 = [];
-          s6.startIndex = e6.lastIndex - n6[0].length;
-          const r6 = n6.length;
-          for (let t7 = 0; t7 < r6; t7++) s6.push(n6[t7]);
-          i6.push(s6), n6 = e6.exec(t6);
+          s6.startIndex = e6.lastIndex - i6[0].length;
+          const r6 = i6.length;
+          for (let t7 = 0; t7 < r6; t7++) s6.push(i6[t7]);
+          n6.push(s6), i6 = e6.exec(t6);
         }
-        return i6;
+        return n6;
       }
       const r5 = function(t6) {
-        return !(null == n5.exec(t6));
+        return !(null == i5.exec(t6));
       }, o5 = ["hasOwnProperty", "toString", "valueOf", "__defineGetter__", "__defineSetter__", "__lookupGetter__", "__lookupSetter__"], a5 = ["__proto__", "constructor", "prototype"], h5 = { allowBooleanAttributes: false, unpairedTags: [] };
       function l5(t6, e6) {
         e6 = Object.assign({}, h5, e6);
-        const i6 = [];
-        let n6 = false, s6 = false;
+        const n6 = [];
+        let i6 = false, s6 = false;
         "\uFEFF" === t6[0] && (t6 = t6.substr(1));
         for (let r6 = 0; r6 < t6.length; r6++) if ("<" === t6[r6] && "?" === t6[r6 + 1]) {
-          if (r6 += 2, r6 = u5(t6, r6), r6.err) return r6;
+          if (r6 += 2, r6 = p5(t6, r6), r6.err) return r6;
         } else {
           if ("<" !== t6[r6]) {
-            if (p5(t6[r6])) continue;
+            if (u5(t6[r6])) continue;
             return b5("InvalidChar", "char '" + t6[r6] + "' is not expected.", w5(t6, r6));
           }
           {
@@ -32046,7 +32046,7 @@ var require_fxp = __commonJS({
               "/" === t6[r6] && (a6 = true, r6++);
               let h6 = "";
               for (; r6 < t6.length && ">" !== t6[r6] && " " !== t6[r6] && "	" !== t6[r6] && "\n" !== t6[r6] && "\r" !== t6[r6]; r6++) h6 += t6[r6];
-              if (h6 = h6.trim(), "/" === h6[h6.length - 1] && (h6 = h6.substring(0, h6.length - 1), r6--), !y2(h6)) {
+              if (h6 = h6.trim(), "/" === h6[h6.length - 1] && (h6 = h6.substring(0, h6.length - 1), r6--), !E2(h6)) {
                 let e7;
                 return e7 = 0 === h6.trim().length ? "Invalid space after '<'." : "Tag '" + h6 + "' is an invalid name.", b5("InvalidTag", e7, w5(t6, r6));
               }
@@ -32054,28 +32054,28 @@ var require_fxp = __commonJS({
               if (false === l6) return b5("InvalidAttr", "Attributes for '" + h6 + "' have open quote.", w5(t6, r6));
               let d6 = l6.value;
               if (r6 = l6.index, "/" === d6[d6.length - 1]) {
-                const i7 = r6 - d6.length;
+                const n7 = r6 - d6.length;
                 d6 = d6.substring(0, d6.length - 1);
                 const s7 = x5(d6, e6);
-                if (true !== s7) return b5(s7.err.code, s7.err.msg, w5(t6, i7 + s7.err.line));
-                n6 = true;
+                if (true !== s7) return b5(s7.err.code, s7.err.msg, w5(t6, n7 + s7.err.line));
+                i6 = true;
               } else if (a6) {
                 if (!l6.tagClosed) return b5("InvalidTag", "Closing tag '" + h6 + "' doesn't have proper closing.", w5(t6, r6));
                 if (d6.trim().length > 0) return b5("InvalidTag", "Closing tag '" + h6 + "' can't have attributes or invalid starting.", w5(t6, o6));
-                if (0 === i6.length) return b5("InvalidTag", "Closing tag '" + h6 + "' has not been opened.", w5(t6, o6));
+                if (0 === n6.length) return b5("InvalidTag", "Closing tag '" + h6 + "' has not been opened.", w5(t6, o6));
                 {
-                  const e7 = i6.pop();
+                  const e7 = n6.pop();
                   if (h6 !== e7.tagName) {
-                    let i7 = w5(t6, e7.tagStartPos);
-                    return b5("InvalidTag", "Expected closing tag '" + e7.tagName + "' (opened in line " + i7.line + ", col " + i7.col + ") instead of closing tag '" + h6 + "'.", w5(t6, o6));
+                    let n7 = w5(t6, e7.tagStartPos);
+                    return b5("InvalidTag", "Expected closing tag '" + e7.tagName + "' (opened in line " + n7.line + ", col " + n7.col + ") instead of closing tag '" + h6 + "'.", w5(t6, o6));
                   }
-                  0 == i6.length && (s6 = true);
+                  0 == n6.length && (s6 = true);
                 }
               } else {
                 const a7 = x5(d6, e6);
                 if (true !== a7) return b5(a7.err.code, a7.err.msg, w5(t6, r6 - d6.length + a7.err.line));
                 if (true === s6) return b5("InvalidXml", "Multiple possible root nodes found.", w5(t6, r6));
-                -1 !== e6.unpairedTags.indexOf(h6) || i6.push({ tagName: h6, tagStartPos: o6 }), n6 = true;
+                -1 !== e6.unpairedTags.indexOf(h6) || n6.push({ tagName: h6, tagStartPos: o6 }), i6 = true;
               }
               for (r6++; r6 < t6.length; r6++) if ("<" === t6[r6]) {
                 if ("!" === t6[r6 + 1]) {
@@ -32083,26 +32083,26 @@ var require_fxp = __commonJS({
                   continue;
                 }
                 if ("?" !== t6[r6 + 1]) break;
-                if (r6 = u5(t6, ++r6), r6.err) return r6;
+                if (r6 = p5(t6, ++r6), r6.err) return r6;
               } else if ("&" === t6[r6]) {
                 const e7 = N(t6, r6);
                 if (-1 == e7) return b5("InvalidChar", "char '&' is not expected.", w5(t6, r6));
                 r6 = e7;
-              } else if (true === s6 && !p5(t6[r6])) return b5("InvalidXml", "Extra text at the end", w5(t6, r6));
+              } else if (true === s6 && !u5(t6[r6])) return b5("InvalidXml", "Extra text at the end", w5(t6, r6));
               "<" === t6[r6] && r6--;
             }
           }
         }
-        return n6 ? 1 == i6.length ? b5("InvalidTag", "Unclosed tag '" + i6[0].tagName + "'.", w5(t6, i6[0].tagStartPos)) : !(i6.length > 0) || b5("InvalidXml", "Invalid '" + JSON.stringify(i6.map((t7) => t7.tagName), null, 4).replace(/\r?\n/g, "") + "' found.", { line: 1, col: 1 }) : b5("InvalidXml", "Start tag expected.", 1);
+        return i6 ? 1 == n6.length ? b5("InvalidTag", "Unclosed tag '" + n6[0].tagName + "'.", w5(t6, n6[0].tagStartPos)) : !(n6.length > 0) || b5("InvalidXml", "Invalid '" + JSON.stringify(n6.map((t7) => t7.tagName), null, 4).replace(/\r?\n/g, "") + "' found.", { line: 1, col: 1 }) : b5("InvalidXml", "Start tag expected.", 1);
       }
-      function p5(t6) {
+      function u5(t6) {
         return " " === t6 || "	" === t6 || "\n" === t6 || "\r" === t6;
       }
-      function u5(t6, e6) {
-        const i6 = e6;
+      function p5(t6, e6) {
+        const n6 = e6;
         for (; e6 < t6.length; e6++) if ("?" == t6[e6] || " " == t6[e6]) {
-          const n6 = t6.substr(i6, e6 - i6);
-          if (e6 > 5 && "xml" === n6) return b5("InvalidXml", "XML declaration allowed only at the start of the document.", w5(t6, e6));
+          const i6 = t6.substr(n6, e6 - n6);
+          if (e6 > 5 && "xml" === i6) return b5("InvalidXml", "XML declaration allowed only at the start of the document.", w5(t6, e6));
           if ("?" == t6[e6] && ">" == t6[e6 + 1]) {
             e6++;
             break;
@@ -32118,9 +32118,9 @@ var require_fxp = __commonJS({
             break;
           }
         } else if (t6.length > e6 + 8 && "D" === t6[e6 + 1] && "O" === t6[e6 + 2] && "C" === t6[e6 + 3] && "T" === t6[e6 + 4] && "Y" === t6[e6 + 5] && "P" === t6[e6 + 6] && "E" === t6[e6 + 7]) {
-          let i6 = 1;
-          for (e6 += 8; e6 < t6.length; e6++) if ("<" === t6[e6]) i6++;
-          else if (">" === t6[e6] && (i6--, 0 === i6)) break;
+          let n6 = 1;
+          for (e6 += 8; e6 < t6.length; e6++) if ("<" === t6[e6]) n6++;
+          else if (">" === t6[e6] && (n6--, 0 === n6)) break;
         } else if (t6.length > e6 + 9 && "[" === t6[e6 + 1] && "C" === t6[e6 + 2] && "D" === t6[e6 + 3] && "A" === t6[e6 + 4] && "T" === t6[e6 + 5] && "A" === t6[e6 + 6] && "[" === t6[e6 + 7]) {
           for (e6 += 8; e6 < t6.length; e6++) if ("]" === t6[e6] && "]" === t6[e6 + 1] && ">" === t6[e6 + 2]) {
             e6 += 2;
@@ -32131,88 +32131,88 @@ var require_fxp = __commonJS({
       }
       const d5 = '"', f5 = "'";
       function g5(t6, e6) {
-        let i6 = "", n6 = "", s6 = false;
+        let n6 = "", i6 = "", s6 = false;
         for (; e6 < t6.length; e6++) {
-          if (t6[e6] === d5 || t6[e6] === f5) "" === n6 ? n6 = t6[e6] : n6 !== t6[e6] || (n6 = "");
-          else if (">" === t6[e6] && "" === n6) {
+          if (t6[e6] === d5 || t6[e6] === f5) "" === i6 ? i6 = t6[e6] : i6 !== t6[e6] || (i6 = "");
+          else if (">" === t6[e6] && "" === i6) {
             s6 = true;
             break;
           }
-          i6 += t6[e6];
+          n6 += t6[e6];
         }
-        return "" === n6 && { value: i6, index: e6, tagClosed: s6 };
+        return "" === i6 && { value: n6, index: e6, tagClosed: s6 };
       }
       const m5 = new RegExp(`(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['"])(([\\s\\S])*?)\\5)?`, "g");
       function x5(t6, e6) {
-        const i6 = s5(t6, m5), n6 = {};
-        for (let t7 = 0; t7 < i6.length; t7++) {
-          if (0 === i6[t7][1].length) return b5("InvalidAttr", "Attribute '" + i6[t7][2] + "' has no space in starting.", v5(i6[t7]));
-          if (void 0 !== i6[t7][3] && void 0 === i6[t7][4]) return b5("InvalidAttr", "Attribute '" + i6[t7][2] + "' is without value.", v5(i6[t7]));
-          if (void 0 === i6[t7][3] && !e6.allowBooleanAttributes) return b5("InvalidAttr", "boolean attribute '" + i6[t7][2] + "' is not allowed.", v5(i6[t7]));
-          const s6 = i6[t7][2];
-          if (!E2(s6)) return b5("InvalidAttr", "Attribute '" + s6 + "' is an invalid name.", v5(i6[t7]));
-          if (Object.prototype.hasOwnProperty.call(n6, s6)) return b5("InvalidAttr", "Attribute '" + s6 + "' is repeated.", v5(i6[t7]));
-          n6[s6] = 1;
+        const n6 = s5(t6, m5), i6 = {};
+        for (let t7 = 0; t7 < n6.length; t7++) {
+          if (0 === n6[t7][1].length) return b5("InvalidAttr", "Attribute '" + n6[t7][2] + "' has no space in starting.", v5(n6[t7]));
+          if (void 0 !== n6[t7][3] && void 0 === n6[t7][4]) return b5("InvalidAttr", "Attribute '" + n6[t7][2] + "' is without value.", v5(n6[t7]));
+          if (void 0 === n6[t7][3] && !e6.allowBooleanAttributes) return b5("InvalidAttr", "boolean attribute '" + n6[t7][2] + "' is not allowed.", v5(n6[t7]));
+          const s6 = n6[t7][2];
+          if (!y2(s6)) return b5("InvalidAttr", "Attribute '" + s6 + "' is an invalid name.", v5(n6[t7]));
+          if (Object.prototype.hasOwnProperty.call(i6, s6)) return b5("InvalidAttr", "Attribute '" + s6 + "' is repeated.", v5(n6[t7]));
+          i6[s6] = 1;
         }
         return true;
       }
       function N(t6, e6) {
         if (";" === t6[++e6]) return -1;
         if ("#" === t6[e6]) return (function(t7, e7) {
-          let i7 = /\d/;
-          for ("x" === t7[e7] && (e7++, i7 = /[\da-fA-F]/); e7 < t7.length; e7++) {
+          let n7 = /\d/;
+          for ("x" === t7[e7] && (e7++, n7 = /[\da-fA-F]/); e7 < t7.length; e7++) {
             if (";" === t7[e7]) return e7;
-            if (!t7[e7].match(i7)) break;
+            if (!t7[e7].match(n7)) break;
           }
           return -1;
         })(t6, ++e6);
-        let i6 = 0;
-        for (; e6 < t6.length; e6++, i6++) if (!(t6[e6].match(/\w/) && i6 < 20)) {
+        let n6 = 0;
+        for (; e6 < t6.length; e6++, n6++) if (!(t6[e6].match(/\w/) && n6 < 20)) {
           if (";" === t6[e6]) break;
           return -1;
         }
         return e6;
       }
-      function b5(t6, e6, i6) {
-        return { err: { code: t6, msg: e6, line: i6.line || i6, col: i6.col } };
-      }
-      function E2(t6) {
-        return r5(t6);
+      function b5(t6, e6, n6) {
+        return { err: { code: t6, msg: e6, line: n6.line || n6, col: n6.col } };
       }
       function y2(t6) {
         return r5(t6);
       }
+      function E2(t6) {
+        return r5(t6);
+      }
       function w5(t6, e6) {
-        const i6 = t6.substring(0, e6).split(/\r?\n/);
-        return { line: i6.length, col: i6[i6.length - 1].length + 1 };
+        const n6 = t6.substring(0, e6).split(/\r?\n/);
+        return { line: n6.length, col: n6[n6.length - 1].length + 1 };
       }
       function v5(t6) {
         return t6.startIndex + t6[1].length;
       }
-      const T = (t6) => o5.includes(t6) ? "__" + t6 : t6, P = { preserveOrder: false, attributeNamePrefix: "@_", attributesGroupName: false, textNodeName: "#text", ignoreAttributes: true, removeNSPrefix: false, allowBooleanAttributes: false, parseTagValue: true, parseAttributeValue: false, trimValues: true, cdataPropName: false, numberParseOptions: { hex: true, leadingZeros: true, eNotation: true }, tagValueProcessor: function(t6, e6) {
+      const S = (t6) => o5.includes(t6) ? "__" + t6 : t6, _ = { preserveOrder: false, attributeNamePrefix: "@_", attributesGroupName: false, textNodeName: "#text", ignoreAttributes: true, removeNSPrefix: false, allowBooleanAttributes: false, parseTagValue: true, parseAttributeValue: false, trimValues: true, cdataPropName: false, numberParseOptions: { hex: true, leadingZeros: true, eNotation: true }, tagValueProcessor: function(t6, e6) {
         return e6;
       }, attributeValueProcessor: function(t6, e6) {
         return e6;
-      }, stopNodes: [], alwaysCreateTextNode: false, isArray: () => false, commentPropName: false, unpairedTags: [], processEntities: true, htmlEntities: false, ignoreDeclaration: false, ignorePiTags: false, transformTagName: false, transformAttributeName: false, updateTag: function(t6, e6, i6) {
+      }, stopNodes: [], alwaysCreateTextNode: false, isArray: () => false, commentPropName: false, unpairedTags: [], processEntities: true, htmlEntities: false, entityDecoder: null, ignoreDeclaration: false, ignorePiTags: false, transformTagName: false, transformAttributeName: false, updateTag: function(t6, e6, n6) {
         return t6;
-      }, captureMetaData: false, maxNestedTags: 100, strictReservedNames: true, jPath: true, onDangerousProperty: T };
-      function S(t6, e6) {
+      }, captureMetaData: false, maxNestedTags: 100, strictReservedNames: true, jPath: true, onDangerousProperty: S };
+      function A2(t6, e6) {
         if ("string" != typeof t6) return;
-        const i6 = t6.toLowerCase();
-        if (o5.some((t7) => i6 === t7.toLowerCase())) throw new Error(`[SECURITY] Invalid ${e6}: "${t6}" is a reserved JavaScript keyword that could cause prototype pollution`);
-        if (a5.some((t7) => i6 === t7.toLowerCase())) throw new Error(`[SECURITY] Invalid ${e6}: "${t6}" is a reserved JavaScript keyword that could cause prototype pollution`);
+        const n6 = t6.toLowerCase();
+        if (o5.some((t7) => n6 === t7.toLowerCase())) throw new Error(`[SECURITY] Invalid ${e6}: "${t6}" is a reserved JavaScript keyword that could cause prototype pollution`);
+        if (a5.some((t7) => n6 === t7.toLowerCase())) throw new Error(`[SECURITY] Invalid ${e6}: "${t6}" is a reserved JavaScript keyword that could cause prototype pollution`);
       }
-      function A2(t6) {
-        return "boolean" == typeof t6 ? { enabled: t6, maxEntitySize: 1e4, maxExpansionDepth: 10, maxTotalExpansions: 1e3, maxExpandedLength: 1e5, maxEntityCount: 100, allowedTags: null, tagFilter: null } : "object" == typeof t6 && null !== t6 ? { enabled: false !== t6.enabled, maxEntitySize: Math.max(1, t6.maxEntitySize ?? 1e4), maxExpansionDepth: Math.max(1, t6.maxExpansionDepth ?? 10), maxTotalExpansions: Math.max(1, t6.maxTotalExpansions ?? 1e3), maxExpandedLength: Math.max(1, t6.maxExpandedLength ?? 1e5), maxEntityCount: Math.max(1, t6.maxEntityCount ?? 100), allowedTags: t6.allowedTags ?? null, tagFilter: t6.tagFilter ?? null } : A2(true);
+      function T(t6, e6) {
+        return "boolean" == typeof t6 ? { enabled: t6, maxEntitySize: 1e4, maxExpansionDepth: 1e4, maxTotalExpansions: 1 / 0, maxExpandedLength: 1e5, maxEntityCount: 1e3, allowedTags: null, tagFilter: null, appliesTo: "all" } : "object" == typeof t6 && null !== t6 ? { enabled: false !== t6.enabled, maxEntitySize: Math.max(1, t6.maxEntitySize ?? 1e4), maxExpansionDepth: Math.max(1, t6.maxExpansionDepth ?? 1e4), maxTotalExpansions: Math.max(1, t6.maxTotalExpansions ?? 1 / 0), maxExpandedLength: Math.max(1, t6.maxExpandedLength ?? 1e5), maxEntityCount: Math.max(1, t6.maxEntityCount ?? 1e3), allowedTags: t6.allowedTags ?? null, tagFilter: t6.tagFilter ?? null, appliesTo: t6.appliesTo ?? "all" } : T(true);
       }
-      const O = function(t6) {
-        const e6 = Object.assign({}, P, t6), i6 = [{ value: e6.attributeNamePrefix, name: "attributeNamePrefix" }, { value: e6.attributesGroupName, name: "attributesGroupName" }, { value: e6.textNodeName, name: "textNodeName" }, { value: e6.cdataPropName, name: "cdataPropName" }, { value: e6.commentPropName, name: "commentPropName" }];
-        for (const { value: t7, name: e7 } of i6) t7 && S(t7, e7);
-        return null === e6.onDangerousProperty && (e6.onDangerousProperty = T), e6.processEntities = A2(e6.processEntities), e6.stopNodes && Array.isArray(e6.stopNodes) && (e6.stopNodes = e6.stopNodes.map((t7) => "string" == typeof t7 && t7.startsWith("*.") ? ".." + t7.substring(2) : t7)), e6;
+      const C2 = function(t6) {
+        const e6 = Object.assign({}, _, t6), n6 = [{ value: e6.attributeNamePrefix, name: "attributeNamePrefix" }, { value: e6.attributesGroupName, name: "attributesGroupName" }, { value: e6.textNodeName, name: "textNodeName" }, { value: e6.cdataPropName, name: "cdataPropName" }, { value: e6.commentPropName, name: "commentPropName" }];
+        for (const { value: t7, name: e7 } of n6) t7 && A2(t7, e7);
+        return null === e6.onDangerousProperty && (e6.onDangerousProperty = S), e6.processEntities = T(e6.processEntities, e6.htmlEntities), e6.unpairedTagsSet = new Set(e6.unpairedTags), e6.stopNodes && Array.isArray(e6.stopNodes) && (e6.stopNodes = e6.stopNodes.map((t7) => "string" == typeof t7 && t7.startsWith("*.") ? ".." + t7.substring(2) : t7)), e6;
       };
-      let C2;
-      C2 = "function" != typeof Symbol ? "@@xmlMetadata" : /* @__PURE__ */ Symbol("XML Node Metadata");
-      class $ {
+      let P;
+      P = "function" != typeof Symbol ? "@@xmlMetadata" : /* @__PURE__ */ Symbol("XML Node Metadata");
+      class O {
         constructor(t6) {
           this.tagname = t6, this.child = [], this[":@"] = /* @__PURE__ */ Object.create(null);
         }
@@ -32220,19 +32220,19 @@ var require_fxp = __commonJS({
           "__proto__" === t6 && (t6 = "#__proto__"), this.child.push({ [t6]: e6 });
         }
         addChild(t6, e6) {
-          "__proto__" === t6.tagname && (t6.tagname = "#__proto__"), t6[":@"] && Object.keys(t6[":@"]).length > 0 ? this.child.push({ [t6.tagname]: t6.child, ":@": t6[":@"] }) : this.child.push({ [t6.tagname]: t6.child }), void 0 !== e6 && (this.child[this.child.length - 1][C2] = { startIndex: e6 });
+          "__proto__" === t6.tagname && (t6.tagname = "#__proto__"), t6[":@"] && Object.keys(t6[":@"]).length > 0 ? this.child.push({ [t6.tagname]: t6.child, ":@": t6[":@"] }) : this.child.push({ [t6.tagname]: t6.child }), void 0 !== e6 && (this.child[this.child.length - 1][P] = { startIndex: e6 });
         }
         static getMetaDataSymbol() {
-          return C2;
+          return P;
         }
       }
-      class I2 {
+      class $ {
         constructor(t6) {
           this.suppressValidationErr = !t6, this.options = t6;
         }
         readDocType(t6, e6) {
-          const i6 = /* @__PURE__ */ Object.create(null);
-          let n6 = 0;
+          const n6 = /* @__PURE__ */ Object.create(null);
+          let i6 = 0;
           if ("O" !== t6[e6 + 3] || "C" !== t6[e6 + 4] || "T" !== t6[e6 + 5] || "Y" !== t6[e6 + 6] || "P" !== t6[e6 + 7] || "E" !== t6[e6 + 8]) throw new Error("Invalid Tag instead of DOCTYPE");
           {
             e6 += 9;
@@ -32241,146 +32241,198 @@ var require_fxp = __commonJS({
               if (o6 ? "-" === t6[e6 - 1] && "-" === t6[e6 - 2] && (o6 = false, s6--) : s6--, 0 === s6) break;
             } else "[" === t6[e6] ? r6 = true : a6 += t6[e6];
             else {
-              if (r6 && M(t6, "!ENTITY", e6)) {
+              if (r6 && D2(t6, "!ENTITY", e6)) {
                 let s7, r7;
                 if (e6 += 7, [s7, r7, e6] = this.readEntityExp(t6, e6 + 1, this.suppressValidationErr), -1 === r7.indexOf("&")) {
-                  if (false !== this.options.enabled && null != this.options.maxEntityCount && n6 >= this.options.maxEntityCount) throw new Error(`Entity count (${n6 + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`);
-                  const t7 = s7.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-                  i6[s7] = { regx: RegExp(`&${t7};`, "g"), val: r7 }, n6++;
+                  if (false !== this.options.enabled && null != this.options.maxEntityCount && i6 >= this.options.maxEntityCount) throw new Error(`Entity count (${i6 + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`);
+                  n6[s7] = r7, i6++;
                 }
-              } else if (r6 && M(t6, "!ELEMENT", e6)) {
+              } else if (r6 && D2(t6, "!ELEMENT", e6)) {
                 e6 += 8;
-                const { index: i7 } = this.readElementExp(t6, e6 + 1);
-                e6 = i7;
-              } else if (r6 && M(t6, "!ATTLIST", e6)) e6 += 8;
-              else if (r6 && M(t6, "!NOTATION", e6)) {
+                const { index: n7 } = this.readElementExp(t6, e6 + 1);
+                e6 = n7;
+              } else if (r6 && D2(t6, "!ATTLIST", e6)) e6 += 8;
+              else if (r6 && D2(t6, "!NOTATION", e6)) {
                 e6 += 9;
-                const { index: i7 } = this.readNotationExp(t6, e6 + 1, this.suppressValidationErr);
-                e6 = i7;
+                const { index: n7 } = this.readNotationExp(t6, e6 + 1, this.suppressValidationErr);
+                e6 = n7;
               } else {
-                if (!M(t6, "!--", e6)) throw new Error("Invalid DOCTYPE");
+                if (!D2(t6, "!--", e6)) throw new Error("Invalid DOCTYPE");
                 o6 = true;
               }
               s6++, a6 = "";
             }
             if (0 !== s6) throw new Error("Unclosed DOCTYPE");
           }
-          return { entities: i6, i: e6 };
+          return { entities: n6, i: e6 };
         }
         readEntityExp(t6, e6) {
-          const i6 = e6 = j5(t6, e6);
+          const n6 = e6 = I2(t6, e6);
           for (; e6 < t6.length && !/\s/.test(t6[e6]) && '"' !== t6[e6] && "'" !== t6[e6]; ) e6++;
-          let n6 = t6.substring(i6, e6);
-          if (_(n6), e6 = j5(t6, e6), !this.suppressValidationErr) {
+          let i6 = t6.substring(n6, e6);
+          if (M(i6), e6 = I2(t6, e6), !this.suppressValidationErr) {
             if ("SYSTEM" === t6.substring(e6, e6 + 6).toUpperCase()) throw new Error("External entities are not supported");
             if ("%" === t6[e6]) throw new Error("Parameter entities are not supported");
           }
           let s6 = "";
-          if ([e6, s6] = this.readIdentifierVal(t6, e6, "entity"), false !== this.options.enabled && null != this.options.maxEntitySize && s6.length > this.options.maxEntitySize) throw new Error(`Entity "${n6}" size (${s6.length}) exceeds maximum allowed size (${this.options.maxEntitySize})`);
-          return [n6, s6, --e6];
+          if ([e6, s6] = this.readIdentifierVal(t6, e6, "entity"), false !== this.options.enabled && null != this.options.maxEntitySize && s6.length > this.options.maxEntitySize) throw new Error(`Entity "${i6}" size (${s6.length}) exceeds maximum allowed size (${this.options.maxEntitySize})`);
+          return [i6, s6, --e6];
         }
         readNotationExp(t6, e6) {
-          const i6 = e6 = j5(t6, e6);
+          const n6 = e6 = I2(t6, e6);
           for (; e6 < t6.length && !/\s/.test(t6[e6]); ) e6++;
-          let n6 = t6.substring(i6, e6);
-          !this.suppressValidationErr && _(n6), e6 = j5(t6, e6);
+          let i6 = t6.substring(n6, e6);
+          !this.suppressValidationErr && M(i6), e6 = I2(t6, e6);
           const s6 = t6.substring(e6, e6 + 6).toUpperCase();
           if (!this.suppressValidationErr && "SYSTEM" !== s6 && "PUBLIC" !== s6) throw new Error(`Expected SYSTEM or PUBLIC, found "${s6}"`);
-          e6 += s6.length, e6 = j5(t6, e6);
+          e6 += s6.length, e6 = I2(t6, e6);
           let r6 = null, o6 = null;
-          if ("PUBLIC" === s6) [e6, r6] = this.readIdentifierVal(t6, e6, "publicIdentifier"), '"' !== t6[e6 = j5(t6, e6)] && "'" !== t6[e6] || ([e6, o6] = this.readIdentifierVal(t6, e6, "systemIdentifier"));
+          if ("PUBLIC" === s6) [e6, r6] = this.readIdentifierVal(t6, e6, "publicIdentifier"), '"' !== t6[e6 = I2(t6, e6)] && "'" !== t6[e6] || ([e6, o6] = this.readIdentifierVal(t6, e6, "systemIdentifier"));
           else if ("SYSTEM" === s6 && ([e6, o6] = this.readIdentifierVal(t6, e6, "systemIdentifier"), !this.suppressValidationErr && !o6)) throw new Error("Missing mandatory system identifier for SYSTEM notation");
-          return { notationName: n6, publicIdentifier: r6, systemIdentifier: o6, index: --e6 };
+          return { notationName: i6, publicIdentifier: r6, systemIdentifier: o6, index: --e6 };
         }
-        readIdentifierVal(t6, e6, i6) {
-          let n6 = "";
+        readIdentifierVal(t6, e6, n6) {
+          let i6 = "";
           const s6 = t6[e6];
           if ('"' !== s6 && "'" !== s6) throw new Error(`Expected quoted string, found "${s6}"`);
           const r6 = ++e6;
           for (; e6 < t6.length && t6[e6] !== s6; ) e6++;
-          if (n6 = t6.substring(r6, e6), t6[e6] !== s6) throw new Error(`Unterminated ${i6} value`);
-          return [++e6, n6];
+          if (i6 = t6.substring(r6, e6), t6[e6] !== s6) throw new Error(`Unterminated ${n6} value`);
+          return [++e6, i6];
         }
         readElementExp(t6, e6) {
-          const i6 = e6 = j5(t6, e6);
+          const n6 = e6 = I2(t6, e6);
           for (; e6 < t6.length && !/\s/.test(t6[e6]); ) e6++;
-          let n6 = t6.substring(i6, e6);
-          if (!this.suppressValidationErr && !r5(n6)) throw new Error(`Invalid element name: "${n6}"`);
+          let i6 = t6.substring(n6, e6);
+          if (!this.suppressValidationErr && !r5(i6)) throw new Error(`Invalid element name: "${i6}"`);
           let s6 = "";
-          if ("E" === t6[e6 = j5(t6, e6)] && M(t6, "MPTY", e6)) e6 += 4;
-          else if ("A" === t6[e6] && M(t6, "NY", e6)) e6 += 2;
+          if ("E" === t6[e6 = I2(t6, e6)] && D2(t6, "MPTY", e6)) e6 += 4;
+          else if ("A" === t6[e6] && D2(t6, "NY", e6)) e6 += 2;
           else if ("(" === t6[e6]) {
-            const i7 = ++e6;
+            const n7 = ++e6;
             for (; e6 < t6.length && ")" !== t6[e6]; ) e6++;
-            if (s6 = t6.substring(i7, e6), ")" !== t6[e6]) throw new Error("Unterminated content model");
+            if (s6 = t6.substring(n7, e6), ")" !== t6[e6]) throw new Error("Unterminated content model");
           } else if (!this.suppressValidationErr) throw new Error(`Invalid Element Expression, found "${t6[e6]}"`);
-          return { elementName: n6, contentModel: s6.trim(), index: e6 };
+          return { elementName: i6, contentModel: s6.trim(), index: e6 };
         }
         readAttlistExp(t6, e6) {
-          let i6 = e6 = j5(t6, e6);
+          let n6 = e6 = I2(t6, e6);
           for (; e6 < t6.length && !/\s/.test(t6[e6]); ) e6++;
-          let n6 = t6.substring(i6, e6);
-          for (_(n6), i6 = e6 = j5(t6, e6); e6 < t6.length && !/\s/.test(t6[e6]); ) e6++;
-          let s6 = t6.substring(i6, e6);
-          if (!_(s6)) throw new Error(`Invalid attribute name: "${s6}"`);
-          e6 = j5(t6, e6);
+          let i6 = t6.substring(n6, e6);
+          for (M(i6), n6 = e6 = I2(t6, e6); e6 < t6.length && !/\s/.test(t6[e6]); ) e6++;
+          let s6 = t6.substring(n6, e6);
+          if (!M(s6)) throw new Error(`Invalid attribute name: "${s6}"`);
+          e6 = I2(t6, e6);
           let r6 = "";
           if ("NOTATION" === t6.substring(e6, e6 + 8).toUpperCase()) {
-            if (r6 = "NOTATION", "(" !== t6[e6 = j5(t6, e6 += 8)]) throw new Error(`Expected '(', found "${t6[e6]}"`);
+            if (r6 = "NOTATION", "(" !== t6[e6 = I2(t6, e6 += 8)]) throw new Error(`Expected '(', found "${t6[e6]}"`);
             e6++;
-            let i7 = [];
+            let n7 = [];
             for (; e6 < t6.length && ")" !== t6[e6]; ) {
-              const n7 = e6;
+              const i7 = e6;
               for (; e6 < t6.length && "|" !== t6[e6] && ")" !== t6[e6]; ) e6++;
-              let s7 = t6.substring(n7, e6);
-              if (s7 = s7.trim(), !_(s7)) throw new Error(`Invalid notation name: "${s7}"`);
-              i7.push(s7), "|" === t6[e6] && (e6++, e6 = j5(t6, e6));
+              let s7 = t6.substring(i7, e6);
+              if (s7 = s7.trim(), !M(s7)) throw new Error(`Invalid notation name: "${s7}"`);
+              n7.push(s7), "|" === t6[e6] && (e6++, e6 = I2(t6, e6));
             }
             if (")" !== t6[e6]) throw new Error("Unterminated list of notations");
-            e6++, r6 += " (" + i7.join("|") + ")";
+            e6++, r6 += " (" + n7.join("|") + ")";
           } else {
-            const i7 = e6;
+            const n7 = e6;
             for (; e6 < t6.length && !/\s/.test(t6[e6]); ) e6++;
-            r6 += t6.substring(i7, e6);
-            const n7 = ["CDATA", "ID", "IDREF", "IDREFS", "ENTITY", "ENTITIES", "NMTOKEN", "NMTOKENS"];
-            if (!this.suppressValidationErr && !n7.includes(r6.toUpperCase())) throw new Error(`Invalid attribute type: "${r6}"`);
+            r6 += t6.substring(n7, e6);
+            const i7 = ["CDATA", "ID", "IDREF", "IDREFS", "ENTITY", "ENTITIES", "NMTOKEN", "NMTOKENS"];
+            if (!this.suppressValidationErr && !i7.includes(r6.toUpperCase())) throw new Error(`Invalid attribute type: "${r6}"`);
           }
-          e6 = j5(t6, e6);
+          e6 = I2(t6, e6);
           let o6 = "";
-          return "#REQUIRED" === t6.substring(e6, e6 + 8).toUpperCase() ? (o6 = "#REQUIRED", e6 += 8) : "#IMPLIED" === t6.substring(e6, e6 + 7).toUpperCase() ? (o6 = "#IMPLIED", e6 += 7) : [e6, o6] = this.readIdentifierVal(t6, e6, "ATTLIST"), { elementName: n6, attributeName: s6, attributeType: r6, defaultValue: o6, index: e6 };
+          return "#REQUIRED" === t6.substring(e6, e6 + 8).toUpperCase() ? (o6 = "#REQUIRED", e6 += 8) : "#IMPLIED" === t6.substring(e6, e6 + 7).toUpperCase() ? (o6 = "#IMPLIED", e6 += 7) : [e6, o6] = this.readIdentifierVal(t6, e6, "ATTLIST"), { elementName: i6, attributeName: s6, attributeType: r6, defaultValue: o6, index: e6 };
         }
       }
-      const j5 = (t6, e6) => {
+      const I2 = (t6, e6) => {
         for (; e6 < t6.length && /\s/.test(t6[e6]); ) e6++;
         return e6;
       };
-      function M(t6, e6, i6) {
-        for (let n6 = 0; n6 < e6.length; n6++) if (e6[n6] !== t6[i6 + n6 + 1]) return false;
+      function D2(t6, e6, n6) {
+        for (let i6 = 0; i6 < e6.length; i6++) if (e6[i6] !== t6[n6 + i6 + 1]) return false;
         return true;
       }
-      function _(t6) {
+      function M(t6) {
         if (r5(t6)) return t6;
         throw new Error(`Invalid entity name ${t6}`);
       }
-      const D2 = /^[-+]?0x[a-fA-F0-9]+$/, V = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/, k5 = { hex: true, leadingZeros: true, decimalPoint: ".", eNotation: true, infinity: "original" };
-      const F2 = /^([-+])?(0*)(\d*(\.\d*)?[eE][-\+]?\d+)$/, L = /* @__PURE__ */ new Set(["push", "pop", "reset", "updateCurrent", "restore"]);
-      class G2 {
-        constructor(t6 = {}) {
-          this.separator = t6.separator || ".", this.path = [], this.siblingStacks = [];
+      const j5 = /^[-+]?0x[a-fA-F0-9]+$/, V = /^([\-\+])?(0*)([0-9]*(\.[0-9]*)?)$/, L = { hex: true, leadingZeros: true, decimalPoint: ".", eNotation: true, infinity: "original" };
+      const k5 = /^([-+])?(0*)(\d*(\.\d*)?[eE][-\+]?\d+)$/;
+      class F2 {
+        constructor(t6) {
+          this._matcher = t6;
         }
-        push(t6, e6 = null, i6 = null) {
-          this.path.length > 0 && (this.path[this.path.length - 1].values = void 0);
-          const n6 = this.path.length;
-          this.siblingStacks[n6] || (this.siblingStacks[n6] = /* @__PURE__ */ new Map());
-          const s6 = this.siblingStacks[n6], r6 = i6 ? `${i6}:${t6}` : t6, o6 = s6.get(r6) || 0;
+        get separator() {
+          return this._matcher.separator;
+        }
+        getCurrentTag() {
+          const t6 = this._matcher.path;
+          return t6.length > 0 ? t6[t6.length - 1].tag : void 0;
+        }
+        getCurrentNamespace() {
+          const t6 = this._matcher.path;
+          return t6.length > 0 ? t6[t6.length - 1].namespace : void 0;
+        }
+        getAttrValue(t6) {
+          const e6 = this._matcher.path;
+          if (0 !== e6.length) return e6[e6.length - 1].values?.[t6];
+        }
+        hasAttr(t6) {
+          const e6 = this._matcher.path;
+          if (0 === e6.length) return false;
+          const n6 = e6[e6.length - 1];
+          return void 0 !== n6.values && t6 in n6.values;
+        }
+        getPosition() {
+          const t6 = this._matcher.path;
+          return 0 === t6.length ? -1 : t6[t6.length - 1].position ?? 0;
+        }
+        getCounter() {
+          const t6 = this._matcher.path;
+          return 0 === t6.length ? -1 : t6[t6.length - 1].counter ?? 0;
+        }
+        getIndex() {
+          return this.getPosition();
+        }
+        getDepth() {
+          return this._matcher.path.length;
+        }
+        toString(t6, e6 = true) {
+          return this._matcher.toString(t6, e6);
+        }
+        toArray() {
+          return this._matcher.path.map((t6) => t6.tag);
+        }
+        matches(t6) {
+          return this._matcher.matches(t6);
+        }
+        matchesAny(t6) {
+          return t6.matchesAny(this._matcher);
+        }
+      }
+      class R {
+        constructor(t6 = {}) {
+          this.separator = t6.separator || ".", this.path = [], this.siblingStacks = [], this._pathStringCache = null, this._view = new F2(this);
+        }
+        push(t6, e6 = null, n6 = null) {
+          this._pathStringCache = null, this.path.length > 0 && (this.path[this.path.length - 1].values = void 0);
+          const i6 = this.path.length;
+          this.siblingStacks[i6] || (this.siblingStacks[i6] = /* @__PURE__ */ new Map());
+          const s6 = this.siblingStacks[i6], r6 = n6 ? `${n6}:${t6}` : t6, o6 = s6.get(r6) || 0;
           let a6 = 0;
           for (const t7 of s6.values()) a6 += t7;
           s6.set(r6, o6 + 1);
           const h6 = { tag: t6, position: a6, counter: o6 };
-          null != i6 && (h6.namespace = i6), null != e6 && (h6.values = e6), this.path.push(h6);
+          null != n6 && (h6.namespace = n6), null != e6 && (h6.values = e6), this.path.push(h6);
         }
         pop() {
           if (0 === this.path.length) return;
+          this._pathStringCache = null;
           const t6 = this.path.pop();
           return this.siblingStacks.length > this.path.length + 1 && (this.siblingStacks.length = this.path.length + 1), t6;
         }
@@ -32397,9 +32449,7 @@ var require_fxp = __commonJS({
           return this.path.length > 0 ? this.path[this.path.length - 1].namespace : void 0;
         }
         getAttrValue(t6) {
-          if (0 === this.path.length) return;
-          const e6 = this.path[this.path.length - 1];
-          return e6.values?.[t6];
+          if (0 !== this.path.length) return this.path[this.path.length - 1].values?.[t6];
         }
         hasAttr(t6) {
           if (0 === this.path.length) return false;
@@ -32419,14 +32469,19 @@ var require_fxp = __commonJS({
           return this.path.length;
         }
         toString(t6, e6 = true) {
-          const i6 = t6 || this.separator;
-          return this.path.map((t7) => e6 && t7.namespace ? `${t7.namespace}:${t7.tag}` : t7.tag).join(i6);
+          const n6 = t6 || this.separator;
+          if (n6 === this.separator && true === e6) {
+            if (null !== this._pathStringCache) return this._pathStringCache;
+            const t7 = this.path.map((t8) => t8.namespace ? `${t8.namespace}:${t8.tag}` : t8.tag).join(n6);
+            return this._pathStringCache = t7, t7;
+          }
+          return this.path.map((t7) => e6 && t7.namespace ? `${t7.namespace}:${t7.tag}` : t7.tag).join(n6);
         }
         toArray() {
           return this.path.map((t6) => t6.tag);
         }
         reset() {
-          this.path = [], this.siblingStacks = [];
+          this._pathStringCache = null, this.path = [], this.siblingStacks = [];
         }
         matches(t6) {
           const e6 = t6.segments;
@@ -32434,110 +32489,93 @@ var require_fxp = __commonJS({
         }
         _matchSimple(t6) {
           if (this.path.length !== t6.length) return false;
-          for (let e6 = 0; e6 < t6.length; e6++) {
-            const i6 = t6[e6], n6 = this.path[e6], s6 = e6 === this.path.length - 1;
-            if (!this._matchSegment(i6, n6, s6)) return false;
-          }
+          for (let e6 = 0; e6 < t6.length; e6++) if (!this._matchSegment(t6[e6], this.path[e6], e6 === this.path.length - 1)) return false;
           return true;
         }
         _matchWithDeepWildcard(t6) {
-          let e6 = this.path.length - 1, i6 = t6.length - 1;
-          for (; i6 >= 0 && e6 >= 0; ) {
-            const n6 = t6[i6];
-            if ("deep-wildcard" === n6.type) {
-              if (i6--, i6 < 0) return true;
-              const n7 = t6[i6];
+          let e6 = this.path.length - 1, n6 = t6.length - 1;
+          for (; n6 >= 0 && e6 >= 0; ) {
+            const i6 = t6[n6];
+            if ("deep-wildcard" === i6.type) {
+              if (n6--, n6 < 0) return true;
+              const i7 = t6[n6];
               let s6 = false;
-              for (let t7 = e6; t7 >= 0; t7--) {
-                const r6 = t7 === this.path.length - 1;
-                if (this._matchSegment(n7, this.path[t7], r6)) {
-                  e6 = t7 - 1, i6--, s6 = true;
-                  break;
-                }
+              for (let t7 = e6; t7 >= 0; t7--) if (this._matchSegment(i7, this.path[t7], t7 === this.path.length - 1)) {
+                e6 = t7 - 1, n6--, s6 = true;
+                break;
               }
               if (!s6) return false;
             } else {
-              const t7 = e6 === this.path.length - 1;
-              if (!this._matchSegment(n6, this.path[e6], t7)) return false;
-              e6--, i6--;
+              if (!this._matchSegment(i6, this.path[e6], e6 === this.path.length - 1)) return false;
+              e6--, n6--;
             }
           }
-          return i6 < 0;
+          return n6 < 0;
         }
-        _matchSegment(t6, e6, i6) {
+        _matchSegment(t6, e6, n6) {
           if ("*" !== t6.tag && t6.tag !== e6.tag) return false;
           if (void 0 !== t6.namespace && "*" !== t6.namespace && t6.namespace !== e6.namespace) return false;
           if (void 0 !== t6.attrName) {
-            if (!i6) return false;
+            if (!n6) return false;
             if (!e6.values || !(t6.attrName in e6.values)) return false;
-            if (void 0 !== t6.attrValue) {
-              const i7 = e6.values[t6.attrName];
-              if (String(i7) !== String(t6.attrValue)) return false;
-            }
+            if (void 0 !== t6.attrValue && String(e6.values[t6.attrName]) !== String(t6.attrValue)) return false;
           }
           if (void 0 !== t6.position) {
-            if (!i6) return false;
-            const n6 = e6.counter ?? 0;
-            if ("first" === t6.position && 0 !== n6) return false;
-            if ("odd" === t6.position && n6 % 2 != 1) return false;
-            if ("even" === t6.position && n6 % 2 != 0) return false;
-            if ("nth" === t6.position && n6 !== t6.positionValue) return false;
+            if (!n6) return false;
+            const i6 = e6.counter ?? 0;
+            if ("first" === t6.position && 0 !== i6) return false;
+            if ("odd" === t6.position && i6 % 2 != 1) return false;
+            if ("even" === t6.position && i6 % 2 != 0) return false;
+            if ("nth" === t6.position && i6 !== t6.positionValue) return false;
           }
           return true;
+        }
+        matchesAny(t6) {
+          return t6.matchesAny(this);
         }
         snapshot() {
           return { path: this.path.map((t6) => ({ ...t6 })), siblingStacks: this.siblingStacks.map((t6) => new Map(t6)) };
         }
         restore(t6) {
-          this.path = t6.path.map((t7) => ({ ...t7 })), this.siblingStacks = t6.siblingStacks.map((t7) => new Map(t7));
+          this._pathStringCache = null, this.path = t6.path.map((t7) => ({ ...t7 })), this.siblingStacks = t6.siblingStacks.map((t7) => new Map(t7));
         }
         readOnly() {
-          return new Proxy(this, { get(t6, e6, i6) {
-            if (L.has(e6)) return () => {
-              throw new TypeError(`Cannot call '${e6}' on a read-only Matcher. Obtain a writable instance to mutate state.`);
-            };
-            const n6 = Reflect.get(t6, e6, i6);
-            return "path" === e6 || "siblingStacks" === e6 ? Object.freeze(Array.isArray(n6) ? n6.map((t7) => t7 instanceof Map ? Object.freeze(new Map(t7)) : Object.freeze({ ...t7 })) : n6) : "function" == typeof n6 ? n6.bind(t6) : n6;
-          }, set(t6, e6) {
-            throw new TypeError(`Cannot set property '${String(e6)}' on a read-only Matcher.`);
-          }, deleteProperty(t6, e6) {
-            throw new TypeError(`Cannot delete property '${String(e6)}' from a read-only Matcher.`);
-          } });
+          return this._view;
         }
       }
-      class R {
-        constructor(t6, e6 = {}) {
-          this.pattern = t6, this.separator = e6.separator || ".", this.segments = this._parse(t6), this._hasDeepWildcard = this.segments.some((t7) => "deep-wildcard" === t7.type), this._hasAttributeCondition = this.segments.some((t7) => void 0 !== t7.attrName), this._hasPositionSelector = this.segments.some((t7) => void 0 !== t7.position);
+      class G2 {
+        constructor(t6, e6 = {}, n6) {
+          this.pattern = t6, this.separator = e6.separator || ".", this.segments = this._parse(t6), this.data = n6, this._hasDeepWildcard = this.segments.some((t7) => "deep-wildcard" === t7.type), this._hasAttributeCondition = this.segments.some((t7) => void 0 !== t7.attrName), this._hasPositionSelector = this.segments.some((t7) => void 0 !== t7.position);
         }
         _parse(t6) {
           const e6 = [];
-          let i6 = 0, n6 = "";
-          for (; i6 < t6.length; ) t6[i6] === this.separator ? i6 + 1 < t6.length && t6[i6 + 1] === this.separator ? (n6.trim() && (e6.push(this._parseSegment(n6.trim())), n6 = ""), e6.push({ type: "deep-wildcard" }), i6 += 2) : (n6.trim() && e6.push(this._parseSegment(n6.trim())), n6 = "", i6++) : (n6 += t6[i6], i6++);
-          return n6.trim() && e6.push(this._parseSegment(n6.trim())), e6;
+          let n6 = 0, i6 = "";
+          for (; n6 < t6.length; ) t6[n6] === this.separator ? n6 + 1 < t6.length && t6[n6 + 1] === this.separator ? (i6.trim() && (e6.push(this._parseSegment(i6.trim())), i6 = ""), e6.push({ type: "deep-wildcard" }), n6 += 2) : (i6.trim() && e6.push(this._parseSegment(i6.trim())), i6 = "", n6++) : (i6 += t6[n6], n6++);
+          return i6.trim() && e6.push(this._parseSegment(i6.trim())), e6;
         }
         _parseSegment(t6) {
           const e6 = { type: "tag" };
-          let i6 = null, n6 = t6;
+          let n6 = null, i6 = t6;
           const s6 = t6.match(/^([^\[]+)(\[[^\]]*\])(.*)$/);
-          if (s6 && (n6 = s6[1] + s6[3], s6[2])) {
+          if (s6 && (i6 = s6[1] + s6[3], s6[2])) {
             const t7 = s6[2].slice(1, -1);
-            t7 && (i6 = t7);
+            t7 && (n6 = t7);
           }
-          let r6, o6, a6 = n6;
-          if (n6.includes("::")) {
-            const e7 = n6.indexOf("::");
-            if (r6 = n6.substring(0, e7).trim(), a6 = n6.substring(e7 + 2).trim(), !r6) throw new Error(`Invalid namespace in pattern: ${t6}`);
+          let r6, o6, a6 = i6;
+          if (i6.includes("::")) {
+            const e7 = i6.indexOf("::");
+            if (r6 = i6.substring(0, e7).trim(), a6 = i6.substring(e7 + 2).trim(), !r6) throw new Error(`Invalid namespace in pattern: ${t6}`);
           }
           let h6 = null;
           if (a6.includes(":")) {
-            const t7 = a6.lastIndexOf(":"), e7 = a6.substring(0, t7).trim(), i7 = a6.substring(t7 + 1).trim();
-            ["first", "last", "odd", "even"].includes(i7) || /^nth\(\d+\)$/.test(i7) ? (o6 = e7, h6 = i7) : o6 = a6;
+            const t7 = a6.lastIndexOf(":"), e7 = a6.substring(0, t7).trim(), n7 = a6.substring(t7 + 1).trim();
+            ["first", "last", "odd", "even"].includes(n7) || /^nth\(\d+\)$/.test(n7) ? (o6 = e7, h6 = n7) : o6 = a6;
           } else o6 = a6;
           if (!o6) throw new Error(`Invalid segment pattern: ${t6}`);
-          if (e6.tag = o6, r6 && (e6.namespace = r6), i6) if (i6.includes("=")) {
-            const t7 = i6.indexOf("=");
-            e6.attrName = i6.substring(0, t7).trim(), e6.attrValue = i6.substring(t7 + 1).trim();
-          } else e6.attrName = i6.trim();
+          if (e6.tag = o6, r6 && (e6.namespace = r6), n6) if (n6.includes("=")) {
+            const t7 = n6.indexOf("=");
+            e6.attrName = n6.substring(0, t7).trim(), e6.attrValue = n6.substring(t7 + 1).trim();
+          } else e6.attrName = n6.trim();
           if (h6) {
             const t7 = h6.match(/^nth\((\d+)\)$/);
             t7 ? (e6.position = "nth", e6.positionValue = parseInt(t7[1], 10)) : e6.position = h6;
@@ -32560,425 +32598,599 @@ var require_fxp = __commonJS({
           return this.pattern;
         }
       }
-      function U(t6, e6) {
-        if (!t6) return {};
-        const i6 = e6.attributesGroupName ? t6[e6.attributesGroupName] : t6;
-        if (!i6) return {};
-        const n6 = {};
-        for (const t7 in i6) t7.startsWith(e6.attributeNamePrefix) ? n6[t7.substring(e6.attributeNamePrefix.length)] = i6[t7] : n6[t7] = i6[t7];
-        return n6;
+      class B2 {
+        constructor() {
+          this._byDepthAndTag = /* @__PURE__ */ new Map(), this._wildcardByDepth = /* @__PURE__ */ new Map(), this._deepWildcards = [], this._patterns = /* @__PURE__ */ new Set(), this._sealed = false;
+        }
+        add(t6) {
+          if (this._sealed) throw new TypeError("ExpressionSet is sealed. Create a new ExpressionSet to add more expressions.");
+          if (this._patterns.has(t6.pattern)) return this;
+          if (this._patterns.add(t6.pattern), t6.hasDeepWildcard()) return this._deepWildcards.push(t6), this;
+          const e6 = t6.length, n6 = t6.segments[t6.segments.length - 1], i6 = n6?.tag;
+          if (i6 && "*" !== i6) {
+            const n7 = `${e6}:${i6}`;
+            this._byDepthAndTag.has(n7) || this._byDepthAndTag.set(n7, []), this._byDepthAndTag.get(n7).push(t6);
+          } else this._wildcardByDepth.has(e6) || this._wildcardByDepth.set(e6, []), this._wildcardByDepth.get(e6).push(t6);
+          return this;
+        }
+        addAll(t6) {
+          for (const e6 of t6) this.add(e6);
+          return this;
+        }
+        has(t6) {
+          return this._patterns.has(t6.pattern);
+        }
+        get size() {
+          return this._patterns.size;
+        }
+        seal() {
+          return this._sealed = true, this;
+        }
+        get isSealed() {
+          return this._sealed;
+        }
+        matchesAny(t6) {
+          return null !== this.findMatch(t6);
+        }
+        findMatch(t6) {
+          const e6 = t6.getDepth(), n6 = `${e6}:${t6.getCurrentTag()}`, i6 = this._byDepthAndTag.get(n6);
+          if (i6) {
+            for (let e7 = 0; e7 < i6.length; e7++) if (t6.matches(i6[e7])) return i6[e7];
+          }
+          const s6 = this._wildcardByDepth.get(e6);
+          if (s6) {
+            for (let e7 = 0; e7 < s6.length; e7++) if (t6.matches(s6[e7])) return s6[e7];
+          }
+          for (let e7 = 0; e7 < this._deepWildcards.length; e7++) if (t6.matches(this._deepWildcards[e7])) return this._deepWildcards[e7];
+          return null;
+        }
       }
-      function B2(t6) {
+      const U = { cent: "\xA2", pound: "\xA3", curren: "\xA4", yen: "\xA5", euro: "\u20AC", dollar: "$", euro: "\u20AC", fnof: "\u0192", inr: "\u20B9", af: "\u060B", birr: "\u1265\u122D", peso: "\u20B1", rub: "\u20BD", won: "\u20A9", yuan: "\xA5", cedil: "\xB8" }, W = { amp: "&", apos: "'", gt: ">", lt: "<", quot: '"' }, X = { nbsp: "\xA0", copy: "\xA9", reg: "\xAE", trade: "\u2122", mdash: "\u2014", ndash: "\u2013", hellip: "\u2026", laquo: "\xAB", raquo: "\xBB", lsquo: "\u2018", rsquo: "\u2019", ldquo: "\u201C", rdquo: "\u201D", bull: "\u2022", para: "\xB6", sect: "\xA7", deg: "\xB0", frac12: "\xBD", frac14: "\xBC", frac34: "\xBE" }, Y = new Set("!?\\\\/[]$%{}^&*()<>|+");
+      function z2(t6) {
+        if ("#" === t6[0]) throw new Error(`[EntityReplacer] Invalid character '#' in entity name: "${t6}"`);
+        for (const e6 of t6) if (Y.has(e6)) throw new Error(`[EntityReplacer] Invalid character '${e6}' in entity name: "${t6}"`);
+        return t6;
+      }
+      function q5(...t6) {
+        const e6 = /* @__PURE__ */ Object.create(null);
+        for (const n6 of t6) if (n6) for (const t7 of Object.keys(n6)) {
+          const i6 = n6[t7];
+          if ("string" == typeof i6) e6[t7] = i6;
+          else if (i6 && "object" == typeof i6 && void 0 !== i6.val) {
+            const n7 = i6.val;
+            "string" == typeof n7 && (e6[t7] = n7);
+          }
+        }
+        return e6;
+      }
+      const Z = "external", J2 = "base", K = "all", Q = Object.freeze({ allow: 0, leave: 1, remove: 2, throw: 3 }), H2 = /* @__PURE__ */ new Set([9, 10, 13]);
+      class tt {
+        constructor(t6 = {}) {
+          var e6;
+          this._limit = t6.limit || {}, this._maxTotalExpansions = this._limit.maxTotalExpansions || 0, this._maxExpandedLength = this._limit.maxExpandedLength || 0, this._postCheck = "function" == typeof t6.postCheck ? t6.postCheck : (t7) => t7, this._limitTiers = (e6 = this._limit.applyLimitsTo ?? Z) && e6 !== Z ? e6 === K ? /* @__PURE__ */ new Set([K]) : e6 === J2 ? /* @__PURE__ */ new Set([J2]) : Array.isArray(e6) ? new Set(e6) : /* @__PURE__ */ new Set([Z]) : /* @__PURE__ */ new Set([Z]), this._numericAllowed = t6.numericAllowed ?? true, this._baseMap = q5(W, t6.namedEntities || null), this._externalMap = /* @__PURE__ */ Object.create(null), this._inputMap = /* @__PURE__ */ Object.create(null), this._totalExpansions = 0, this._expandedLength = 0, this._removeSet = new Set(t6.remove && Array.isArray(t6.remove) ? t6.remove : []), this._leaveSet = new Set(t6.leave && Array.isArray(t6.leave) ? t6.leave : []);
+          const n6 = (function(t7) {
+            if (!t7) return { xmlVersion: 1, onLevel: Q.allow, nullLevel: Q.remove };
+            const e7 = 1.1 === t7.xmlVersion ? 1.1 : 1, n7 = Q[t7.onNCR] ?? Q.allow, i6 = Q[t7.nullNCR] ?? Q.remove;
+            return { xmlVersion: e7, onLevel: n7, nullLevel: Math.max(i6, Q.remove) };
+          })(t6.ncr);
+          this._ncrXmlVersion = n6.xmlVersion, this._ncrOnLevel = n6.onLevel, this._ncrNullLevel = n6.nullLevel;
+        }
+        setExternalEntities(t6) {
+          if (t6) for (const e6 of Object.keys(t6)) z2(e6);
+          this._externalMap = q5(t6);
+        }
+        addExternalEntity(t6, e6) {
+          z2(t6), "string" == typeof e6 && -1 === e6.indexOf("&") && (this._externalMap[t6] = e6);
+        }
+        addInputEntities(t6) {
+          this._totalExpansions = 0, this._expandedLength = 0, this._inputMap = q5(t6);
+        }
+        reset() {
+          return this._inputMap = /* @__PURE__ */ Object.create(null), this._totalExpansions = 0, this._expandedLength = 0, this;
+        }
+        setXmlVersion(t6) {
+          this._ncrXmlVersion = 1.1 === t6 ? 1.1 : 1;
+        }
+        decode(t6) {
+          if ("string" != typeof t6 || 0 === t6.length) return t6;
+          const e6 = t6, n6 = [], i6 = t6.length;
+          let s6 = 0, r6 = 0;
+          const o6 = this._maxTotalExpansions > 0, a6 = this._maxExpandedLength > 0, h6 = o6 || a6;
+          for (; r6 < i6; ) {
+            if (38 !== t6.charCodeAt(r6)) {
+              r6++;
+              continue;
+            }
+            let e7 = r6 + 1;
+            for (; e7 < i6 && 59 !== t6.charCodeAt(e7) && e7 - r6 <= 32; ) e7++;
+            if (e7 >= i6 || 59 !== t6.charCodeAt(e7)) {
+              r6++;
+              continue;
+            }
+            const l7 = t6.slice(r6 + 1, e7);
+            if (0 === l7.length) {
+              r6++;
+              continue;
+            }
+            let u6, p6;
+            if (this._removeSet.has(l7)) u6 = "", void 0 === p6 && (p6 = Z);
+            else {
+              if (this._leaveSet.has(l7)) {
+                r6++;
+                continue;
+              }
+              if (35 === l7.charCodeAt(0)) {
+                const t7 = this._resolveNCR(l7);
+                if (void 0 === t7) {
+                  r6++;
+                  continue;
+                }
+                u6 = t7, p6 = J2;
+              } else {
+                const t7 = this._resolveName(l7);
+                u6 = t7?.value, p6 = t7?.tier;
+              }
+            }
+            if (void 0 !== u6) {
+              if (r6 > s6 && n6.push(t6.slice(s6, r6)), n6.push(u6), s6 = e7 + 1, r6 = s6, h6 && this._tierCounts(p6)) {
+                if (o6 && (this._totalExpansions++, this._totalExpansions > this._maxTotalExpansions)) throw new Error(`[EntityReplacer] Entity expansion count limit exceeded: ${this._totalExpansions} > ${this._maxTotalExpansions}`);
+                if (a6) {
+                  const t7 = u6.length - (l7.length + 2);
+                  if (t7 > 0 && (this._expandedLength += t7, this._expandedLength > this._maxExpandedLength)) throw new Error(`[EntityReplacer] Expanded content length limit exceeded: ${this._expandedLength} > ${this._maxExpandedLength}`);
+                }
+              }
+            } else r6++;
+          }
+          s6 < i6 && n6.push(t6.slice(s6));
+          const l6 = 0 === n6.length ? t6 : n6.join("");
+          return this._postCheck(l6, e6);
+        }
+        _tierCounts(t6) {
+          return !!this._limitTiers.has(K) || this._limitTiers.has(t6);
+        }
+        _resolveName(t6) {
+          return t6 in this._inputMap ? { value: this._inputMap[t6], tier: Z } : t6 in this._externalMap ? { value: this._externalMap[t6], tier: Z } : t6 in this._baseMap ? { value: this._baseMap[t6], tier: J2 } : void 0;
+        }
+        _classifyNCR(t6) {
+          return 0 === t6 ? this._ncrNullLevel : t6 >= 55296 && t6 <= 57343 || 1 === this._ncrXmlVersion && t6 >= 1 && t6 <= 31 && !H2.has(t6) ? Q.remove : -1;
+        }
+        _applyNCRAction(t6, e6, n6) {
+          switch (t6) {
+            case Q.allow:
+              return String.fromCodePoint(n6);
+            case Q.remove:
+              return "";
+            case Q.leave:
+              return;
+            case Q.throw:
+              throw new Error(`[EntityDecoder] Prohibited numeric character reference &${e6}; (U+${n6.toString(16).toUpperCase().padStart(4, "0")})`);
+            default:
+              return String.fromCodePoint(n6);
+          }
+        }
+        _resolveNCR(t6) {
+          const e6 = t6.charCodeAt(1);
+          let n6;
+          if (n6 = 120 === e6 || 88 === e6 ? parseInt(t6.slice(2), 16) : parseInt(t6.slice(1), 10), Number.isNaN(n6) || n6 < 0 || n6 > 1114111) return;
+          const i6 = this._classifyNCR(n6);
+          if (!this._numericAllowed && i6 < Q.remove) return;
+          const s6 = -1 === i6 ? this._ncrOnLevel : Math.max(this._ncrOnLevel, i6);
+          return this._applyNCRAction(s6, t6, n6);
+        }
+      }
+      function et(t6, e6) {
+        if (!t6) return {};
+        const n6 = e6.attributesGroupName ? t6[e6.attributesGroupName] : t6;
+        if (!n6) return {};
+        const i6 = {};
+        for (const t7 in n6) t7.startsWith(e6.attributeNamePrefix) ? i6[t7.substring(e6.attributeNamePrefix.length)] = n6[t7] : i6[t7] = n6[t7];
+        return i6;
+      }
+      function nt(t6) {
         if (!t6 || "string" != typeof t6) return;
         const e6 = t6.indexOf(":");
         if (-1 !== e6 && e6 > 0) {
-          const i6 = t6.substring(0, e6);
-          if ("xmlns" !== i6) return i6;
+          const n6 = t6.substring(0, e6);
+          if ("xmlns" !== n6) return n6;
         }
       }
-      class W {
-        constructor(t6) {
-          var e6;
-          if (this.options = t6, this.currentNode = null, this.tagsNodeStack = [], this.docTypeEntities = {}, this.lastEntities = { apos: { regex: /&(apos|#39|#x27);/g, val: "'" }, gt: { regex: /&(gt|#62|#x3E);/g, val: ">" }, lt: { regex: /&(lt|#60|#x3C);/g, val: "<" }, quot: { regex: /&(quot|#34|#x22);/g, val: '"' } }, this.ampEntity = { regex: /&(amp|#38|#x26);/g, val: "&" }, this.htmlEntities = { space: { regex: /&(nbsp|#160);/g, val: " " }, cent: { regex: /&(cent|#162);/g, val: "\xA2" }, pound: { regex: /&(pound|#163);/g, val: "\xA3" }, yen: { regex: /&(yen|#165);/g, val: "\xA5" }, euro: { regex: /&(euro|#8364);/g, val: "\u20AC" }, copyright: { regex: /&(copy|#169);/g, val: "\xA9" }, reg: { regex: /&(reg|#174);/g, val: "\xAE" }, inr: { regex: /&(inr|#8377);/g, val: "\u20B9" }, num_dec: { regex: /&#([0-9]{1,7});/g, val: (t7, e7) => rt(e7, 10, "&#") }, num_hex: { regex: /&#x([0-9a-fA-F]{1,6});/g, val: (t7, e7) => rt(e7, 16, "&#x") } }, this.addExternalEntities = Y, this.parseXml = J2, this.parseTextData = z2, this.resolveNameSpace = X, this.buildAttributesMap = Z, this.isItStopNode = tt, this.replaceEntitiesValue = Q, this.readStopNodeData = nt, this.saveTextToParentTag = H2, this.addChild = K, this.ignoreAttributesFn = "function" == typeof (e6 = this.options.ignoreAttributes) ? e6 : Array.isArray(e6) ? (t7) => {
-            for (const i6 of e6) {
-              if ("string" == typeof i6 && t7 === i6) return true;
-              if (i6 instanceof RegExp && i6.test(t7)) return true;
+      class it {
+        constructor(t6, e6) {
+          var n6;
+          this.options = t6, this.currentNode = null, this.tagsNodeStack = [], this.parseXml = ht, this.parseTextData = st, this.resolveNameSpace = rt, this.buildAttributesMap = at, this.isItStopNode = ct, this.replaceEntitiesValue = ut, this.readStopNodeData = mt, this.saveTextToParentTag = pt, this.addChild = lt, this.ignoreAttributesFn = "function" == typeof (n6 = this.options.ignoreAttributes) ? n6 : Array.isArray(n6) ? (t7) => {
+            for (const e7 of n6) {
+              if ("string" == typeof e7 && t7 === e7) return true;
+              if (e7 instanceof RegExp && e7.test(t7)) return true;
             }
-          } : () => false, this.entityExpansionCount = 0, this.currentExpandedLength = 0, this.matcher = new G2(), this.readonlyMatcher = this.matcher.readOnly(), this.isCurrentNodeStopNode = false, this.options.stopNodes && this.options.stopNodes.length > 0) {
-            this.stopNodeExpressions = [];
-            for (let t7 = 0; t7 < this.options.stopNodes.length; t7++) {
-              const e7 = this.options.stopNodes[t7];
-              "string" == typeof e7 ? this.stopNodeExpressions.push(new R(e7)) : e7 instanceof R && this.stopNodeExpressions.push(e7);
+          } : () => false, this.entityExpansionCount = 0, this.currentExpandedLength = 0;
+          let i6 = { ...W };
+          this.options.entityDecoder ? this.entityDecoder = this.options.entityDecoder : ("object" == typeof this.options.htmlEntities ? i6 = this.options.htmlEntities : true === this.options.htmlEntities && (i6 = { ...X, ...U }), this.entityDecoder = new tt({ namedEntities: { ...i6, ...e6 }, numericAllowed: this.options.htmlEntities, limit: { maxTotalExpansions: this.options.processEntities.maxTotalExpansions, maxExpandedLength: this.options.processEntities.maxExpandedLength, applyLimitsTo: this.options.processEntities.appliesTo } })), this.matcher = new R(), this.readonlyMatcher = this.matcher.readOnly(), this.isCurrentNodeStopNode = false, this.stopNodeExpressionsSet = new B2();
+          const s6 = this.options.stopNodes;
+          if (s6 && s6.length > 0) {
+            for (let t7 = 0; t7 < s6.length; t7++) {
+              const e7 = s6[t7];
+              "string" == typeof e7 ? this.stopNodeExpressionsSet.add(new G2(e7)) : e7 instanceof G2 && this.stopNodeExpressionsSet.add(e7);
             }
+            this.stopNodeExpressionsSet.seal();
           }
         }
       }
-      function Y(t6) {
-        const e6 = Object.keys(t6);
-        for (let i6 = 0; i6 < e6.length; i6++) {
-          const n6 = e6[i6], s6 = n6.replace(/[.\-+*:]/g, "\\.");
-          this.lastEntities[n6] = { regex: new RegExp("&" + s6 + ";", "g"), val: t6[n6] };
+      function st(t6, e6, n6, i6, s6, r6, o6) {
+        const a6 = this.options;
+        if (void 0 !== t6 && (a6.trimValues && !i6 && (t6 = t6.trim()), t6.length > 0)) {
+          o6 || (t6 = this.replaceEntitiesValue(t6, e6, n6));
+          const i7 = a6.jPath ? n6.toString() : n6, h6 = a6.tagValueProcessor(e6, t6, i7, s6, r6);
+          return null == h6 ? t6 : typeof h6 != typeof t6 || h6 !== t6 ? h6 : a6.trimValues || t6.trim() === t6 ? xt(t6, a6.parseTagValue, a6.numberParseOptions) : t6;
         }
       }
-      function z2(t6, e6, i6, n6, s6, r6, o6) {
-        if (void 0 !== t6 && (this.options.trimValues && !n6 && (t6 = t6.trim()), t6.length > 0)) {
-          o6 || (t6 = this.replaceEntitiesValue(t6, e6, i6));
-          const n7 = this.options.jPath ? i6.toString() : i6, a6 = this.options.tagValueProcessor(e6, t6, n7, s6, r6);
-          return null == a6 ? t6 : typeof a6 != typeof t6 || a6 !== t6 ? a6 : this.options.trimValues || t6.trim() === t6 ? st(t6, this.options.parseTagValue, this.options.numberParseOptions) : t6;
-        }
-      }
-      function X(t6) {
+      function rt(t6) {
         if (this.options.removeNSPrefix) {
-          const e6 = t6.split(":"), i6 = "/" === t6.charAt(0) ? "/" : "";
+          const e6 = t6.split(":"), n6 = "/" === t6.charAt(0) ? "/" : "";
           if ("xmlns" === e6[0]) return "";
-          2 === e6.length && (t6 = i6 + e6[1]);
+          2 === e6.length && (t6 = n6 + e6[1]);
         }
         return t6;
       }
-      const q5 = new RegExp(`([^\\s=]+)\\s*(=\\s*(['"])([\\s\\S]*?)\\3)?`, "gm");
-      function Z(t6, e6, i6) {
-        if (true !== this.options.ignoreAttributes && "string" == typeof t6) {
-          const n6 = s5(t6, q5), r6 = n6.length, o6 = {}, a6 = {};
-          for (let t7 = 0; t7 < r6; t7++) {
-            const e7 = this.resolveNameSpace(n6[t7][1]), s6 = n6[t7][4];
+      const ot = new RegExp(`([^\\s=]+)\\s*(=\\s*(['"])([\\s\\S]*?)\\3)?`, "gm");
+      function at(t6, e6, n6, i6 = false) {
+        const r6 = this.options;
+        if (true === i6 || true !== r6.ignoreAttributes && "string" == typeof t6) {
+          const i7 = s5(t6, ot), o6 = i7.length, a6 = {}, h6 = new Array(o6);
+          let l6 = false;
+          const u6 = {};
+          for (let t7 = 0; t7 < o6; t7++) {
+            const e7 = this.resolveNameSpace(i7[t7][1]), s6 = i7[t7][4];
             if (e7.length && void 0 !== s6) {
-              let t8 = s6;
-              this.options.trimValues && (t8 = t8.trim()), t8 = this.replaceEntitiesValue(t8, i6, this.readonlyMatcher), a6[e7] = t8;
+              let i8 = s6;
+              r6.trimValues && (i8 = i8.trim()), i8 = this.replaceEntitiesValue(i8, n6, this.readonlyMatcher), h6[t7] = i8, u6[e7] = i8, l6 = true;
             }
           }
-          Object.keys(a6).length > 0 && "object" == typeof e6 && e6.updateCurrent && e6.updateCurrent(a6);
-          for (let t7 = 0; t7 < r6; t7++) {
-            const s6 = this.resolveNameSpace(n6[t7][1]), r7 = this.options.jPath ? e6.toString() : this.readonlyMatcher;
-            if (this.ignoreAttributesFn(s6, r7)) continue;
-            let a7 = n6[t7][4], h6 = this.options.attributeNamePrefix + s6;
-            if (s6.length) if (this.options.transformAttributeName && (h6 = this.options.transformAttributeName(h6)), h6 = at(h6, this.options), void 0 !== a7) {
-              this.options.trimValues && (a7 = a7.trim()), a7 = this.replaceEntitiesValue(a7, i6, this.readonlyMatcher);
-              const t8 = this.options.jPath ? e6.toString() : this.readonlyMatcher, n7 = this.options.attributeValueProcessor(s6, a7, t8);
-              o6[h6] = null == n7 ? a7 : typeof n7 != typeof a7 || n7 !== a7 ? n7 : st(a7, this.options.parseAttributeValue, this.options.numberParseOptions);
-            } else this.options.allowBooleanAttributes && (o6[h6] = true);
+          l6 && "object" == typeof e6 && e6.updateCurrent && e6.updateCurrent(u6);
+          const p6 = r6.jPath ? e6.toString() : this.readonlyMatcher;
+          let c6 = false;
+          for (let t7 = 0; t7 < o6; t7++) {
+            const e7 = this.resolveNameSpace(i7[t7][1]);
+            if (this.ignoreAttributesFn(e7, p6)) continue;
+            let n7 = r6.attributeNamePrefix + e7;
+            if (e7.length) if (r6.transformAttributeName && (n7 = r6.transformAttributeName(n7)), n7 = bt(n7, r6), void 0 !== i7[t7][4]) {
+              const i8 = h6[t7], s6 = r6.attributeValueProcessor(e7, i8, p6);
+              a6[n7] = null == s6 ? i8 : typeof s6 != typeof i8 || s6 !== i8 ? s6 : xt(i8, r6.parseAttributeValue, r6.numberParseOptions), c6 = true;
+            } else r6.allowBooleanAttributes && (a6[n7] = true, c6 = true);
           }
-          if (!Object.keys(o6).length) return;
-          if (this.options.attributesGroupName) {
+          if (!c6) return;
+          if (r6.attributesGroupName && !r6.preserveOrder) {
             const t7 = {};
-            return t7[this.options.attributesGroupName] = o6, t7;
+            return t7[r6.attributesGroupName] = a6, t7;
           }
-          return o6;
+          return a6;
         }
       }
-      const J2 = function(t6) {
+      const ht = function(t6) {
         t6 = t6.replace(/\r\n?/g, "\n");
-        const e6 = new $("!xml");
-        let i6 = e6, n6 = "";
-        this.matcher.reset(), this.entityExpansionCount = 0, this.currentExpandedLength = 0;
-        const s6 = new I2(this.options.processEntities);
-        for (let r6 = 0; r6 < t6.length; r6++) if ("<" === t6[r6]) if ("/" === t6[r6 + 1]) {
-          const e7 = et(t6, ">", r6, "Closing Tag is not closed.");
-          let s7 = t6.substring(r6 + 2, e7).trim();
-          if (this.options.removeNSPrefix) {
-            const t7 = s7.indexOf(":");
-            -1 !== t7 && (s7 = s7.substr(t7 + 1));
-          }
-          s7 = ot(this.options.transformTagName, s7, "", this.options).tagName, i6 && (n6 = this.saveTextToParentTag(n6, i6, this.readonlyMatcher));
-          const o6 = this.matcher.getCurrentTag();
-          if (s7 && -1 !== this.options.unpairedTags.indexOf(s7)) throw new Error(`Unpaired tag can not be used as closing tag: </${s7}>`);
-          o6 && -1 !== this.options.unpairedTags.indexOf(o6) && (this.matcher.pop(), this.tagsNodeStack.pop()), this.matcher.pop(), this.isCurrentNodeStopNode = false, i6 = this.tagsNodeStack.pop(), n6 = "", r6 = e7;
-        } else if ("?" === t6[r6 + 1]) {
-          let e7 = it(t6, r6, false, "?>");
-          if (!e7) throw new Error("Pi Tag is not closed.");
-          if (n6 = this.saveTextToParentTag(n6, i6, this.readonlyMatcher), this.options.ignoreDeclaration && "?xml" === e7.tagName || this.options.ignorePiTags) ;
-          else {
-            const t7 = new $(e7.tagName);
-            t7.add(this.options.textNodeName, ""), e7.tagName !== e7.tagExp && e7.attrExpPresent && (t7[":@"] = this.buildAttributesMap(e7.tagExp, this.matcher, e7.tagName)), this.addChild(i6, t7, this.readonlyMatcher, r6);
-          }
-          r6 = e7.closeIndex + 1;
-        } else if ("!--" === t6.substr(r6 + 1, 3)) {
-          const e7 = et(t6, "-->", r6 + 4, "Comment is not closed.");
-          if (this.options.commentPropName) {
-            const s7 = t6.substring(r6 + 4, e7 - 2);
-            n6 = this.saveTextToParentTag(n6, i6, this.readonlyMatcher), i6.add(this.options.commentPropName, [{ [this.options.textNodeName]: s7 }]);
-          }
-          r6 = e7;
-        } else if ("!D" === t6.substr(r6 + 1, 2)) {
-          const e7 = s6.readDocType(t6, r6);
-          this.docTypeEntities = e7.entities, r6 = e7.i;
-        } else if ("![" === t6.substr(r6 + 1, 2)) {
-          const e7 = et(t6, "]]>", r6, "CDATA is not closed.") - 2, s7 = t6.substring(r6 + 9, e7);
-          n6 = this.saveTextToParentTag(n6, i6, this.readonlyMatcher);
-          let o6 = this.parseTextData(s7, i6.tagname, this.readonlyMatcher, true, false, true, true);
-          null == o6 && (o6 = ""), this.options.cdataPropName ? i6.add(this.options.cdataPropName, [{ [this.options.textNodeName]: s7 }]) : i6.add(this.options.textNodeName, o6), r6 = e7 + 2;
-        } else {
-          let s7 = it(t6, r6, this.options.removeNSPrefix);
-          if (!s7) {
-            const e7 = t6.substring(Math.max(0, r6 - 50), Math.min(t6.length, r6 + 50));
-            throw new Error(`readTagExp returned undefined at position ${r6}. Context: "${e7}"`);
-          }
-          let o6 = s7.tagName;
-          const a6 = s7.rawTagName;
-          let h6 = s7.tagExp, l6 = s7.attrExpPresent, p6 = s7.closeIndex;
-          if ({ tagName: o6, tagExp: h6 } = ot(this.options.transformTagName, o6, h6, this.options), this.options.strictReservedNames && (o6 === this.options.commentPropName || o6 === this.options.cdataPropName || o6 === this.options.textNodeName || o6 === this.options.attributesGroupName)) throw new Error(`Invalid tag name: ${o6}`);
-          i6 && n6 && "!xml" !== i6.tagname && (n6 = this.saveTextToParentTag(n6, i6, this.readonlyMatcher, false));
-          const u6 = i6;
-          u6 && -1 !== this.options.unpairedTags.indexOf(u6.tagname) && (i6 = this.tagsNodeStack.pop(), this.matcher.pop());
-          let c6 = false;
-          h6.length > 0 && h6.lastIndexOf("/") === h6.length - 1 && (c6 = true, "/" === o6[o6.length - 1] ? (o6 = o6.substr(0, o6.length - 1), h6 = o6) : h6 = h6.substr(0, h6.length - 1), l6 = o6 !== h6);
-          let d6, f6 = null, g6 = {};
-          d6 = B2(a6), o6 !== e6.tagname && this.matcher.push(o6, {}, d6), o6 !== h6 && l6 && (f6 = this.buildAttributesMap(h6, this.matcher, o6), f6 && (g6 = U(f6, this.options))), o6 !== e6.tagname && (this.isCurrentNodeStopNode = this.isItStopNode(this.stopNodeExpressions, this.matcher));
-          const m6 = r6;
-          if (this.isCurrentNodeStopNode) {
-            let e7 = "";
-            if (c6) r6 = s7.closeIndex;
-            else if (-1 !== this.options.unpairedTags.indexOf(o6)) r6 = s7.closeIndex;
+        const e6 = new O("!xml");
+        let n6 = e6, i6 = "";
+        this.matcher.reset(), this.entityDecoder.reset(), this.entityExpansionCount = 0, this.currentExpandedLength = 0;
+        const s6 = this.options, r6 = new $(s6.processEntities), o6 = t6.length;
+        for (let a6 = 0; a6 < o6; a6++) if ("<" === t6[a6]) {
+          const h6 = t6.charCodeAt(a6 + 1);
+          if (47 === h6) {
+            const e7 = dt(t6, ">", a6, "Closing Tag is not closed.");
+            let r7 = t6.substring(a6 + 2, e7).trim();
+            if (s6.removeNSPrefix) {
+              const t7 = r7.indexOf(":");
+              -1 !== t7 && (r7 = r7.substr(t7 + 1));
+            }
+            r7 = Nt(s6.transformTagName, r7, "", s6).tagName, n6 && (i6 = this.saveTextToParentTag(i6, n6, this.readonlyMatcher));
+            const o7 = this.matcher.getCurrentTag();
+            if (r7 && s6.unpairedTagsSet.has(r7)) throw new Error(`Unpaired tag can not be used as closing tag: </${r7}>`);
+            o7 && s6.unpairedTagsSet.has(o7) && (this.matcher.pop(), this.tagsNodeStack.pop()), this.matcher.pop(), this.isCurrentNodeStopNode = false, n6 = this.tagsNodeStack.pop(), i6 = "", a6 = e7;
+          } else if (63 === h6) {
+            let e7 = gt(t6, a6, false, "?>");
+            if (!e7) throw new Error("Pi Tag is not closed.");
+            i6 = this.saveTextToParentTag(i6, n6, this.readonlyMatcher);
+            const r7 = this.buildAttributesMap(e7.tagExp, this.matcher, e7.tagName, true);
+            if (r7) {
+              const t7 = r7[this.options.attributeNamePrefix + "version"];
+              this.entityDecoder.setXmlVersion(Number(t7) || 1);
+            }
+            if (s6.ignoreDeclaration && "?xml" === e7.tagName || s6.ignorePiTags) ;
             else {
-              const i7 = this.readStopNodeData(t6, a6, p6 + 1);
-              if (!i7) throw new Error(`Unexpected end of ${a6}`);
-              r6 = i7.i, e7 = i7.tagContent;
+              const t7 = new O(e7.tagName);
+              t7.add(s6.textNodeName, ""), e7.tagName !== e7.tagExp && e7.attrExpPresent && true !== s6.ignoreAttributes && (t7[":@"] = r7), this.addChild(n6, t7, this.readonlyMatcher, a6);
             }
-            const n7 = new $(o6);
-            f6 && (n7[":@"] = f6), n7.add(this.options.textNodeName, e7), this.matcher.pop(), this.isCurrentNodeStopNode = false, this.addChild(i6, n7, this.readonlyMatcher, m6);
+            a6 = e7.closeIndex + 1;
+          } else if (33 === h6 && 45 === t6.charCodeAt(a6 + 2) && 45 === t6.charCodeAt(a6 + 3)) {
+            const e7 = dt(t6, "-->", a6 + 4, "Comment is not closed.");
+            if (s6.commentPropName) {
+              const r7 = t6.substring(a6 + 4, e7 - 2);
+              i6 = this.saveTextToParentTag(i6, n6, this.readonlyMatcher), n6.add(s6.commentPropName, [{ [s6.textNodeName]: r7 }]);
+            }
+            a6 = e7;
+          } else if (33 === h6 && 68 === t6.charCodeAt(a6 + 2)) {
+            const e7 = r6.readDocType(t6, a6);
+            this.entityDecoder.addInputEntities(e7.entities), a6 = e7.i;
+          } else if (33 === h6 && 91 === t6.charCodeAt(a6 + 2)) {
+            const e7 = dt(t6, "]]>", a6, "CDATA is not closed.") - 2, r7 = t6.substring(a6 + 9, e7);
+            i6 = this.saveTextToParentTag(i6, n6, this.readonlyMatcher);
+            let o7 = this.parseTextData(r7, n6.tagname, this.readonlyMatcher, true, false, true, true);
+            null == o7 && (o7 = ""), s6.cdataPropName ? n6.add(s6.cdataPropName, [{ [s6.textNodeName]: r7 }]) : n6.add(s6.textNodeName, o7), a6 = e7 + 2;
           } else {
-            if (c6) {
-              ({ tagName: o6, tagExp: h6 } = ot(this.options.transformTagName, o6, h6, this.options));
-              const t7 = new $(o6);
-              f6 && (t7[":@"] = f6), this.addChild(i6, t7, this.readonlyMatcher, m6), this.matcher.pop(), this.isCurrentNodeStopNode = false;
-            } else {
-              if (-1 !== this.options.unpairedTags.indexOf(o6)) {
-                const t7 = new $(o6);
-                f6 && (t7[":@"] = f6), this.addChild(i6, t7, this.readonlyMatcher, m6), this.matcher.pop(), this.isCurrentNodeStopNode = false, r6 = s7.closeIndex;
-                continue;
-              }
-              {
-                const t7 = new $(o6);
-                if (this.tagsNodeStack.length > this.options.maxNestedTags) throw new Error("Maximum nested tags exceeded");
-                this.tagsNodeStack.push(i6), f6 && (t7[":@"] = f6), this.addChild(i6, t7, this.readonlyMatcher, m6), i6 = t7;
-              }
+            let r7 = gt(t6, a6, s6.removeNSPrefix);
+            if (!r7) {
+              const e7 = t6.substring(Math.max(0, a6 - 50), Math.min(o6, a6 + 50));
+              throw new Error(`readTagExp returned undefined at position ${a6}. Context: "${e7}"`);
             }
-            n6 = "", r6 = p6;
+            let h7 = r7.tagName;
+            const l6 = r7.rawTagName;
+            let u6 = r7.tagExp, p6 = r7.attrExpPresent, c6 = r7.closeIndex;
+            if ({ tagName: h7, tagExp: u6 } = Nt(s6.transformTagName, h7, u6, s6), s6.strictReservedNames && (h7 === s6.commentPropName || h7 === s6.cdataPropName || h7 === s6.textNodeName || h7 === s6.attributesGroupName)) throw new Error(`Invalid tag name: ${h7}`);
+            n6 && i6 && "!xml" !== n6.tagname && (i6 = this.saveTextToParentTag(i6, n6, this.readonlyMatcher, false));
+            const d6 = n6;
+            d6 && s6.unpairedTagsSet.has(d6.tagname) && (n6 = this.tagsNodeStack.pop(), this.matcher.pop());
+            let f6 = false;
+            u6.length > 0 && u6.lastIndexOf("/") === u6.length - 1 && (f6 = true, "/" === h7[h7.length - 1] ? (h7 = h7.substr(0, h7.length - 1), u6 = h7) : u6 = u6.substr(0, u6.length - 1), p6 = h7 !== u6);
+            let g6, m6 = null, x6 = {};
+            g6 = nt(l6), h7 !== e6.tagname && this.matcher.push(h7, {}, g6), h7 !== u6 && p6 && (m6 = this.buildAttributesMap(u6, this.matcher, h7), m6 && (x6 = et(m6, s6))), h7 !== e6.tagname && (this.isCurrentNodeStopNode = this.isItStopNode());
+            const N2 = a6;
+            if (this.isCurrentNodeStopNode) {
+              let e7 = "";
+              if (f6) a6 = r7.closeIndex;
+              else if (s6.unpairedTagsSet.has(h7)) a6 = r7.closeIndex;
+              else {
+                const n7 = this.readStopNodeData(t6, l6, c6 + 1);
+                if (!n7) throw new Error(`Unexpected end of ${l6}`);
+                a6 = n7.i, e7 = n7.tagContent;
+              }
+              const i7 = new O(h7);
+              m6 && (i7[":@"] = m6), i7.add(s6.textNodeName, e7), this.matcher.pop(), this.isCurrentNodeStopNode = false, this.addChild(n6, i7, this.readonlyMatcher, N2);
+            } else {
+              if (f6) {
+                ({ tagName: h7, tagExp: u6 } = Nt(s6.transformTagName, h7, u6, s6));
+                const t7 = new O(h7);
+                m6 && (t7[":@"] = m6), this.addChild(n6, t7, this.readonlyMatcher, N2), this.matcher.pop(), this.isCurrentNodeStopNode = false;
+              } else {
+                if (s6.unpairedTagsSet.has(h7)) {
+                  const t7 = new O(h7);
+                  m6 && (t7[":@"] = m6), this.addChild(n6, t7, this.readonlyMatcher, N2), this.matcher.pop(), this.isCurrentNodeStopNode = false, a6 = r7.closeIndex;
+                  continue;
+                }
+                {
+                  const t7 = new O(h7);
+                  if (this.tagsNodeStack.length > s6.maxNestedTags) throw new Error("Maximum nested tags exceeded");
+                  this.tagsNodeStack.push(n6), m6 && (t7[":@"] = m6), this.addChild(n6, t7, this.readonlyMatcher, N2), n6 = t7;
+                }
+              }
+              i6 = "", a6 = c6;
+            }
           }
-        }
-        else n6 += t6[r6];
+        } else i6 += t6[a6];
         return e6.child;
       };
-      function K(t6, e6, i6, n6) {
-        this.options.captureMetaData || (n6 = void 0);
-        const s6 = this.options.jPath ? i6.toString() : i6, r6 = this.options.updateTag(e6.tagname, s6, e6[":@"]);
-        false === r6 || ("string" == typeof r6 ? (e6.tagname = r6, t6.addChild(e6, n6)) : t6.addChild(e6, n6));
+      function lt(t6, e6, n6, i6) {
+        this.options.captureMetaData || (i6 = void 0);
+        const s6 = this.options.jPath ? n6.toString() : n6, r6 = this.options.updateTag(e6.tagname, s6, e6[":@"]);
+        false === r6 || ("string" == typeof r6 ? (e6.tagname = r6, t6.addChild(e6, i6)) : t6.addChild(e6, i6));
       }
-      function Q(t6, e6, i6) {
-        const n6 = this.options.processEntities;
-        if (!n6 || !n6.enabled) return t6;
-        if (n6.allowedTags) {
-          const s6 = this.options.jPath ? i6.toString() : i6;
-          if (!(Array.isArray(n6.allowedTags) ? n6.allowedTags.includes(e6) : n6.allowedTags(e6, s6))) return t6;
+      function ut(t6, e6, n6) {
+        const i6 = this.options.processEntities;
+        if (!i6 || !i6.enabled) return t6;
+        if (i6.allowedTags) {
+          const s6 = this.options.jPath ? n6.toString() : n6;
+          if (!(Array.isArray(i6.allowedTags) ? i6.allowedTags.includes(e6) : i6.allowedTags(e6, s6))) return t6;
         }
-        if (n6.tagFilter) {
-          const s6 = this.options.jPath ? i6.toString() : i6;
-          if (!n6.tagFilter(e6, s6)) return t6;
+        if (i6.tagFilter) {
+          const s6 = this.options.jPath ? n6.toString() : n6;
+          if (!i6.tagFilter(e6, s6)) return t6;
         }
-        for (const e7 of Object.keys(this.docTypeEntities)) {
-          const i7 = this.docTypeEntities[e7], s6 = t6.match(i7.regx);
-          if (s6) {
-            if (this.entityExpansionCount += s6.length, n6.maxTotalExpansions && this.entityExpansionCount > n6.maxTotalExpansions) throw new Error(`Entity expansion limit exceeded: ${this.entityExpansionCount} > ${n6.maxTotalExpansions}`);
-            const e8 = t6.length;
-            if (t6 = t6.replace(i7.regx, i7.val), n6.maxExpandedLength && (this.currentExpandedLength += t6.length - e8, this.currentExpandedLength > n6.maxExpandedLength)) throw new Error(`Total expanded content size exceeded: ${this.currentExpandedLength} > ${n6.maxExpandedLength}`);
-          }
-        }
-        for (const e7 of Object.keys(this.lastEntities)) {
-          const i7 = this.lastEntities[e7], s6 = t6.match(i7.regex);
-          if (s6 && (this.entityExpansionCount += s6.length, n6.maxTotalExpansions && this.entityExpansionCount > n6.maxTotalExpansions)) throw new Error(`Entity expansion limit exceeded: ${this.entityExpansionCount} > ${n6.maxTotalExpansions}`);
-          t6 = t6.replace(i7.regex, i7.val);
-        }
-        if (-1 === t6.indexOf("&")) return t6;
-        if (this.options.htmlEntities) for (const e7 of Object.keys(this.htmlEntities)) {
-          const i7 = this.htmlEntities[e7], s6 = t6.match(i7.regex);
-          if (s6 && (this.entityExpansionCount += s6.length, n6.maxTotalExpansions && this.entityExpansionCount > n6.maxTotalExpansions)) throw new Error(`Entity expansion limit exceeded: ${this.entityExpansionCount} > ${n6.maxTotalExpansions}`);
-          t6 = t6.replace(i7.regex, i7.val);
-        }
-        return t6.replace(this.ampEntity.regex, this.ampEntity.val);
+        return this.entityDecoder.decode(t6);
       }
-      function H2(t6, e6, i6, n6) {
-        return t6 && (void 0 === n6 && (n6 = 0 === e6.child.length), void 0 !== (t6 = this.parseTextData(t6, e6.tagname, i6, false, !!e6[":@"] && 0 !== Object.keys(e6[":@"]).length, n6)) && "" !== t6 && e6.add(this.options.textNodeName, t6), t6 = ""), t6;
+      function pt(t6, e6, n6, i6) {
+        return t6 && (void 0 === i6 && (i6 = 0 === e6.child.length), void 0 !== (t6 = this.parseTextData(t6, e6.tagname, n6, false, !!e6[":@"] && 0 !== Object.keys(e6[":@"]).length, i6)) && "" !== t6 && e6.add(this.options.textNodeName, t6), t6 = ""), t6;
       }
-      function tt(t6, e6) {
-        if (!t6 || 0 === t6.length) return false;
-        for (let i6 = 0; i6 < t6.length; i6++) if (e6.matches(t6[i6])) return true;
-        return false;
+      function ct() {
+        return 0 !== this.stopNodeExpressionsSet.size && this.matcher.matchesAny(this.stopNodeExpressionsSet);
       }
-      function et(t6, e6, i6, n6) {
-        const s6 = t6.indexOf(e6, i6);
-        if (-1 === s6) throw new Error(n6);
+      function dt(t6, e6, n6, i6) {
+        const s6 = t6.indexOf(e6, n6);
+        if (-1 === s6) throw new Error(i6);
         return s6 + e6.length - 1;
       }
-      function it(t6, e6, i6, n6 = ">") {
-        const s6 = (function(t7, e7, i7 = ">") {
-          let n7, s7 = "";
-          for (let r7 = e7; r7 < t7.length; r7++) {
-            let e8 = t7[r7];
-            if (n7) e8 === n7 && (n7 = "");
-            else if ('"' === e8 || "'" === e8) n7 = e8;
-            else if (e8 === i7[0]) {
-              if (!i7[1]) return { data: s7, index: r7 };
-              if (t7[r7 + 1] === i7[1]) return { data: s7, index: r7 };
-            } else "	" === e8 && (e8 = " ");
-            s7 += e8;
+      function ft(t6, e6, n6, i6) {
+        const s6 = t6.indexOf(e6, n6);
+        if (-1 === s6) throw new Error(i6);
+        return s6;
+      }
+      function gt(t6, e6, n6, i6 = ">") {
+        const s6 = (function(t7, e7, n7 = ">") {
+          let i7 = 0;
+          const s7 = t7.length, r7 = n7.charCodeAt(0), o7 = n7.length > 1 ? n7.charCodeAt(1) : -1;
+          let a7 = "", h7 = e7;
+          for (let n8 = e7; n8 < s7; n8++) {
+            const e8 = t7.charCodeAt(n8);
+            if (i7) e8 === i7 && (i7 = 0);
+            else if (34 === e8 || 39 === e8) i7 = e8;
+            else if (e8 === r7) {
+              if (-1 === o7) return a7 += t7.substring(h7, n8), { data: a7, index: n8 };
+              if (t7.charCodeAt(n8 + 1) === o7) return a7 += t7.substring(h7, n8), { data: a7, index: n8 };
+            } else 9 !== e8 || i7 || (a7 += t7.substring(h7, n8) + " ", h7 = n8 + 1);
           }
-        })(t6, e6 + 1, n6);
+        })(t6, e6 + 1, i6);
         if (!s6) return;
         let r6 = s6.data;
         const o6 = s6.index, a6 = r6.search(/\s/);
         let h6 = r6, l6 = true;
         -1 !== a6 && (h6 = r6.substring(0, a6), r6 = r6.substring(a6 + 1).trimStart());
-        const p6 = h6;
-        if (i6) {
+        const u6 = h6;
+        if (n6) {
           const t7 = h6.indexOf(":");
           -1 !== t7 && (h6 = h6.substr(t7 + 1), l6 = h6 !== s6.data.substr(t7 + 1));
         }
-        return { tagName: h6, tagExp: r6, closeIndex: o6, attrExpPresent: l6, rawTagName: p6 };
+        return { tagName: h6, tagExp: r6, closeIndex: o6, attrExpPresent: l6, rawTagName: u6 };
       }
-      function nt(t6, e6, i6) {
-        const n6 = i6;
+      function mt(t6, e6, n6) {
+        const i6 = n6;
         let s6 = 1;
-        for (; i6 < t6.length; i6++) if ("<" === t6[i6]) if ("/" === t6[i6 + 1]) {
-          const r6 = et(t6, ">", i6, `${e6} is not closed`);
-          if (t6.substring(i6 + 2, r6).trim() === e6 && (s6--, 0 === s6)) return { tagContent: t6.substring(n6, i6), i: r6 };
-          i6 = r6;
-        } else if ("?" === t6[i6 + 1]) i6 = et(t6, "?>", i6 + 1, "StopNode is not closed.");
-        else if ("!--" === t6.substr(i6 + 1, 3)) i6 = et(t6, "-->", i6 + 3, "StopNode is not closed.");
-        else if ("![" === t6.substr(i6 + 1, 2)) i6 = et(t6, "]]>", i6, "StopNode is not closed.") - 2;
-        else {
-          const n7 = it(t6, i6, ">");
-          n7 && ((n7 && n7.tagName) === e6 && "/" !== n7.tagExp[n7.tagExp.length - 1] && s6++, i6 = n7.closeIndex);
+        const r6 = t6.length;
+        for (; n6 < r6; n6++) if ("<" === t6[n6]) {
+          const r7 = t6.charCodeAt(n6 + 1);
+          if (47 === r7) {
+            const r8 = ft(t6, ">", n6, `${e6} is not closed`);
+            if (t6.substring(n6 + 2, r8).trim() === e6 && (s6--, 0 === s6)) return { tagContent: t6.substring(i6, n6), i: r8 };
+            n6 = r8;
+          } else if (63 === r7) n6 = dt(t6, "?>", n6 + 1, "StopNode is not closed.");
+          else if (33 === r7 && 45 === t6.charCodeAt(n6 + 2) && 45 === t6.charCodeAt(n6 + 3)) n6 = dt(t6, "-->", n6 + 3, "StopNode is not closed.");
+          else if (33 === r7 && 91 === t6.charCodeAt(n6 + 2)) n6 = dt(t6, "]]>", n6, "StopNode is not closed.") - 2;
+          else {
+            const i7 = gt(t6, n6, ">");
+            i7 && ((i7 && i7.tagName) === e6 && "/" !== i7.tagExp[i7.tagExp.length - 1] && s6++, n6 = i7.closeIndex);
+          }
         }
       }
-      function st(t6, e6, i6) {
+      function xt(t6, e6, n6) {
         if (e6 && "string" == typeof t6) {
           const e7 = t6.trim();
           return "true" === e7 || "false" !== e7 && (function(t7, e8 = {}) {
-            if (e8 = Object.assign({}, k5, e8), !t7 || "string" != typeof t7) return t7;
-            let i7 = t7.trim();
-            if (void 0 !== e8.skipLike && e8.skipLike.test(i7)) return t7;
-            if ("0" === t7) return 0;
-            if (e8.hex && D2.test(i7)) return (function(t8) {
+            if (e8 = Object.assign({}, L, e8), !t7 || "string" != typeof t7) return t7;
+            let n7 = t7.trim();
+            if (0 === n7.length) return t7;
+            if (void 0 !== e8.skipLike && e8.skipLike.test(n7)) return t7;
+            if ("0" === n7) return 0;
+            if (e8.hex && j5.test(n7)) return (function(t8) {
               if (parseInt) return parseInt(t8, 16);
               if (Number.parseInt) return Number.parseInt(t8, 16);
               if (window && window.parseInt) return window.parseInt(t8, 16);
               throw new Error("parseInt, Number.parseInt, window.parseInt are not supported");
-            })(i7);
-            if (isFinite(i7)) {
-              if (i7.includes("e") || i7.includes("E")) return (function(t8, e9, i8) {
-                if (!i8.eNotation) return t8;
-                const n7 = e9.match(F2);
-                if (n7) {
-                  let s6 = n7[1] || "";
-                  const r6 = -1 === n7[3].indexOf("e") ? "E" : "e", o6 = n7[2], a6 = s6 ? t8[o6.length + 1] === r6 : t8[o6.length] === r6;
-                  return o6.length > 1 && a6 ? t8 : (1 !== o6.length || !n7[3].startsWith(`.${r6}`) && n7[3][0] !== r6) && o6.length > 0 ? i8.leadingZeros && !a6 ? (e9 = (n7[1] || "") + n7[3], Number(e9)) : t8 : Number(e9);
+            })(n7);
+            if (isFinite(n7)) {
+              if (n7.includes("e") || n7.includes("E")) return (function(t8, e9, n8) {
+                if (!n8.eNotation) return t8;
+                const i7 = e9.match(k5);
+                if (i7) {
+                  let s6 = i7[1] || "";
+                  const r6 = -1 === i7[3].indexOf("e") ? "E" : "e", o6 = i7[2], a6 = s6 ? t8[o6.length + 1] === r6 : t8[o6.length] === r6;
+                  return o6.length > 1 && a6 ? t8 : (1 !== o6.length || !i7[3].startsWith(`.${r6}`) && i7[3][0] !== r6) && o6.length > 0 ? n8.leadingZeros && !a6 ? (e9 = (i7[1] || "") + i7[3], Number(e9)) : t8 : Number(e9);
                 }
                 return t8;
-              })(t7, i7, e8);
+              })(t7, n7, e8);
               {
-                const s6 = V.exec(i7);
+                const s6 = V.exec(n7);
                 if (s6) {
                   const r6 = s6[1] || "", o6 = s6[2];
-                  let a6 = (n6 = s6[3]) && -1 !== n6.indexOf(".") ? ("." === (n6 = n6.replace(/0+$/, "")) ? n6 = "0" : "." === n6[0] ? n6 = "0" + n6 : "." === n6[n6.length - 1] && (n6 = n6.substring(0, n6.length - 1)), n6) : n6;
+                  let a6 = (i6 = s6[3]) && -1 !== i6.indexOf(".") ? ("." === (i6 = i6.replace(/0+$/, "")) ? i6 = "0" : "." === i6[0] ? i6 = "0" + i6 : "." === i6[i6.length - 1] && (i6 = i6.substring(0, i6.length - 1)), i6) : i6;
                   const h6 = r6 ? "." === t7[o6.length + 1] : "." === t7[o6.length];
                   if (!e8.leadingZeros && (o6.length > 1 || 1 === o6.length && !h6)) return t7;
                   {
-                    const n7 = Number(i7), s7 = String(n7);
-                    if (0 === n7) return n7;
-                    if (-1 !== s7.search(/[eE]/)) return e8.eNotation ? n7 : t7;
-                    if (-1 !== i7.indexOf(".")) return "0" === s7 || s7 === a6 || s7 === `${r6}${a6}` ? n7 : t7;
-                    let h7 = o6 ? a6 : i7;
-                    return o6 ? h7 === s7 || r6 + h7 === s7 ? n7 : t7 : h7 === s7 || h7 === r6 + s7 ? n7 : t7;
+                    const i7 = Number(n7), s7 = String(i7);
+                    if (0 === i7) return i7;
+                    if (-1 !== s7.search(/[eE]/)) return e8.eNotation ? i7 : t7;
+                    if (-1 !== n7.indexOf(".")) return "0" === s7 || s7 === a6 || s7 === `${r6}${a6}` ? i7 : t7;
+                    let h7 = o6 ? a6 : n7;
+                    return o6 ? h7 === s7 || r6 + h7 === s7 ? i7 : t7 : h7 === s7 || h7 === r6 + s7 ? i7 : t7;
                   }
                 }
                 return t7;
               }
             }
-            var n6;
-            return (function(t8, e9, i8) {
-              const n7 = e9 === 1 / 0;
-              switch (i8.infinity.toLowerCase()) {
+            var i6;
+            return (function(t8, e9, n8) {
+              const i7 = e9 === 1 / 0;
+              switch (n8.infinity.toLowerCase()) {
                 case "null":
                   return null;
                 case "infinity":
                   return e9;
                 case "string":
-                  return n7 ? "Infinity" : "-Infinity";
+                  return i7 ? "Infinity" : "-Infinity";
                 default:
                   return t8;
               }
-            })(t7, Number(i7), e8);
-          })(t6, i6);
+            })(t7, Number(n7), e8);
+          })(t6, n6);
         }
         return void 0 !== t6 ? t6 : "";
       }
-      function rt(t6, e6, i6) {
-        const n6 = Number.parseInt(t6, e6);
-        return n6 >= 0 && n6 <= 1114111 ? String.fromCodePoint(n6) : i6 + t6 + ";";
-      }
-      function ot(t6, e6, i6, n6) {
+      function Nt(t6, e6, n6, i6) {
         if (t6) {
-          const n7 = t6(e6);
-          i6 === e6 && (i6 = n7), e6 = n7;
+          const i7 = t6(e6);
+          n6 === e6 && (n6 = i7), e6 = i7;
         }
-        return { tagName: e6 = at(e6, n6), tagExp: i6 };
+        return { tagName: e6 = bt(e6, i6), tagExp: n6 };
       }
-      function at(t6, e6) {
+      function bt(t6, e6) {
         if (a5.includes(t6)) throw new Error(`[SECURITY] Invalid name: "${t6}" is a reserved JavaScript keyword that could cause prototype pollution`);
         return o5.includes(t6) ? e6.onDangerousProperty(t6) : t6;
       }
-      const ht = $.getMetaDataSymbol();
-      function lt(t6, e6) {
+      const yt = O.getMetaDataSymbol();
+      function Et(t6, e6) {
         if (!t6 || "object" != typeof t6) return {};
         if (!e6) return t6;
-        const i6 = {};
-        for (const n6 in t6) n6.startsWith(e6) ? i6[n6.substring(e6.length)] = t6[n6] : i6[n6] = t6[n6];
-        return i6;
+        const n6 = {};
+        for (const i6 in t6) i6.startsWith(e6) ? n6[i6.substring(e6.length)] = t6[i6] : n6[i6] = t6[i6];
+        return n6;
       }
-      function pt(t6, e6, i6, n6) {
-        return ut(t6, e6, i6, n6);
+      function wt(t6, e6, n6, i6) {
+        return vt(t6, e6, n6, i6);
       }
-      function ut(t6, e6, i6, n6) {
+      function vt(t6, e6, n6, i6) {
         let s6;
         const r6 = {};
         for (let o6 = 0; o6 < t6.length; o6++) {
-          const a6 = t6[o6], h6 = ct(a6);
+          const a6 = t6[o6], h6 = St(a6);
           if (void 0 !== h6 && h6 !== e6.textNodeName) {
-            const t7 = lt(a6[":@"] || {}, e6.attributeNamePrefix);
-            i6.push(h6, t7);
+            const t7 = Et(a6[":@"] || {}, e6.attributeNamePrefix);
+            n6.push(h6, t7);
           }
           if (h6 === e6.textNodeName) void 0 === s6 ? s6 = a6[h6] : s6 += "" + a6[h6];
           else {
             if (void 0 === h6) continue;
             if (a6[h6]) {
-              let t7 = ut(a6[h6], e6, i6, n6);
-              const s7 = ft(t7, e6);
-              if (a6[":@"] ? dt(t7, a6[":@"], n6, e6) : 1 !== Object.keys(t7).length || void 0 === t7[e6.textNodeName] || e6.alwaysCreateTextNode ? 0 === Object.keys(t7).length && (e6.alwaysCreateTextNode ? t7[e6.textNodeName] = "" : t7 = "") : t7 = t7[e6.textNodeName], void 0 !== a6[ht] && "object" == typeof t7 && null !== t7 && (t7[ht] = a6[ht]), void 0 !== r6[h6] && Object.prototype.hasOwnProperty.call(r6, h6)) Array.isArray(r6[h6]) || (r6[h6] = [r6[h6]]), r6[h6].push(t7);
+              let t7 = vt(a6[h6], e6, n6, i6);
+              const s7 = At(t7, e6);
+              if (a6[":@"] ? _t(t7, a6[":@"], i6, e6) : 1 !== Object.keys(t7).length || void 0 === t7[e6.textNodeName] || e6.alwaysCreateTextNode ? 0 === Object.keys(t7).length && (e6.alwaysCreateTextNode ? t7[e6.textNodeName] = "" : t7 = "") : t7 = t7[e6.textNodeName], void 0 !== a6[yt] && "object" == typeof t7 && null !== t7 && (t7[yt] = a6[yt]), void 0 !== r6[h6] && Object.prototype.hasOwnProperty.call(r6, h6)) Array.isArray(r6[h6]) || (r6[h6] = [r6[h6]]), r6[h6].push(t7);
               else {
-                const i7 = e6.jPath ? n6.toString() : n6;
-                e6.isArray(h6, i7, s7) ? r6[h6] = [t7] : r6[h6] = t7;
+                const n7 = e6.jPath ? i6.toString() : i6;
+                e6.isArray(h6, n7, s7) ? r6[h6] = [t7] : r6[h6] = t7;
               }
-              void 0 !== h6 && h6 !== e6.textNodeName && i6.pop();
+              void 0 !== h6 && h6 !== e6.textNodeName && n6.pop();
             }
           }
         }
         return "string" == typeof s6 ? s6.length > 0 && (r6[e6.textNodeName] = s6) : void 0 !== s6 && (r6[e6.textNodeName] = s6), r6;
       }
-      function ct(t6) {
+      function St(t6) {
         const e6 = Object.keys(t6);
         for (let t7 = 0; t7 < e6.length; t7++) {
-          const i6 = e6[t7];
-          if (":@" !== i6) return i6;
+          const n6 = e6[t7];
+          if (":@" !== n6) return n6;
         }
       }
-      function dt(t6, e6, i6, n6) {
+      function _t(t6, e6, n6, i6) {
         if (e6) {
           const s6 = Object.keys(e6), r6 = s6.length;
           for (let o6 = 0; o6 < r6; o6++) {
-            const r7 = s6[o6], a6 = r7.startsWith(n6.attributeNamePrefix) ? r7.substring(n6.attributeNamePrefix.length) : r7, h6 = n6.jPath ? i6.toString() + "." + a6 : i6;
-            n6.isArray(r7, h6, true, true) ? t6[r7] = [e6[r7]] : t6[r7] = e6[r7];
+            const r7 = s6[o6], a6 = r7.startsWith(i6.attributeNamePrefix) ? r7.substring(i6.attributeNamePrefix.length) : r7, h6 = i6.jPath ? n6.toString() + "." + a6 : n6;
+            i6.isArray(r7, h6, true, true) ? t6[r7] = [e6[r7]] : t6[r7] = e6[r7];
           }
         }
       }
-      function ft(t6, e6) {
-        const { textNodeName: i6 } = e6, n6 = Object.keys(t6).length;
-        return 0 === n6 || !(1 !== n6 || !t6[i6] && "boolean" != typeof t6[i6] && 0 !== t6[i6]);
+      function At(t6, e6) {
+        const { textNodeName: n6 } = e6, i6 = Object.keys(t6).length;
+        return 0 === i6 || !(1 !== i6 || !t6[n6] && "boolean" != typeof t6[n6] && 0 !== t6[n6]);
       }
-      class gt {
+      class Tt {
         constructor(t6) {
-          this.externalEntities = {}, this.options = O(t6);
+          this.externalEntities = {}, this.options = C2(t6);
         }
         parse(t6, e6) {
           if ("string" != typeof t6 && t6.toString) t6 = t6.toString();
           else if ("string" != typeof t6) throw new Error("XML data is accepted in String or Bytes[] form.");
           if (e6) {
             true === e6 && (e6 = {});
-            const i7 = l5(t6, e6);
-            if (true !== i7) throw Error(`${i7.err.msg}:${i7.err.line}:${i7.err.col}`);
+            const n7 = l5(t6, e6);
+            if (true !== n7) throw Error(`${n7.err.msg}:${n7.err.line}:${n7.err.col}`);
           }
-          const i6 = new W(this.options);
-          i6.addExternalEntities(this.externalEntities);
-          const n6 = i6.parseXml(t6);
-          return this.options.preserveOrder || void 0 === n6 ? n6 : pt(n6, this.options, i6.matcher, i6.readonlyMatcher);
+          const n6 = new it(this.options, this.externalEntities), i6 = n6.parseXml(t6);
+          return this.options.preserveOrder || void 0 === i6 ? i6 : wt(i6, this.options, n6.matcher, n6.readonlyMatcher);
         }
         addEntity(t6, e6) {
           if (-1 !== e6.indexOf("&")) throw new Error("Entity value can't have '&'");
@@ -32987,307 +33199,650 @@ var require_fxp = __commonJS({
           this.externalEntities[t6] = e6;
         }
         static getMetaDataSymbol() {
-          return $.getMetaDataSymbol();
+          return O.getMetaDataSymbol();
         }
       }
-      function mt(t6, e6) {
-        let i6 = "";
-        e6.format && e6.indentBy.length > 0 && (i6 = "\n");
-        const n6 = [];
+      function Ct(t6, e6) {
+        let n6 = "";
+        e6.format && e6.indentBy.length > 0 && (n6 = "\n");
+        const i6 = [];
         if (e6.stopNodes && Array.isArray(e6.stopNodes)) for (let t7 = 0; t7 < e6.stopNodes.length; t7++) {
-          const i7 = e6.stopNodes[t7];
-          "string" == typeof i7 ? n6.push(new R(i7)) : i7 instanceof R && n6.push(i7);
+          const n7 = e6.stopNodes[t7];
+          "string" == typeof n7 ? i6.push(new G2(n7)) : n7 instanceof G2 && i6.push(n7);
         }
-        return xt(t6, e6, i6, new G2(), n6);
+        return Pt(t6, e6, n6, new R(), i6);
       }
-      function xt(t6, e6, i6, n6, s6) {
+      function Pt(t6, e6, n6, i6, s6) {
         let r6 = "", o6 = false;
-        if (e6.maxNestedTags && n6.getDepth() > e6.maxNestedTags) throw new Error("Maximum nested tags exceeded");
+        if (e6.maxNestedTags && i6.getDepth() > e6.maxNestedTags) throw new Error("Maximum nested tags exceeded");
         if (!Array.isArray(t6)) {
           if (null != t6) {
-            let i7 = t6.toString();
-            return i7 = Tt(i7, e6), i7;
+            let n7 = t6.toString();
+            return n7 = Vt(n7, e6), n7;
           }
           return "";
         }
         for (let a6 = 0; a6 < t6.length; a6++) {
-          const h6 = t6[a6], l6 = yt(h6);
+          const h6 = t6[a6], l6 = Dt(h6);
           if (void 0 === l6) continue;
-          const p6 = Nt(h6[":@"], e6);
-          n6.push(l6, p6);
-          const u6 = vt(n6, s6);
+          const u6 = Ot(h6[":@"], e6);
+          i6.push(l6, u6);
+          const p6 = jt(i6, s6);
           if (l6 === e6.textNodeName) {
             let t7 = h6[l6];
-            u6 || (t7 = e6.tagValueProcessor(l6, t7), t7 = Tt(t7, e6)), o6 && (r6 += i6), r6 += t7, o6 = false, n6.pop();
+            p6 || (t7 = e6.tagValueProcessor(l6, t7), t7 = Vt(t7, e6)), o6 && (r6 += n6), r6 += t7, o6 = false, i6.pop();
             continue;
           }
           if (l6 === e6.cdataPropName) {
-            o6 && (r6 += i6), r6 += `<![CDATA[${h6[l6][0][e6.textNodeName]}]]>`, o6 = false, n6.pop();
+            o6 && (r6 += n6);
+            const t7 = h6[l6][0][e6.textNodeName];
+            r6 += `<![CDATA[${String(t7).replace(/\]\]>/g, "]]]]><![CDATA[>")}]]>`, o6 = false, i6.pop();
             continue;
           }
           if (l6 === e6.commentPropName) {
-            r6 += i6 + `<!--${h6[l6][0][e6.textNodeName]}-->`, o6 = true, n6.pop();
+            const t7 = h6[l6][0][e6.textNodeName];
+            r6 += n6 + `<!--${String(t7).replace(/--/g, "- -").replace(/-$/, "- ")}-->`, o6 = true, i6.pop();
             continue;
           }
           if ("?" === l6[0]) {
-            const t7 = wt(h6[":@"], e6, u6), s7 = "?xml" === l6 ? "" : i6;
+            const t7 = Mt(h6[":@"], e6, p6), s7 = "?xml" === l6 ? "" : n6;
             let a7 = h6[l6][0][e6.textNodeName];
-            a7 = 0 !== a7.length ? " " + a7 : "", r6 += s7 + `<${l6}${a7}${t7}?>`, o6 = true, n6.pop();
+            a7 = 0 !== a7.length ? " " + a7 : "", r6 += s7 + `<${l6}${a7}${t7}?>`, o6 = true, i6.pop();
             continue;
           }
-          let c6 = i6;
+          let c6 = n6;
           "" !== c6 && (c6 += e6.indentBy);
-          const d6 = i6 + `<${l6}${wt(h6[":@"], e6, u6)}`;
+          const d6 = n6 + `<${l6}${Mt(h6[":@"], e6, p6)}`;
           let f6;
-          f6 = u6 ? bt(h6[l6], e6) : xt(h6[l6], e6, c6, n6, s6), -1 !== e6.unpairedTags.indexOf(l6) ? e6.suppressUnpairedNode ? r6 += d6 + ">" : r6 += d6 + "/>" : f6 && 0 !== f6.length || !e6.suppressEmptyNode ? f6 && f6.endsWith(">") ? r6 += d6 + `>${f6}${i6}</${l6}>` : (r6 += d6 + ">", f6 && "" !== i6 && (f6.includes("/>") || f6.includes("</")) ? r6 += i6 + e6.indentBy + f6 + i6 : r6 += f6, r6 += `</${l6}>`) : r6 += d6 + "/>", o6 = true, n6.pop();
+          f6 = p6 ? $t(h6[l6], e6) : Pt(h6[l6], e6, c6, i6, s6), -1 !== e6.unpairedTags.indexOf(l6) ? e6.suppressUnpairedNode ? r6 += d6 + ">" : r6 += d6 + "/>" : f6 && 0 !== f6.length || !e6.suppressEmptyNode ? f6 && f6.endsWith(">") ? r6 += d6 + `>${f6}${n6}</${l6}>` : (r6 += d6 + ">", f6 && "" !== n6 && (f6.includes("/>") || f6.includes("</")) ? r6 += n6 + e6.indentBy + f6 + n6 : r6 += f6, r6 += `</${l6}>`) : r6 += d6 + "/>", o6 = true, i6.pop();
         }
         return r6;
       }
-      function Nt(t6, e6) {
+      function Ot(t6, e6) {
         if (!t6 || e6.ignoreAttributes) return null;
-        const i6 = {};
-        let n6 = false;
-        for (let s6 in t6) Object.prototype.hasOwnProperty.call(t6, s6) && (i6[s6.startsWith(e6.attributeNamePrefix) ? s6.substr(e6.attributeNamePrefix.length) : s6] = t6[s6], n6 = true);
-        return n6 ? i6 : null;
+        const n6 = {};
+        let i6 = false;
+        for (let s6 in t6) Object.prototype.hasOwnProperty.call(t6, s6) && (n6[s6.startsWith(e6.attributeNamePrefix) ? s6.substr(e6.attributeNamePrefix.length) : s6] = t6[s6], i6 = true);
+        return i6 ? n6 : null;
       }
-      function bt(t6, e6) {
+      function $t(t6, e6) {
         if (!Array.isArray(t6)) return null != t6 ? t6.toString() : "";
-        let i6 = "";
-        for (let n6 = 0; n6 < t6.length; n6++) {
-          const s6 = t6[n6], r6 = yt(s6);
-          if (r6 === e6.textNodeName) i6 += s6[r6];
-          else if (r6 === e6.cdataPropName) i6 += s6[r6][0][e6.textNodeName];
-          else if (r6 === e6.commentPropName) i6 += s6[r6][0][e6.textNodeName];
+        let n6 = "";
+        for (let i6 = 0; i6 < t6.length; i6++) {
+          const s6 = t6[i6], r6 = Dt(s6);
+          if (r6 === e6.textNodeName) n6 += s6[r6];
+          else if (r6 === e6.cdataPropName) n6 += s6[r6][0][e6.textNodeName];
+          else if (r6 === e6.commentPropName) n6 += s6[r6][0][e6.textNodeName];
           else {
             if (r6 && "?" === r6[0]) continue;
             if (r6) {
-              const t7 = Et(s6[":@"], e6), n7 = bt(s6[r6], e6);
-              n7 && 0 !== n7.length ? i6 += `<${r6}${t7}>${n7}</${r6}>` : i6 += `<${r6}${t7}/>`;
+              const t7 = It(s6[":@"], e6), i7 = $t(s6[r6], e6);
+              i7 && 0 !== i7.length ? n6 += `<${r6}${t7}>${i7}</${r6}>` : n6 += `<${r6}${t7}/>`;
             }
           }
         }
-        return i6;
+        return n6;
       }
-      function Et(t6, e6) {
-        let i6 = "";
-        if (t6 && !e6.ignoreAttributes) for (let n6 in t6) {
-          if (!Object.prototype.hasOwnProperty.call(t6, n6)) continue;
-          let s6 = t6[n6];
-          true === s6 && e6.suppressBooleanAttributes ? i6 += ` ${n6.substr(e6.attributeNamePrefix.length)}` : i6 += ` ${n6.substr(e6.attributeNamePrefix.length)}="${s6}"`;
-        }
-        return i6;
-      }
-      function yt(t6) {
-        const e6 = Object.keys(t6);
-        for (let i6 = 0; i6 < e6.length; i6++) {
-          const n6 = e6[i6];
-          if (Object.prototype.hasOwnProperty.call(t6, n6) && ":@" !== n6) return n6;
-        }
-      }
-      function wt(t6, e6, i6) {
+      function It(t6, e6) {
         let n6 = "";
-        if (t6 && !e6.ignoreAttributes) for (let s6 in t6) {
-          if (!Object.prototype.hasOwnProperty.call(t6, s6)) continue;
-          let r6;
-          i6 ? r6 = t6[s6] : (r6 = e6.attributeValueProcessor(s6, t6[s6]), r6 = Tt(r6, e6)), true === r6 && e6.suppressBooleanAttributes ? n6 += ` ${s6.substr(e6.attributeNamePrefix.length)}` : n6 += ` ${s6.substr(e6.attributeNamePrefix.length)}="${r6}"`;
+        if (t6 && !e6.ignoreAttributes) for (let i6 in t6) {
+          if (!Object.prototype.hasOwnProperty.call(t6, i6)) continue;
+          let s6 = t6[i6];
+          true === s6 && e6.suppressBooleanAttributes ? n6 += ` ${i6.substr(e6.attributeNamePrefix.length)}` : n6 += ` ${i6.substr(e6.attributeNamePrefix.length)}="${s6}"`;
         }
         return n6;
       }
-      function vt(t6, e6) {
+      function Dt(t6) {
+        const e6 = Object.keys(t6);
+        for (let n6 = 0; n6 < e6.length; n6++) {
+          const i6 = e6[n6];
+          if (Object.prototype.hasOwnProperty.call(t6, i6) && ":@" !== i6) return i6;
+        }
+      }
+      function Mt(t6, e6, n6) {
+        let i6 = "";
+        if (t6 && !e6.ignoreAttributes) for (let s6 in t6) {
+          if (!Object.prototype.hasOwnProperty.call(t6, s6)) continue;
+          let r6;
+          n6 ? r6 = t6[s6] : (r6 = e6.attributeValueProcessor(s6, t6[s6]), r6 = Vt(r6, e6)), true === r6 && e6.suppressBooleanAttributes ? i6 += ` ${s6.substr(e6.attributeNamePrefix.length)}` : i6 += ` ${s6.substr(e6.attributeNamePrefix.length)}="${r6}"`;
+        }
+        return i6;
+      }
+      function jt(t6, e6) {
         if (!e6 || 0 === e6.length) return false;
-        for (let i6 = 0; i6 < e6.length; i6++) if (t6.matches(e6[i6])) return true;
+        for (let n6 = 0; n6 < e6.length; n6++) if (t6.matches(e6[n6])) return true;
         return false;
       }
-      function Tt(t6, e6) {
-        if (t6 && t6.length > 0 && e6.processEntities) for (let i6 = 0; i6 < e6.entities.length; i6++) {
-          const n6 = e6.entities[i6];
-          t6 = t6.replace(n6.regex, n6.val);
+      function Vt(t6, e6) {
+        if (t6 && t6.length > 0 && e6.processEntities) for (let n6 = 0; n6 < e6.entities.length; n6++) {
+          const i6 = e6.entities[n6];
+          t6 = t6.replace(i6.regex, i6.val);
         }
         return t6;
       }
-      const Pt = { attributeNamePrefix: "@_", attributesGroupName: false, textNodeName: "#text", ignoreAttributes: true, cdataPropName: false, format: false, indentBy: "  ", suppressEmptyNode: false, suppressUnpairedNode: true, suppressBooleanAttributes: true, tagValueProcessor: function(t6, e6) {
+      const Lt = { attributeNamePrefix: "@_", attributesGroupName: false, textNodeName: "#text", ignoreAttributes: true, cdataPropName: false, format: false, indentBy: "  ", suppressEmptyNode: false, suppressUnpairedNode: true, suppressBooleanAttributes: true, tagValueProcessor: function(t6, e6) {
         return e6;
       }, attributeValueProcessor: function(t6, e6) {
         return e6;
       }, preserveOrder: false, commentPropName: false, unpairedTags: [], entities: [{ regex: new RegExp("&", "g"), val: "&amp;" }, { regex: new RegExp(">", "g"), val: "&gt;" }, { regex: new RegExp("<", "g"), val: "&lt;" }, { regex: new RegExp("'", "g"), val: "&apos;" }, { regex: new RegExp('"', "g"), val: "&quot;" }], processEntities: true, stopNodes: [], oneListGroup: false, maxNestedTags: 100, jPath: true };
-      function St(t6) {
-        if (this.options = Object.assign({}, Pt, t6), this.options.stopNodes && Array.isArray(this.options.stopNodes) && (this.options.stopNodes = this.options.stopNodes.map((t7) => "string" == typeof t7 && t7.startsWith("*.") ? ".." + t7.substring(2) : t7)), this.stopNodeExpressions = [], this.options.stopNodes && Array.isArray(this.options.stopNodes)) for (let t7 = 0; t7 < this.options.stopNodes.length; t7++) {
+      function kt(t6) {
+        if (this.options = Object.assign({}, Lt, t6), this.options.stopNodes && Array.isArray(this.options.stopNodes) && (this.options.stopNodes = this.options.stopNodes.map((t7) => "string" == typeof t7 && t7.startsWith("*.") ? ".." + t7.substring(2) : t7)), this.stopNodeExpressions = [], this.options.stopNodes && Array.isArray(this.options.stopNodes)) for (let t7 = 0; t7 < this.options.stopNodes.length; t7++) {
           const e7 = this.options.stopNodes[t7];
-          "string" == typeof e7 ? this.stopNodeExpressions.push(new R(e7)) : e7 instanceof R && this.stopNodeExpressions.push(e7);
+          "string" == typeof e7 ? this.stopNodeExpressions.push(new G2(e7)) : e7 instanceof G2 && this.stopNodeExpressions.push(e7);
         }
         var e6;
         true === this.options.ignoreAttributes || this.options.attributesGroupName ? this.isAttribute = function() {
           return false;
         } : (this.ignoreAttributesFn = "function" == typeof (e6 = this.options.ignoreAttributes) ? e6 : Array.isArray(e6) ? (t7) => {
-          for (const i6 of e6) {
-            if ("string" == typeof i6 && t7 === i6) return true;
-            if (i6 instanceof RegExp && i6.test(t7)) return true;
+          for (const n6 of e6) {
+            if ("string" == typeof n6 && t7 === n6) return true;
+            if (n6 instanceof RegExp && n6.test(t7)) return true;
           }
-        } : () => false, this.attrPrefixLen = this.options.attributeNamePrefix.length, this.isAttribute = Ct), this.processTextOrObjNode = At, this.options.format ? (this.indentate = Ot, this.tagEndChar = ">\n", this.newLine = "\n") : (this.indentate = function() {
+        } : () => false, this.attrPrefixLen = this.options.attributeNamePrefix.length, this.isAttribute = Gt), this.processTextOrObjNode = Ft, this.options.format ? (this.indentate = Rt, this.tagEndChar = ">\n", this.newLine = "\n") : (this.indentate = function() {
           return "";
         }, this.tagEndChar = ">", this.newLine = "");
       }
-      function At(t6, e6, i6, n6) {
+      function Ft(t6, e6, n6, i6) {
         const s6 = this.extractAttributes(t6);
-        if (n6.push(e6, s6), this.checkStopNode(n6)) {
+        if (i6.push(e6, s6), this.checkStopNode(i6)) {
           const s7 = this.buildRawContent(t6), r7 = this.buildAttributesForStopNode(t6);
-          return n6.pop(), this.buildObjectNode(s7, e6, r7, i6);
+          return i6.pop(), this.buildObjectNode(s7, e6, r7, n6);
         }
-        const r6 = this.j2x(t6, i6 + 1, n6);
-        return n6.pop(), void 0 !== t6[this.options.textNodeName] && 1 === Object.keys(t6).length ? this.buildTextValNode(t6[this.options.textNodeName], e6, r6.attrStr, i6, n6) : this.buildObjectNode(r6.val, e6, r6.attrStr, i6);
+        const r6 = this.j2x(t6, n6 + 1, i6);
+        return i6.pop(), void 0 !== t6[this.options.textNodeName] && 1 === Object.keys(t6).length ? this.buildTextValNode(t6[this.options.textNodeName], e6, r6.attrStr, n6, i6) : this.buildObjectNode(r6.val, e6, r6.attrStr, n6);
       }
-      function Ot(t6) {
+      function Rt(t6) {
         return this.options.indentBy.repeat(t6);
       }
-      function Ct(t6) {
+      function Gt(t6) {
         return !(!t6.startsWith(this.options.attributeNamePrefix) || t6 === this.options.textNodeName) && t6.substr(this.attrPrefixLen);
       }
-      St.prototype.build = function(t6) {
-        if (this.options.preserveOrder) return mt(t6, this.options);
+      kt.prototype.build = function(t6) {
+        if (this.options.preserveOrder) return Ct(t6, this.options);
         {
           Array.isArray(t6) && this.options.arrayNodeName && this.options.arrayNodeName.length > 1 && (t6 = { [this.options.arrayNodeName]: t6 });
-          const e6 = new G2();
+          const e6 = new R();
           return this.j2x(t6, 0, e6).val;
         }
-      }, St.prototype.j2x = function(t6, e6, i6) {
-        let n6 = "", s6 = "";
-        if (this.options.maxNestedTags && i6.getDepth() >= this.options.maxNestedTags) throw new Error("Maximum nested tags exceeded");
-        const r6 = this.options.jPath ? i6.toString() : i6, o6 = this.checkStopNode(i6);
+      }, kt.prototype.j2x = function(t6, e6, n6) {
+        let i6 = "", s6 = "";
+        if (this.options.maxNestedTags && n6.getDepth() >= this.options.maxNestedTags) throw new Error("Maximum nested tags exceeded");
+        const r6 = this.options.jPath ? n6.toString() : n6, o6 = this.checkStopNode(n6);
         for (let a6 in t6) if (Object.prototype.hasOwnProperty.call(t6, a6)) if (void 0 === t6[a6]) this.isAttribute(a6) && (s6 += "");
         else if (null === t6[a6]) this.isAttribute(a6) || a6 === this.options.cdataPropName ? s6 += "" : "?" === a6[0] ? s6 += this.indentate(e6) + "<" + a6 + "?" + this.tagEndChar : s6 += this.indentate(e6) + "<" + a6 + "/" + this.tagEndChar;
-        else if (t6[a6] instanceof Date) s6 += this.buildTextValNode(t6[a6], a6, "", e6, i6);
+        else if (t6[a6] instanceof Date) s6 += this.buildTextValNode(t6[a6], a6, "", e6, n6);
         else if ("object" != typeof t6[a6]) {
           const h6 = this.isAttribute(a6);
-          if (h6 && !this.ignoreAttributesFn(h6, r6)) n6 += this.buildAttrPairStr(h6, "" + t6[a6], o6);
+          if (h6 && !this.ignoreAttributesFn(h6, r6)) i6 += this.buildAttrPairStr(h6, "" + t6[a6], o6);
           else if (!h6) if (a6 === this.options.textNodeName) {
             let e7 = this.options.tagValueProcessor(a6, "" + t6[a6]);
             s6 += this.replaceEntitiesValue(e7);
           } else {
-            i6.push(a6);
-            const n7 = this.checkStopNode(i6);
-            if (i6.pop(), n7) {
-              const i7 = "" + t6[a6];
-              s6 += "" === i7 ? this.indentate(e6) + "<" + a6 + this.closeTag(a6) + this.tagEndChar : this.indentate(e6) + "<" + a6 + ">" + i7 + "</" + a6 + this.tagEndChar;
-            } else s6 += this.buildTextValNode(t6[a6], a6, "", e6, i6);
+            n6.push(a6);
+            const i7 = this.checkStopNode(n6);
+            if (n6.pop(), i7) {
+              const n7 = "" + t6[a6];
+              s6 += "" === n7 ? this.indentate(e6) + "<" + a6 + this.closeTag(a6) + this.tagEndChar : this.indentate(e6) + "<" + a6 + ">" + n7 + "</" + a6 + this.tagEndChar;
+            } else s6 += this.buildTextValNode(t6[a6], a6, "", e6, n6);
           }
         } else if (Array.isArray(t6[a6])) {
-          const n7 = t6[a6].length;
+          const i7 = t6[a6].length;
           let r7 = "", o7 = "";
-          for (let h6 = 0; h6 < n7; h6++) {
-            const n8 = t6[a6][h6];
-            if (void 0 === n8) ;
-            else if (null === n8) "?" === a6[0] ? s6 += this.indentate(e6) + "<" + a6 + "?" + this.tagEndChar : s6 += this.indentate(e6) + "<" + a6 + "/" + this.tagEndChar;
-            else if ("object" == typeof n8) if (this.options.oneListGroup) {
-              i6.push(a6);
-              const t7 = this.j2x(n8, e6 + 1, i6);
-              i6.pop(), r7 += t7.val, this.options.attributesGroupName && n8.hasOwnProperty(this.options.attributesGroupName) && (o7 += t7.attrStr);
-            } else r7 += this.processTextOrObjNode(n8, a6, e6, i6);
+          for (let h6 = 0; h6 < i7; h6++) {
+            const i8 = t6[a6][h6];
+            if (void 0 === i8) ;
+            else if (null === i8) "?" === a6[0] ? s6 += this.indentate(e6) + "<" + a6 + "?" + this.tagEndChar : s6 += this.indentate(e6) + "<" + a6 + "/" + this.tagEndChar;
+            else if ("object" == typeof i8) if (this.options.oneListGroup) {
+              n6.push(a6);
+              const t7 = this.j2x(i8, e6 + 1, n6);
+              n6.pop(), r7 += t7.val, this.options.attributesGroupName && i8.hasOwnProperty(this.options.attributesGroupName) && (o7 += t7.attrStr);
+            } else r7 += this.processTextOrObjNode(i8, a6, e6, n6);
             else if (this.options.oneListGroup) {
-              let t7 = this.options.tagValueProcessor(a6, n8);
+              let t7 = this.options.tagValueProcessor(a6, i8);
               t7 = this.replaceEntitiesValue(t7), r7 += t7;
             } else {
-              i6.push(a6);
-              const t7 = this.checkStopNode(i6);
-              if (i6.pop(), t7) {
-                const t8 = "" + n8;
+              n6.push(a6);
+              const t7 = this.checkStopNode(n6);
+              if (n6.pop(), t7) {
+                const t8 = "" + i8;
                 r7 += "" === t8 ? this.indentate(e6) + "<" + a6 + this.closeTag(a6) + this.tagEndChar : this.indentate(e6) + "<" + a6 + ">" + t8 + "</" + a6 + this.tagEndChar;
-              } else r7 += this.buildTextValNode(n8, a6, "", e6, i6);
+              } else r7 += this.buildTextValNode(i8, a6, "", e6, n6);
             }
           }
           this.options.oneListGroup && (r7 = this.buildObjectNode(r7, a6, o7, e6)), s6 += r7;
         } else if (this.options.attributesGroupName && a6 === this.options.attributesGroupName) {
-          const e7 = Object.keys(t6[a6]), i7 = e7.length;
-          for (let s7 = 0; s7 < i7; s7++) n6 += this.buildAttrPairStr(e7[s7], "" + t6[a6][e7[s7]], o6);
-        } else s6 += this.processTextOrObjNode(t6[a6], a6, e6, i6);
-        return { attrStr: n6, val: s6 };
-      }, St.prototype.buildAttrPairStr = function(t6, e6, i6) {
-        return i6 || (e6 = this.options.attributeValueProcessor(t6, "" + e6), e6 = this.replaceEntitiesValue(e6)), this.options.suppressBooleanAttributes && "true" === e6 ? " " + t6 : " " + t6 + '="' + e6 + '"';
-      }, St.prototype.extractAttributes = function(t6) {
+          const e7 = Object.keys(t6[a6]), n7 = e7.length;
+          for (let s7 = 0; s7 < n7; s7++) i6 += this.buildAttrPairStr(e7[s7], "" + t6[a6][e7[s7]], o6);
+        } else s6 += this.processTextOrObjNode(t6[a6], a6, e6, n6);
+        return { attrStr: i6, val: s6 };
+      }, kt.prototype.buildAttrPairStr = function(t6, e6, n6) {
+        return n6 || (e6 = this.options.attributeValueProcessor(t6, "" + e6), e6 = this.replaceEntitiesValue(e6)), this.options.suppressBooleanAttributes && "true" === e6 ? " " + t6 : " " + t6 + '="' + e6 + '"';
+      }, kt.prototype.extractAttributes = function(t6) {
         if (!t6 || "object" != typeof t6) return null;
         const e6 = {};
-        let i6 = false;
+        let n6 = false;
         if (this.options.attributesGroupName && t6[this.options.attributesGroupName]) {
-          const n6 = t6[this.options.attributesGroupName];
-          for (let t7 in n6) Object.prototype.hasOwnProperty.call(n6, t7) && (e6[t7.startsWith(this.options.attributeNamePrefix) ? t7.substring(this.options.attributeNamePrefix.length) : t7] = n6[t7], i6 = true);
-        } else for (let n6 in t6) {
-          if (!Object.prototype.hasOwnProperty.call(t6, n6)) continue;
-          const s6 = this.isAttribute(n6);
-          s6 && (e6[s6] = t6[n6], i6 = true);
+          const i6 = t6[this.options.attributesGroupName];
+          for (let t7 in i6) Object.prototype.hasOwnProperty.call(i6, t7) && (e6[t7.startsWith(this.options.attributeNamePrefix) ? t7.substring(this.options.attributeNamePrefix.length) : t7] = i6[t7], n6 = true);
+        } else for (let i6 in t6) {
+          if (!Object.prototype.hasOwnProperty.call(t6, i6)) continue;
+          const s6 = this.isAttribute(i6);
+          s6 && (e6[s6] = t6[i6], n6 = true);
         }
-        return i6 ? e6 : null;
-      }, St.prototype.buildRawContent = function(t6) {
+        return n6 ? e6 : null;
+      }, kt.prototype.buildRawContent = function(t6) {
         if ("string" == typeof t6) return t6;
         if ("object" != typeof t6 || null === t6) return String(t6);
         if (void 0 !== t6[this.options.textNodeName]) return t6[this.options.textNodeName];
         let e6 = "";
-        for (let i6 in t6) {
-          if (!Object.prototype.hasOwnProperty.call(t6, i6)) continue;
-          if (this.isAttribute(i6)) continue;
-          if (this.options.attributesGroupName && i6 === this.options.attributesGroupName) continue;
-          const n6 = t6[i6];
-          if (i6 === this.options.textNodeName) e6 += n6;
-          else if (Array.isArray(n6)) {
-            for (let t7 of n6) if ("string" == typeof t7 || "number" == typeof t7) e6 += `<${i6}>${t7}</${i6}>`;
+        for (let n6 in t6) {
+          if (!Object.prototype.hasOwnProperty.call(t6, n6)) continue;
+          if (this.isAttribute(n6)) continue;
+          if (this.options.attributesGroupName && n6 === this.options.attributesGroupName) continue;
+          const i6 = t6[n6];
+          if (n6 === this.options.textNodeName) e6 += i6;
+          else if (Array.isArray(i6)) {
+            for (let t7 of i6) if ("string" == typeof t7 || "number" == typeof t7) e6 += `<${n6}>${t7}</${n6}>`;
             else if ("object" == typeof t7 && null !== t7) {
-              const n7 = this.buildRawContent(t7), s6 = this.buildAttributesForStopNode(t7);
-              e6 += "" === n7 ? `<${i6}${s6}/>` : `<${i6}${s6}>${n7}</${i6}>`;
+              const i7 = this.buildRawContent(t7), s6 = this.buildAttributesForStopNode(t7);
+              e6 += "" === i7 ? `<${n6}${s6}/>` : `<${n6}${s6}>${i7}</${n6}>`;
             }
-          } else if ("object" == typeof n6 && null !== n6) {
-            const t7 = this.buildRawContent(n6), s6 = this.buildAttributesForStopNode(n6);
-            e6 += "" === t7 ? `<${i6}${s6}/>` : `<${i6}${s6}>${t7}</${i6}>`;
-          } else e6 += `<${i6}>${n6}</${i6}>`;
+          } else if ("object" == typeof i6 && null !== i6) {
+            const t7 = this.buildRawContent(i6), s6 = this.buildAttributesForStopNode(i6);
+            e6 += "" === t7 ? `<${n6}${s6}/>` : `<${n6}${s6}>${t7}</${n6}>`;
+          } else e6 += `<${n6}>${i6}</${n6}>`;
         }
         return e6;
-      }, St.prototype.buildAttributesForStopNode = function(t6) {
+      }, kt.prototype.buildAttributesForStopNode = function(t6) {
         if (!t6 || "object" != typeof t6) return "";
         let e6 = "";
         if (this.options.attributesGroupName && t6[this.options.attributesGroupName]) {
-          const i6 = t6[this.options.attributesGroupName];
-          for (let t7 in i6) {
-            if (!Object.prototype.hasOwnProperty.call(i6, t7)) continue;
-            const n6 = t7.startsWith(this.options.attributeNamePrefix) ? t7.substring(this.options.attributeNamePrefix.length) : t7, s6 = i6[t7];
-            true === s6 && this.options.suppressBooleanAttributes ? e6 += " " + n6 : e6 += " " + n6 + '="' + s6 + '"';
+          const n6 = t6[this.options.attributesGroupName];
+          for (let t7 in n6) {
+            if (!Object.prototype.hasOwnProperty.call(n6, t7)) continue;
+            const i6 = t7.startsWith(this.options.attributeNamePrefix) ? t7.substring(this.options.attributeNamePrefix.length) : t7, s6 = n6[t7];
+            true === s6 && this.options.suppressBooleanAttributes ? e6 += " " + i6 : e6 += " " + i6 + '="' + s6 + '"';
           }
-        } else for (let i6 in t6) {
-          if (!Object.prototype.hasOwnProperty.call(t6, i6)) continue;
-          const n6 = this.isAttribute(i6);
-          if (n6) {
-            const s6 = t6[i6];
-            true === s6 && this.options.suppressBooleanAttributes ? e6 += " " + n6 : e6 += " " + n6 + '="' + s6 + '"';
+        } else for (let n6 in t6) {
+          if (!Object.prototype.hasOwnProperty.call(t6, n6)) continue;
+          const i6 = this.isAttribute(n6);
+          if (i6) {
+            const s6 = t6[n6];
+            true === s6 && this.options.suppressBooleanAttributes ? e6 += " " + i6 : e6 += " " + i6 + '="' + s6 + '"';
           }
         }
         return e6;
-      }, St.prototype.buildObjectNode = function(t6, e6, i6, n6) {
-        if ("" === t6) return "?" === e6[0] ? this.indentate(n6) + "<" + e6 + i6 + "?" + this.tagEndChar : this.indentate(n6) + "<" + e6 + i6 + this.closeTag(e6) + this.tagEndChar;
+      }, kt.prototype.buildObjectNode = function(t6, e6, n6, i6) {
+        if ("" === t6) return "?" === e6[0] ? this.indentate(i6) + "<" + e6 + n6 + "?" + this.tagEndChar : this.indentate(i6) + "<" + e6 + n6 + this.closeTag(e6) + this.tagEndChar;
         {
           let s6 = "</" + e6 + this.tagEndChar, r6 = "";
-          return "?" === e6[0] && (r6 = "?", s6 = ""), !i6 && "" !== i6 || -1 !== t6.indexOf("<") ? false !== this.options.commentPropName && e6 === this.options.commentPropName && 0 === r6.length ? this.indentate(n6) + `<!--${t6}-->` + this.newLine : this.indentate(n6) + "<" + e6 + i6 + r6 + this.tagEndChar + t6 + this.indentate(n6) + s6 : this.indentate(n6) + "<" + e6 + i6 + r6 + ">" + t6 + s6;
+          return "?" === e6[0] && (r6 = "?", s6 = ""), !n6 && "" !== n6 || -1 !== t6.indexOf("<") ? false !== this.options.commentPropName && e6 === this.options.commentPropName && 0 === r6.length ? this.indentate(i6) + `<!--${t6}-->` + this.newLine : this.indentate(i6) + "<" + e6 + n6 + r6 + this.tagEndChar + t6 + this.indentate(i6) + s6 : this.indentate(i6) + "<" + e6 + n6 + r6 + ">" + t6 + s6;
         }
-      }, St.prototype.closeTag = function(t6) {
+      }, kt.prototype.closeTag = function(t6) {
         let e6 = "";
         return -1 !== this.options.unpairedTags.indexOf(t6) ? this.options.suppressUnpairedNode || (e6 = "/") : e6 = this.options.suppressEmptyNode ? "/" : `></${t6}`, e6;
-      }, St.prototype.checkStopNode = function(t6) {
+      }, kt.prototype.checkStopNode = function(t6) {
         if (!this.stopNodeExpressions || 0 === this.stopNodeExpressions.length) return false;
         for (let e6 = 0; e6 < this.stopNodeExpressions.length; e6++) if (t6.matches(this.stopNodeExpressions[e6])) return true;
         return false;
-      }, St.prototype.buildTextValNode = function(t6, e6, i6, n6, s6) {
-        if (false !== this.options.cdataPropName && e6 === this.options.cdataPropName) return this.indentate(n6) + `<![CDATA[${t6}]]>` + this.newLine;
-        if (false !== this.options.commentPropName && e6 === this.options.commentPropName) return this.indentate(n6) + `<!--${t6}-->` + this.newLine;
-        if ("?" === e6[0]) return this.indentate(n6) + "<" + e6 + i6 + "?" + this.tagEndChar;
+      }, kt.prototype.buildTextValNode = function(t6, e6, n6, i6, s6) {
+        if (false !== this.options.cdataPropName && e6 === this.options.cdataPropName) {
+          const e7 = String(t6).replace(/\]\]>/g, "]]]]><![CDATA[>");
+          return this.indentate(i6) + `<![CDATA[${e7}]]>` + this.newLine;
+        }
+        if (false !== this.options.commentPropName && e6 === this.options.commentPropName) {
+          const e7 = String(t6).replace(/--/g, "- -").replace(/-$/, "- ");
+          return this.indentate(i6) + `<!--${e7}-->` + this.newLine;
+        }
+        if ("?" === e6[0]) return this.indentate(i6) + "<" + e6 + n6 + "?" + this.tagEndChar;
         {
           let s7 = this.options.tagValueProcessor(e6, t6);
-          return s7 = this.replaceEntitiesValue(s7), "" === s7 ? this.indentate(n6) + "<" + e6 + i6 + this.closeTag(e6) + this.tagEndChar : this.indentate(n6) + "<" + e6 + i6 + ">" + s7 + "</" + e6 + this.tagEndChar;
+          return s7 = this.replaceEntitiesValue(s7), "" === s7 ? this.indentate(i6) + "<" + e6 + n6 + this.closeTag(e6) + this.tagEndChar : this.indentate(i6) + "<" + e6 + n6 + ">" + s7 + "</" + e6 + this.tagEndChar;
         }
-      }, St.prototype.replaceEntitiesValue = function(t6) {
+      }, kt.prototype.replaceEntitiesValue = function(t6) {
         if (t6 && t6.length > 0 && this.options.processEntities) for (let e6 = 0; e6 < this.options.entities.length; e6++) {
-          const i6 = this.options.entities[e6];
-          t6 = t6.replace(i6.regex, i6.val);
+          const n6 = this.options.entities[e6];
+          t6 = t6.replace(n6.regex, n6.val);
         }
         return t6;
       };
-      const $t = St, It = { validate: l5 };
+      const Bt = kt, Ut = { validate: l5 };
       module2.exports = e5;
     })();
+  }
+});
+
+// node_modules/@aws-sdk/xml-builder/dist-cjs/xml-external/nodable_entities.js
+var require_nodable_entities = __commonJS({
+  "node_modules/@aws-sdk/xml-builder/dist-cjs/xml-external/nodable_entities.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.EntityDecoderImpl = exports2.CURRENCY = exports2.COMMON_HTML = exports2.XML = void 0;
+    exports2.XML = {
+      amp: "&",
+      apos: "'",
+      gt: ">",
+      lt: "<",
+      quot: '"'
+    };
+    exports2.COMMON_HTML = {
+      nbsp: "\xA0",
+      copy: "\xA9",
+      reg: "\xAE",
+      trade: "\u2122",
+      mdash: "\u2014",
+      ndash: "\u2013",
+      hellip: "\u2026",
+      laquo: "\xAB",
+      raquo: "\xBB",
+      lsquo: "\u2018",
+      rsquo: "\u2019",
+      ldquo: "\u201C",
+      rdquo: "\u201D",
+      bull: "\u2022",
+      para: "\xB6",
+      sect: "\xA7",
+      deg: "\xB0",
+      frac12: "\xBD",
+      frac14: "\xBC",
+      frac34: "\xBE"
+    };
+    exports2.CURRENCY = {
+      cent: "\xA2",
+      pound: "\xA3",
+      curren: "\xA4",
+      yen: "\xA5",
+      euro: "\u20AC",
+      dollar: "$",
+      fnof: "\u0192",
+      inr: "\u20B9",
+      af: "\u060B",
+      birr: "\u1265\u122D",
+      peso: "\u20B1",
+      rub: "\u20BD",
+      won: "\u20A9",
+      yuan: "\xA5",
+      cedil: "\xB8"
+    };
+    var SPECIAL_CHARS2 = new Set("!?\\/[]$%{}^&*()<>|+");
+    function validateEntityName3(name) {
+      if (name[0] === "#") {
+        throw new Error(`[EntityReplacer] Invalid character '#' in entity name: "${name}"`);
+      }
+      for (const ch of name) {
+        if (SPECIAL_CHARS2.has(ch)) {
+          throw new Error(`[EntityReplacer] Invalid character '${ch}' in entity name: "${name}"`);
+        }
+      }
+      return name;
+    }
+    function mergeEntityMaps2(...maps) {
+      const out = /* @__PURE__ */ Object.create(null);
+      for (const map2 of maps) {
+        if (!map2) {
+          continue;
+        }
+        for (const key of Object.keys(map2)) {
+          const raw = map2[key];
+          if (typeof raw === "string") {
+            out[key] = raw;
+          } else if (raw && typeof raw === "object" && raw.val !== void 0) {
+            const val = raw.val;
+            if (typeof val === "string") {
+              out[key] = val;
+            }
+          }
+        }
+      }
+      return out;
+    }
+    var LIMIT_TIER_EXTERNAL2 = "external";
+    var LIMIT_TIER_BASE2 = "base";
+    var LIMIT_TIER_ALL2 = "all";
+    function parseLimitTiers2(raw) {
+      if (!raw || raw === LIMIT_TIER_EXTERNAL2) {
+        return /* @__PURE__ */ new Set([LIMIT_TIER_EXTERNAL2]);
+      }
+      if (raw === LIMIT_TIER_ALL2) {
+        return /* @__PURE__ */ new Set([LIMIT_TIER_ALL2]);
+      }
+      if (raw === LIMIT_TIER_BASE2) {
+        return /* @__PURE__ */ new Set([LIMIT_TIER_BASE2]);
+      }
+      if (Array.isArray(raw)) {
+        return new Set(raw);
+      }
+      return /* @__PURE__ */ new Set([LIMIT_TIER_EXTERNAL2]);
+    }
+    var NCR_LEVEL2 = Object.freeze({ allow: 0, leave: 1, remove: 2, throw: 3 });
+    var XML10_ALLOWED_C02 = /* @__PURE__ */ new Set([9, 10, 13]);
+    function parseNCRConfig2(ncr) {
+      if (!ncr) {
+        return { xmlVersion: 1, onLevel: NCR_LEVEL2.allow, nullLevel: NCR_LEVEL2.remove };
+      }
+      const xmlVersion = ncr.xmlVersion === 1.1 ? 1.1 : 1;
+      const onLevel = NCR_LEVEL2[ncr.onNCR ?? "allow"] ?? NCR_LEVEL2.allow;
+      const nullLevel = NCR_LEVEL2[ncr.nullNCR ?? "remove"] ?? NCR_LEVEL2.remove;
+      const clampedNull = Math.max(nullLevel, NCR_LEVEL2.remove);
+      return { xmlVersion, onLevel, nullLevel: clampedNull };
+    }
+    var EntityDecoderImpl = class EntityDecoderImpl {
+      _limit;
+      _maxTotalExpansions;
+      _maxExpandedLength;
+      _postCheck;
+      _limitTiers;
+      _numericAllowed;
+      _baseMap;
+      _externalMap;
+      _inputMap;
+      _totalExpansions;
+      _expandedLength;
+      _removeSet;
+      _leaveSet;
+      _ncrXmlVersion;
+      _ncrOnLevel;
+      _ncrNullLevel;
+      constructor(options = {}) {
+        this._limit = options.limit || {};
+        this._maxTotalExpansions = this._limit.maxTotalExpansions || 0;
+        this._maxExpandedLength = this._limit.maxExpandedLength || 0;
+        this._postCheck = typeof options.postCheck === "function" ? options.postCheck : (r5) => r5;
+        this._limitTiers = parseLimitTiers2(this._limit.applyLimitsTo ?? LIMIT_TIER_EXTERNAL2);
+        this._numericAllowed = options.numericAllowed ?? true;
+        this._baseMap = mergeEntityMaps2(exports2.XML, options.namedEntities || null);
+        this._externalMap = /* @__PURE__ */ Object.create(null);
+        this._inputMap = /* @__PURE__ */ Object.create(null);
+        this._totalExpansions = 0;
+        this._expandedLength = 0;
+        this._removeSet = new Set(options.remove && Array.isArray(options.remove) ? options.remove : []);
+        this._leaveSet = new Set(options.leave && Array.isArray(options.leave) ? options.leave : []);
+        const ncrCfg = parseNCRConfig2(options.ncr);
+        this._ncrXmlVersion = ncrCfg.xmlVersion;
+        this._ncrOnLevel = ncrCfg.onLevel;
+        this._ncrNullLevel = ncrCfg.nullLevel;
+      }
+      setExternalEntities(map2) {
+        if (map2) {
+          for (const key of Object.keys(map2)) {
+            validateEntityName3(key);
+          }
+        }
+        this._externalMap = mergeEntityMaps2(map2);
+      }
+      addExternalEntity(key, value) {
+        validateEntityName3(key);
+        if (typeof value === "string" && value.indexOf("&") === -1) {
+          this._externalMap[key] = value;
+        }
+      }
+      addInputEntities(map2) {
+        this._totalExpansions = 0;
+        this._expandedLength = 0;
+        this._inputMap = mergeEntityMaps2(map2);
+      }
+      reset() {
+        this._inputMap = /* @__PURE__ */ Object.create(null);
+        this._totalExpansions = 0;
+        this._expandedLength = 0;
+        return this;
+      }
+      setXmlVersion(version3) {
+        this._ncrXmlVersion = version3 === "1.1" || version3 === 1.1 ? 1.1 : 1;
+      }
+      decode(str) {
+        if (typeof str !== "string" || str.length === 0) {
+          return str;
+        }
+        const original = str;
+        const chunks = [];
+        const len = str.length;
+        let last = 0;
+        let i5 = 0;
+        const limitExpansions = this._maxTotalExpansions > 0;
+        const limitLength = this._maxExpandedLength > 0;
+        const checkLimits = limitExpansions || limitLength;
+        while (i5 < len) {
+          if (str.charCodeAt(i5) !== 38) {
+            i5++;
+            continue;
+          }
+          let j5 = i5 + 1;
+          while (j5 < len && str.charCodeAt(j5) !== 59 && j5 - i5 <= 32) {
+            j5++;
+          }
+          if (j5 >= len || str.charCodeAt(j5) !== 59) {
+            i5++;
+            continue;
+          }
+          const token = str.slice(i5 + 1, j5);
+          if (token.length === 0) {
+            i5++;
+            continue;
+          }
+          let replacement;
+          let tier2;
+          if (this._removeSet.has(token)) {
+            replacement = "";
+            if (tier2 === void 0) {
+              tier2 = LIMIT_TIER_EXTERNAL2;
+            }
+          } else if (this._leaveSet.has(token)) {
+            i5++;
+            continue;
+          } else if (token.charCodeAt(0) === 35) {
+            const ncrResult = this._resolveNCR(token);
+            if (ncrResult === void 0) {
+              i5++;
+              continue;
+            }
+            replacement = ncrResult;
+            tier2 = LIMIT_TIER_BASE2;
+          } else {
+            const resolved = this._resolveName(token);
+            replacement = resolved?.value;
+            tier2 = resolved?.tier;
+          }
+          if (replacement === void 0) {
+            i5++;
+            continue;
+          }
+          if (i5 > last) {
+            chunks.push(str.slice(last, i5));
+          }
+          chunks.push(replacement);
+          last = j5 + 1;
+          i5 = last;
+          if (checkLimits && this._tierCounts(tier2)) {
+            if (limitExpansions) {
+              this._totalExpansions++;
+              if (this._totalExpansions > this._maxTotalExpansions) {
+                throw new Error(`[EntityReplacer] Entity expansion count limit exceeded: ${this._totalExpansions} > ${this._maxTotalExpansions}`);
+              }
+            }
+            if (limitLength) {
+              const delta = replacement.length - (token.length + 2);
+              if (delta > 0) {
+                this._expandedLength += delta;
+                if (this._expandedLength > this._maxExpandedLength) {
+                  throw new Error(`[EntityReplacer] Expanded content length limit exceeded: ${this._expandedLength} > ${this._maxExpandedLength}`);
+                }
+              }
+            }
+          }
+        }
+        if (last < len) {
+          chunks.push(str.slice(last));
+        }
+        const result = chunks.length === 0 ? str : chunks.join("");
+        return this._postCheck(result, original);
+      }
+      _tierCounts(tier2) {
+        if (this._limitTiers.has(LIMIT_TIER_ALL2)) {
+          return true;
+        }
+        return this._limitTiers.has(tier2);
+      }
+      _resolveName(name) {
+        if (name in this._inputMap) {
+          return { value: this._inputMap[name], tier: LIMIT_TIER_EXTERNAL2 };
+        }
+        if (name in this._externalMap) {
+          return { value: this._externalMap[name], tier: LIMIT_TIER_EXTERNAL2 };
+        }
+        if (name in this._baseMap) {
+          return { value: this._baseMap[name], tier: LIMIT_TIER_BASE2 };
+        }
+        return void 0;
+      }
+      _classifyNCR(cp) {
+        if (cp === 0) {
+          return this._ncrNullLevel;
+        }
+        if (cp >= 55296 && cp <= 57343) {
+          return NCR_LEVEL2.remove;
+        }
+        if (this._ncrXmlVersion === 1) {
+          if (cp >= 1 && cp <= 31 && !XML10_ALLOWED_C02.has(cp)) {
+            return NCR_LEVEL2.remove;
+          }
+        }
+        return -1;
+      }
+      _applyNCRAction(action5, token, cp) {
+        switch (action5) {
+          case NCR_LEVEL2.allow:
+            return String.fromCodePoint(cp);
+          case NCR_LEVEL2.remove:
+            return "";
+          case NCR_LEVEL2.leave:
+            return void 0;
+          case NCR_LEVEL2.throw:
+            throw new Error(`[EntityDecoder] Prohibited numeric character reference &${token}; (U+${cp.toString(16).toUpperCase().padStart(4, "0")})`);
+          default:
+            return String.fromCodePoint(cp);
+        }
+      }
+      _resolveNCR(token) {
+        const second = token.charCodeAt(1);
+        let cp;
+        if (second === 120 || second === 88) {
+          cp = parseInt(token.slice(2), 16);
+        } else {
+          cp = parseInt(token.slice(1), 10);
+        }
+        if (Number.isNaN(cp) || cp < 0 || cp > 1114111) {
+          return void 0;
+        }
+        const minimum = this._classifyNCR(cp);
+        if (!this._numericAllowed && minimum < NCR_LEVEL2.remove) {
+          return void 0;
+        }
+        const effective = minimum === -1 ? this._ncrOnLevel : Math.max(this._ncrOnLevel, minimum);
+        return this._applyNCRAction(effective, token, cp);
+      }
+    };
+    exports2.EntityDecoderImpl = EntityDecoderImpl;
   }
 });
 
@@ -33298,6 +33853,17 @@ var require_xml_parser = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.parseXML = parseXML4;
     var fast_xml_parser_1 = require_fxp();
+    var nodable_entities_1 = require_nodable_entities();
+    var entityDecoder = new nodable_entities_1.EntityDecoderImpl({
+      namedEntities: { ...nodable_entities_1.XML, ...nodable_entities_1.COMMON_HTML, ...nodable_entities_1.CURRENCY },
+      numericAllowed: true,
+      limit: {
+        maxTotalExpansions: Infinity
+      },
+      ncr: {
+        xmlVersion: 1.1
+      }
+    });
     var parser = new fast_xml_parser_1.XMLParser({
       attributeNamePrefix: "",
       processEntities: {
@@ -33305,6 +33871,21 @@ var require_xml_parser = __commonJS({
         maxTotalExpansions: Infinity
       },
       htmlEntities: true,
+      entityDecoder: {
+        setExternalEntities: (entities) => {
+          entityDecoder.setExternalEntities(entities);
+        },
+        addInputEntities: (entities) => {
+          entityDecoder.addInputEntities(entities);
+        },
+        reset: () => {
+          entityDecoder.reset();
+        },
+        decode: (text) => {
+          return entityDecoder.decode(text);
+        },
+        setXmlVersion: (version3) => void {}
+      },
       ignoreAttributes: false,
       ignoreDeclaration: true,
       parseTagValue: false,
@@ -33312,8 +33893,6 @@ var require_xml_parser = __commonJS({
       tagValueProcessor: (_, val) => val.trim() === "" && val.includes("\n") ? "" : void 0,
       maxNestedTags: Infinity
     });
-    parser.addEntity("#xD", "\r");
-    parser.addEntity("#10", "\n");
     function parseXML4(xmlString) {
       return parser.parse(xmlString, true);
     }
@@ -69167,6 +69746,1475 @@ function getPositionFromMatch(match2) {
   return match2.startIndex + match2[1].length;
 }
 
+// node_modules/@nodable/entities/src/entities.js
+var BASIC_LATIN = {
+  amp: "&",
+  AMP: "&",
+  lt: "<",
+  LT: "<",
+  gt: ">",
+  GT: ">",
+  quot: '"',
+  QUOT: '"',
+  apos: "'",
+  lsquo: "\u2018",
+  rsquo: "\u2019",
+  ldquo: "\u201C",
+  rdquo: "\u201D",
+  lsquor: "\u201A",
+  rsquor: "\u2019",
+  ldquor: "\u201E",
+  bdquo: "\u201E",
+  comma: ",",
+  period: ".",
+  colon: ":",
+  semi: ";",
+  excl: "!",
+  quest: "?",
+  num: "#",
+  dollar: "$",
+  percent: "%",
+  amp: "&",
+  ast: "*",
+  commat: "@",
+  lowbar: "_",
+  verbar: "|",
+  vert: "|",
+  sol: "/",
+  bsol: "\\",
+  lbrace: "{",
+  rbrace: "}",
+  lbrack: "[",
+  rbrack: "]",
+  lpar: "(",
+  rpar: ")",
+  nbsp: "\xA0",
+  iexcl: "\xA1",
+  cent: "\xA2",
+  pound: "\xA3",
+  curren: "\xA4",
+  yen: "\xA5",
+  brvbar: "\xA6",
+  sect: "\xA7",
+  uml: "\xA8",
+  copy: "\xA9",
+  COPY: "\xA9",
+  ordf: "\xAA",
+  laquo: "\xAB",
+  not: "\xAC",
+  shy: "\xAD",
+  reg: "\xAE",
+  REG: "\xAE",
+  macr: "\xAF",
+  deg: "\xB0",
+  plusmn: "\xB1",
+  sup2: "\xB2",
+  sup3: "\xB3",
+  acute: "\xB4",
+  micro: "\xB5",
+  para: "\xB6",
+  middot: "\xB7",
+  cedil: "\xB8",
+  sup1: "\xB9",
+  ordm: "\xBA",
+  raquo: "\xBB",
+  frac14: "\xBC",
+  frac12: "\xBD",
+  half: "\xBD",
+  frac34: "\xBE",
+  iquest: "\xBF",
+  times: "\xD7",
+  div: "\xF7",
+  divide: "\xF7"
+};
+var LATIN_ACCENTS = {
+  Agrave: "\xC0",
+  agrave: "\xE0",
+  Aacute: "\xC1",
+  aacute: "\xE1",
+  Acirc: "\xC2",
+  acirc: "\xE2",
+  Atilde: "\xC3",
+  atilde: "\xE3",
+  Auml: "\xC4",
+  auml: "\xE4",
+  Aring: "\xC5",
+  aring: "\xE5",
+  AElig: "\xC6",
+  aelig: "\xE6",
+  Ccedil: "\xC7",
+  ccedil: "\xE7",
+  Egrave: "\xC8",
+  egrave: "\xE8",
+  Eacute: "\xC9",
+  eacute: "\xE9",
+  Ecirc: "\xCA",
+  ecirc: "\xEA",
+  Euml: "\xCB",
+  euml: "\xEB",
+  Igrave: "\xCC",
+  igrave: "\xEC",
+  Iacute: "\xCD",
+  iacute: "\xED",
+  Icirc: "\xCE",
+  icirc: "\xEE",
+  Iuml: "\xCF",
+  iuml: "\xEF",
+  ETH: "\xD0",
+  eth: "\xF0",
+  Ntilde: "\xD1",
+  ntilde: "\xF1",
+  Ograve: "\xD2",
+  ograve: "\xF2",
+  Oacute: "\xD3",
+  oacute: "\xF3",
+  Ocirc: "\xD4",
+  ocirc: "\xF4",
+  Otilde: "\xD5",
+  otilde: "\xF5",
+  Ouml: "\xD6",
+  ouml: "\xF6",
+  Oslash: "\xD8",
+  oslash: "\xF8",
+  Ugrave: "\xD9",
+  ugrave: "\xF9",
+  Uacute: "\xDA",
+  uacute: "\xFA",
+  Ucirc: "\xDB",
+  ucirc: "\xFB",
+  Uuml: "\xDC",
+  uuml: "\xFC",
+  Yacute: "\xDD",
+  yacute: "\xFD",
+  THORN: "\xDE",
+  thorn: "\xFE",
+  szlig: "\xDF",
+  yuml: "\xFF",
+  Yuml: "\u0178"
+};
+var LATIN_EXTENDED = {
+  Amacr: "\u0100",
+  amacr: "\u0101",
+  Abreve: "\u0102",
+  abreve: "\u0103",
+  Aogon: "\u0104",
+  aogon: "\u0105",
+  Cacute: "\u0106",
+  cacute: "\u0107",
+  Ccirc: "\u0108",
+  ccirc: "\u0109",
+  Cdot: "\u010A",
+  cdot: "\u010B",
+  Ccaron: "\u010C",
+  ccaron: "\u010D",
+  Dcaron: "\u010E",
+  dcaron: "\u010F",
+  Dstrok: "\u0110",
+  dstrok: "\u0111",
+  Emacr: "\u0112",
+  emacr: "\u0113",
+  Ecaron: "\u011A",
+  ecaron: "\u011B",
+  Edot: "\u0116",
+  edot: "\u0117",
+  Eogon: "\u0118",
+  eogon: "\u0119",
+  Gcirc: "\u011C",
+  gcirc: "\u011D",
+  Gbreve: "\u011E",
+  gbreve: "\u011F",
+  Gdot: "\u0120",
+  gdot: "\u0121",
+  Gcedil: "\u0122",
+  Hcirc: "\u0124",
+  hcirc: "\u0125",
+  Hstrok: "\u0126",
+  hstrok: "\u0127",
+  Itilde: "\u0128",
+  itilde: "\u0129",
+  Imacr: "\u012A",
+  imacr: "\u012B",
+  Iogon: "\u012E",
+  iogon: "\u012F",
+  Idot: "\u0130",
+  IJlig: "\u0132",
+  ijlig: "\u0133",
+  Jcirc: "\u0134",
+  jcirc: "\u0135",
+  Kcedil: "\u0136",
+  kcedil: "\u0137",
+  kgreen: "\u0138",
+  Lacute: "\u0139",
+  lacute: "\u013A",
+  Lcedil: "\u013B",
+  lcedil: "\u013C",
+  Lcaron: "\u013D",
+  lcaron: "\u013E",
+  Lmidot: "\u013F",
+  lmidot: "\u0140",
+  Lstrok: "\u0141",
+  lstrok: "\u0142",
+  Nacute: "\u0143",
+  nacute: "\u0144",
+  Ncaron: "\u0147",
+  ncaron: "\u0148",
+  Ncedil: "\u0145",
+  ncedil: "\u0146",
+  ENG: "\u014A",
+  eng: "\u014B",
+  Omacr: "\u014C",
+  omacr: "\u014D",
+  Odblac: "\u0150",
+  odblac: "\u0151",
+  OElig: "\u0152",
+  oelig: "\u0153",
+  Racute: "\u0154",
+  racute: "\u0155",
+  Rcaron: "\u0158",
+  rcaron: "\u0159",
+  Rcedil: "\u0156",
+  rcedil: "\u0157",
+  Sacute: "\u015A",
+  sacute: "\u015B",
+  Scirc: "\u015C",
+  scirc: "\u015D",
+  Scedil: "\u015E",
+  scedil: "\u015F",
+  Scaron: "\u0160",
+  scaron: "\u0161",
+  Tcedil: "\u0162",
+  tcedil: "\u0163",
+  Tcaron: "\u0164",
+  tcaron: "\u0165",
+  Tstrok: "\u0166",
+  tstrok: "\u0167",
+  Utilde: "\u0168",
+  utilde: "\u0169",
+  Umacr: "\u016A",
+  umacr: "\u016B",
+  Ubreve: "\u016C",
+  ubreve: "\u016D",
+  Uring: "\u016E",
+  uring: "\u016F",
+  Udblac: "\u0170",
+  udblac: "\u0171",
+  Uogon: "\u0172",
+  uogon: "\u0173",
+  Wcirc: "\u0174",
+  wcirc: "\u0175",
+  Ycirc: "\u0176",
+  ycirc: "\u0177",
+  Zacute: "\u0179",
+  zacute: "\u017A",
+  Zdot: "\u017B",
+  zdot: "\u017C",
+  Zcaron: "\u017D",
+  zcaron: "\u017E"
+};
+var GREEK = {
+  Alpha: "\u0391",
+  alpha: "\u03B1",
+  Beta: "\u0392",
+  beta: "\u03B2",
+  Gamma: "\u0393",
+  gamma: "\u03B3",
+  Delta: "\u0394",
+  delta: "\u03B4",
+  Epsilon: "\u0395",
+  epsilon: "\u03B5",
+  epsiv: "\u03F5",
+  varepsilon: "\u03F5",
+  Zeta: "\u0396",
+  zeta: "\u03B6",
+  Eta: "\u0397",
+  eta: "\u03B7",
+  Theta: "\u0398",
+  theta: "\u03B8",
+  thetasym: "\u03D1",
+  vartheta: "\u03D1",
+  Iota: "\u0399",
+  iota: "\u03B9",
+  Kappa: "\u039A",
+  kappa: "\u03BA",
+  kappav: "\u03F0",
+  varkappa: "\u03F0",
+  Lambda: "\u039B",
+  lambda: "\u03BB",
+  Mu: "\u039C",
+  mu: "\u03BC",
+  Nu: "\u039D",
+  nu: "\u03BD",
+  Xi: "\u039E",
+  xi: "\u03BE",
+  Omicron: "\u039F",
+  omicron: "\u03BF",
+  Pi: "\u03A0",
+  pi: "\u03C0",
+  piv: "\u03D6",
+  varpi: "\u03D6",
+  Rho: "\u03A1",
+  rho: "\u03C1",
+  rhov: "\u03F1",
+  varrho: "\u03F1",
+  Sigma: "\u03A3",
+  sigma: "\u03C3",
+  sigmaf: "\u03C2",
+  sigmav: "\u03C2",
+  varsigma: "\u03C2",
+  Tau: "\u03A4",
+  tau: "\u03C4",
+  Upsilon: "\u03A5",
+  upsilon: "\u03C5",
+  upsi: "\u03C5",
+  Upsi: "\u03D2",
+  upsih: "\u03D2",
+  Phi: "\u03A6",
+  phi: "\u03C6",
+  phiv: "\u03D5",
+  varphi: "\u03D5",
+  Chi: "\u03A7",
+  chi: "\u03C7",
+  Psi: "\u03A8",
+  psi: "\u03C8",
+  Omega: "\u03A9",
+  omega: "\u03C9",
+  ohm: "\u03A9",
+  Gammad: "\u03DC",
+  gammad: "\u03DD",
+  digamma: "\u03DD"
+};
+var CYRILLIC = {
+  Afr: "\u{1D504}",
+  afr: "\u{1D51E}",
+  Acy: "\u0410",
+  acy: "\u0430",
+  Bcy: "\u0411",
+  bcy: "\u0431",
+  Vcy: "\u0412",
+  vcy: "\u0432",
+  Gcy: "\u0413",
+  gcy: "\u0433",
+  Dcy: "\u0414",
+  dcy: "\u0434",
+  IEcy: "\u0415",
+  iecy: "\u0435",
+  IOcy: "\u0401",
+  iocy: "\u0451",
+  ZHcy: "\u0416",
+  zhcy: "\u0436",
+  Zcy: "\u0417",
+  zcy: "\u0437",
+  Icy: "\u0418",
+  icy: "\u0438",
+  Jcy: "\u0419",
+  jcy: "\u0439",
+  Kcy: "\u041A",
+  kcy: "\u043A",
+  Lcy: "\u041B",
+  lcy: "\u043B",
+  Mcy: "\u041C",
+  mcy: "\u043C",
+  Ncy: "\u041D",
+  ncy: "\u043D",
+  Ocy: "\u041E",
+  ocy: "\u043E",
+  Pcy: "\u041F",
+  pcy: "\u043F",
+  Rcy: "\u0420",
+  rcy: "\u0440",
+  Scy: "\u0421",
+  scy: "\u0441",
+  Tcy: "\u0422",
+  tcy: "\u0442",
+  Ucy: "\u0423",
+  ucy: "\u0443",
+  Fcy: "\u0424",
+  fcy: "\u0444",
+  KHcy: "\u0425",
+  khcy: "\u0445",
+  TScy: "\u0426",
+  tscy: "\u0446",
+  CHcy: "\u0427",
+  chcy: "\u0447",
+  SHcy: "\u0428",
+  shcy: "\u0448",
+  SHCHcy: "\u0429",
+  shchcy: "\u0449",
+  HARDcy: "\u042A",
+  hardcy: "\u044A",
+  Ycy: "\u042B",
+  ycy: "\u044B",
+  SOFTcy: "\u042C",
+  softcy: "\u044C",
+  Ecy: "\u042D",
+  ecy: "\u044D",
+  YUcy: "\u042E",
+  yucy: "\u044E",
+  YAcy: "\u042F",
+  yacy: "\u044F",
+  DJcy: "\u0402",
+  djcy: "\u0452",
+  GJcy: "\u0403",
+  gjcy: "\u0453",
+  Jukcy: "\u0404",
+  jukcy: "\u0454",
+  DScy: "\u0405",
+  dscy: "\u0455",
+  Iukcy: "\u0406",
+  iukcy: "\u0456",
+  YIcy: "\u0407",
+  yicy: "\u0457",
+  Jsercy: "\u0408",
+  jsercy: "\u0458",
+  LJcy: "\u0409",
+  ljcy: "\u0459",
+  NJcy: "\u040A",
+  njcy: "\u045A",
+  TSHcy: "\u040B",
+  tshcy: "\u045B",
+  KJcy: "\u040C",
+  kjcy: "\u045C",
+  Ubrcy: "\u040E",
+  ubrcy: "\u045E",
+  DZcy: "\u040F",
+  dzcy: "\u045F"
+};
+var MATH = {
+  plus: "+",
+  minus: "\u2212",
+  mnplus: "\u2213",
+  mp: "\u2213",
+  pm: "\xB1",
+  times: "\xD7",
+  div: "\xF7",
+  divide: "\xF7",
+  sdot: "\u22C5",
+  star: "\u2606",
+  starf: "\u2605",
+  bigstar: "\u2605",
+  lowast: "\u2217",
+  ast: "*",
+  midast: "*",
+  compfn: "\u2218",
+  smallcircle: "\u2218",
+  bullet: "\u2022",
+  bull: "\u2022",
+  nbsp: "\xA0",
+  hellip: "\u2026",
+  mldr: "\u2026",
+  prime: "\u2032",
+  Prime: "\u2033",
+  tprime: "\u2034",
+  bprime: "\u2035",
+  backprime: "\u2035",
+  minus: "\u2212",
+  minusd: "\u2238",
+  dotminus: "\u2238",
+  plusdo: "\u2214",
+  dotplus: "\u2214",
+  plusmn: "\xB1",
+  minusplus: "\u2213",
+  mnplus: "\u2213",
+  mp: "\u2213",
+  setminus: "\u2216",
+  smallsetminus: "\u2216",
+  Backslash: "\u2216",
+  setmn: "\u2216",
+  ssetmn: "\u2216",
+  lowbar: "_",
+  verbar: "|",
+  vert: "|",
+  VerticalLine: "|",
+  colon: ":",
+  Colon: "\u2237",
+  Proportion: "\u2237",
+  ratio: "\u2236",
+  equals: "=",
+  ne: "\u2260",
+  nequiv: "\u2262",
+  equiv: "\u2261",
+  Congruent: "\u2261",
+  sim: "\u223C",
+  thicksim: "\u223C",
+  thksim: "\u223C",
+  sime: "\u2243",
+  simeq: "\u2243",
+  TildeEqual: "\u2243",
+  asymp: "\u2248",
+  approx: "\u2248",
+  thickapprox: "\u2248",
+  thkap: "\u2248",
+  TildeTilde: "\u2248",
+  ncong: "\u2247",
+  cong: "\u2245",
+  TildeFullEqual: "\u2245",
+  asympeq: "\u224D",
+  CupCap: "\u224D",
+  bump: "\u224E",
+  Bumpeq: "\u224E",
+  HumpDownHump: "\u224E",
+  bumpe: "\u224F",
+  bumpeq: "\u224F",
+  HumpEqual: "\u224F",
+  dotminus: "\u2238",
+  minusd: "\u2238",
+  plusdo: "\u2214",
+  dotplus: "\u2214",
+  le: "\u2264",
+  LessEqual: "\u2264",
+  ge: "\u2265",
+  GreaterEqual: "\u2265",
+  lesseqgtr: "\u22DA",
+  lesseqqgtr: "\u2A8B",
+  greater: ">",
+  less: "<"
+};
+var MATH_ADVANCED = {
+  alefsym: "\u2135",
+  aleph: "\u2135",
+  beth: "\u2136",
+  gimel: "\u2137",
+  daleth: "\u2138",
+  forall: "\u2200",
+  ForAll: "\u2200",
+  part: "\u2202",
+  PartialD: "\u2202",
+  exist: "\u2203",
+  Exists: "\u2203",
+  nexist: "\u2204",
+  nexists: "\u2204",
+  empty: "\u2205",
+  emptyset: "\u2205",
+  emptyv: "\u2205",
+  varnothing: "\u2205",
+  nabla: "\u2207",
+  Del: "\u2207",
+  isin: "\u2208",
+  isinv: "\u2208",
+  in: "\u2208",
+  Element: "\u2208",
+  notin: "\u2209",
+  notinva: "\u2209",
+  ni: "\u220B",
+  niv: "\u220B",
+  SuchThat: "\u220B",
+  ReverseElement: "\u220B",
+  notni: "\u220C",
+  notniva: "\u220C",
+  prod: "\u220F",
+  Product: "\u220F",
+  coprod: "\u2210",
+  Coproduct: "\u2210",
+  sum: "\u2211",
+  Sum: "\u2211",
+  minus: "\u2212",
+  mp: "\u2213",
+  plusdo: "\u2214",
+  dotplus: "\u2214",
+  setminus: "\u2216",
+  lowast: "\u2217",
+  radic: "\u221A",
+  Sqrt: "\u221A",
+  prop: "\u221D",
+  propto: "\u221D",
+  Proportional: "\u221D",
+  varpropto: "\u221D",
+  infin: "\u221E",
+  infintie: "\u29DD",
+  ang: "\u2220",
+  angle: "\u2220",
+  angmsd: "\u2221",
+  measuredangle: "\u2221",
+  angsph: "\u2222",
+  mid: "\u2223",
+  VerticalBar: "\u2223",
+  nmid: "\u2224",
+  nsmid: "\u2224",
+  npar: "\u2226",
+  parallel: "\u2225",
+  spar: "\u2225",
+  nparallel: "\u2226",
+  nspar: "\u2226",
+  and: "\u2227",
+  wedge: "\u2227",
+  or: "\u2228",
+  vee: "\u2228",
+  cap: "\u2229",
+  cup: "\u222A",
+  int: "\u222B",
+  Integral: "\u222B",
+  conint: "\u222E",
+  ContourIntegral: "\u222E",
+  Conint: "\u222F",
+  DoubleContourIntegral: "\u222F",
+  Cconint: "\u2230",
+  there4: "\u2234",
+  therefore: "\u2234",
+  Therefore: "\u2234",
+  becaus: "\u2235",
+  because: "\u2235",
+  Because: "\u2235",
+  ratio: "\u2236",
+  Proportion: "\u2237",
+  minusd: "\u2238",
+  dotminus: "\u2238",
+  mDDot: "\u223A",
+  homtht: "\u223B",
+  sim: "\u223C",
+  bsimg: "\u223D",
+  backsim: "\u223D",
+  ac: "\u223E",
+  mstpos: "\u223E",
+  acd: "\u223F",
+  VerticalTilde: "\u2240",
+  wr: "\u2240",
+  wreath: "\u2240",
+  nsime: "\u2244",
+  nsimeq: "\u2244",
+  nsimeq: "\u2244",
+  ncong: "\u2247",
+  simne: "\u2246",
+  ncongdot: "\u2A6D\u0338",
+  ngsim: "\u2275",
+  nsim: "\u2241",
+  napprox: "\u2249",
+  nap: "\u2249",
+  ngeq: "\u2271",
+  nge: "\u2271",
+  nleq: "\u2270",
+  nle: "\u2270",
+  ngtr: "\u226F",
+  ngt: "\u226F",
+  nless: "\u226E",
+  nlt: "\u226E",
+  nprec: "\u2280",
+  npr: "\u2280",
+  nsucc: "\u2281",
+  nsc: "\u2281"
+};
+var ARROWS = {
+  larr: "\u2190",
+  leftarrow: "\u2190",
+  LeftArrow: "\u2190",
+  uarr: "\u2191",
+  uparrow: "\u2191",
+  UpArrow: "\u2191",
+  rarr: "\u2192",
+  rightarrow: "\u2192",
+  RightArrow: "\u2192",
+  darr: "\u2193",
+  downarrow: "\u2193",
+  DownArrow: "\u2193",
+  harr: "\u2194",
+  leftrightarrow: "\u2194",
+  LeftRightArrow: "\u2194",
+  varr: "\u2195",
+  updownarrow: "\u2195",
+  UpDownArrow: "\u2195",
+  nwarr: "\u2196",
+  nwarrow: "\u2196",
+  UpperLeftArrow: "\u2196",
+  nearr: "\u2197",
+  nearrow: "\u2197",
+  UpperRightArrow: "\u2197",
+  searr: "\u2198",
+  searrow: "\u2198",
+  LowerRightArrow: "\u2198",
+  swarr: "\u2199",
+  swarrow: "\u2199",
+  LowerLeftArrow: "\u2199",
+  lArr: "\u21D0",
+  Leftarrow: "\u21D0",
+  uArr: "\u21D1",
+  Uparrow: "\u21D1",
+  rArr: "\u21D2",
+  Rightarrow: "\u21D2",
+  dArr: "\u21D3",
+  Downarrow: "\u21D3",
+  hArr: "\u21D4",
+  Leftrightarrow: "\u21D4",
+  iff: "\u21D4",
+  vArr: "\u21D5",
+  Updownarrow: "\u21D5",
+  lAarr: "\u21DA",
+  Lleftarrow: "\u21DA",
+  rAarr: "\u21DB",
+  Rrightarrow: "\u21DB",
+  lrarr: "\u21C6",
+  leftrightarrows: "\u21C6",
+  rlarr: "\u21C4",
+  rightleftarrows: "\u21C4",
+  lrhar: "\u21CB",
+  leftrightharpoons: "\u21CB",
+  ReverseEquilibrium: "\u21CB",
+  rlhar: "\u21CC",
+  rightleftharpoons: "\u21CC",
+  Equilibrium: "\u21CC",
+  udarr: "\u21C5",
+  UpArrowDownArrow: "\u21C5",
+  duarr: "\u21F5",
+  DownArrowUpArrow: "\u21F5",
+  llarr: "\u21C7",
+  leftleftarrows: "\u21C7",
+  rrarr: "\u21C9",
+  rightrightarrows: "\u21C9",
+  ddarr: "\u21CA",
+  downdownarrows: "\u21CA",
+  har: "\u21BD",
+  lhard: "\u21BD",
+  leftharpoondown: "\u21BD",
+  lharu: "\u21BC",
+  leftharpoonup: "\u21BC",
+  rhard: "\u21C1",
+  rightharpoondown: "\u21C1",
+  rharu: "\u21C0",
+  rightharpoonup: "\u21C0",
+  lsh: "\u21B0",
+  Lsh: "\u21B0",
+  rsh: "\u21B1",
+  Rsh: "\u21B1",
+  ldsh: "\u21B2",
+  rdsh: "\u21B3",
+  hookleftarrow: "\u21A9",
+  hookrightarrow: "\u21AA",
+  mapstoleft: "\u21A4",
+  mapstoup: "\u21A5",
+  map: "\u21A6",
+  mapsto: "\u21A6",
+  mapstodown: "\u21A7",
+  crarr: "\u21B5",
+  nwarrow: "\u2196",
+  nearrow: "\u2197",
+  searrow: "\u2198",
+  swarrow: "\u2199",
+  nleftarrow: "\u219A",
+  nleftrightarrow: "\u21AE",
+  nrightarrow: "\u219B",
+  nrarr: "\u219B",
+  larrtl: "\u21A2",
+  rarrtl: "\u21A3",
+  leftarrowtail: "\u21A2",
+  rightarrowtail: "\u21A3",
+  twoheadleftarrow: "\u219E",
+  twoheadrightarrow: "\u21A0",
+  Larr: "\u219E",
+  Rarr: "\u21A0",
+  larrhk: "\u21A9",
+  rarrhk: "\u21AA",
+  larrlp: "\u21AB",
+  looparrowleft: "\u21AB",
+  rarrlp: "\u21AC",
+  looparrowright: "\u21AC",
+  harrw: "\u21AD",
+  leftrightsquigarrow: "\u21AD",
+  nrarrw: "\u219D\u0338",
+  rarrw: "\u219D",
+  rightsquigarrow: "\u219D",
+  larrbfs: "\u291F",
+  rarrbfs: "\u2920",
+  nvHarr: "\u2904",
+  nvlArr: "\u2902",
+  nvrArr: "\u2903",
+  larrfs: "\u291D",
+  rarrfs: "\u291E",
+  Map: "\u2905",
+  larrsim: "\u2973",
+  rarrsim: "\u2974",
+  harrcir: "\u2948",
+  Uarrocir: "\u2949",
+  lurdshar: "\u294A",
+  ldrdhar: "\u2967",
+  ldrushar: "\u294B",
+  rdldhar: "\u2969",
+  lrhard: "\u296D",
+  rlhar: "\u21CC",
+  uharr: "\u21BE",
+  uharl: "\u21BF",
+  dharr: "\u21C2",
+  dharl: "\u21C3",
+  Uarr: "\u219F",
+  Darr: "\u21A1",
+  zigrarr: "\u21DD",
+  nwArr: "\u21D6",
+  neArr: "\u21D7",
+  seArr: "\u21D8",
+  swArr: "\u21D9",
+  nharr: "\u21AE",
+  nhArr: "\u21CE",
+  nlarr: "\u219A",
+  nlArr: "\u21CD",
+  nrarr: "\u219B",
+  nrArr: "\u21CF",
+  larrb: "\u21E4",
+  LeftArrowBar: "\u21E4",
+  rarrb: "\u21E5",
+  RightArrowBar: "\u21E5"
+};
+var SHAPES = {
+  square: "\u25A1",
+  Square: "\u25A1",
+  squ: "\u25A1",
+  squf: "\u25AA",
+  squarf: "\u25AA",
+  blacksquar: "\u25AA",
+  blacksquare: "\u25AA",
+  FilledVerySmallSquare: "\u25AA",
+  blk34: "\u2593",
+  blk12: "\u2592",
+  blk14: "\u2591",
+  block: "\u2588",
+  srect: "\u25AD",
+  rect: "\u25AD",
+  sdot: "\u22C5",
+  sdotb: "\u22A1",
+  dotsquare: "\u22A1",
+  triangle: "\u25B5",
+  tri: "\u25B5",
+  trine: "\u25B5",
+  utri: "\u25B5",
+  triangledown: "\u25BF",
+  dtri: "\u25BF",
+  tridown: "\u25BF",
+  triangleleft: "\u25C3",
+  ltri: "\u25C3",
+  triangleright: "\u25B9",
+  rtri: "\u25B9",
+  blacktriangle: "\u25B4",
+  utrif: "\u25B4",
+  blacktriangledown: "\u25BE",
+  dtrif: "\u25BE",
+  blacktriangleleft: "\u25C2",
+  ltrif: "\u25C2",
+  blacktriangleright: "\u25B8",
+  rtrif: "\u25B8",
+  loz: "\u25CA",
+  lozenge: "\u25CA",
+  blacklozenge: "\u29EB",
+  lozf: "\u29EB",
+  bigcirc: "\u25EF",
+  xcirc: "\u25EF",
+  circ: "\u02C6",
+  Circle: "\u25CB",
+  cir: "\u25CB",
+  o: "\u25CB",
+  bullet: "\u2022",
+  bull: "\u2022",
+  hellip: "\u2026",
+  mldr: "\u2026",
+  nldr: "\u2025",
+  boxh: "\u2500",
+  HorizontalLine: "\u2500",
+  boxv: "\u2502",
+  boxdr: "\u250C",
+  boxdl: "\u2510",
+  boxur: "\u2514",
+  boxul: "\u2518",
+  boxvr: "\u251C",
+  boxvl: "\u2524",
+  boxhd: "\u252C",
+  boxhu: "\u2534",
+  boxvh: "\u253C",
+  boxH: "\u2550",
+  boxV: "\u2551",
+  boxdR: "\u2552",
+  boxDr: "\u2553",
+  boxDR: "\u2554",
+  boxDl: "\u2555",
+  boxdL: "\u2556",
+  boxDL: "\u2557",
+  boxuR: "\u2558",
+  boxUr: "\u2559",
+  boxUR: "\u255A",
+  boxUl: "\u255C",
+  boxuL: "\u255B",
+  boxUL: "\u255D",
+  boxvR: "\u255E",
+  boxVr: "\u255F",
+  boxVR: "\u2560",
+  boxVl: "\u2562",
+  boxvL: "\u2561",
+  boxVL: "\u2563",
+  boxHd: "\u2564",
+  boxhD: "\u2565",
+  boxHD: "\u2566",
+  boxHu: "\u2567",
+  boxhU: "\u2568",
+  boxHU: "\u2569",
+  boxvH: "\u256A",
+  boxVh: "\u256B",
+  boxVH: "\u256C"
+};
+var PUNCTUATION = {
+  excl: "!",
+  iexcl: "\xA1",
+  brvbar: "\xA6",
+  sect: "\xA7",
+  uml: "\xA8",
+  copy: "\xA9",
+  ordf: "\xAA",
+  laquo: "\xAB",
+  not: "\xAC",
+  shy: "\xAD",
+  reg: "\xAE",
+  macr: "\xAF",
+  deg: "\xB0",
+  plusmn: "\xB1",
+  sup2: "\xB2",
+  sup3: "\xB3",
+  acute: "\xB4",
+  micro: "\xB5",
+  para: "\xB6",
+  middot: "\xB7",
+  cedil: "\xB8",
+  sup1: "\xB9",
+  ordm: "\xBA",
+  raquo: "\xBB",
+  frac14: "\xBC",
+  frac12: "\xBD",
+  frac34: "\xBE",
+  iquest: "\xBF",
+  nbsp: "\xA0",
+  comma: ",",
+  period: ".",
+  colon: ":",
+  semi: ";",
+  vert: "|",
+  Verbar: "\u2016",
+  verbar: "|",
+  dblac: "\u02DD",
+  circ: "\u02C6",
+  caron: "\u02C7",
+  breve: "\u02D8",
+  dot: "\u02D9",
+  ring: "\u02DA",
+  ogon: "\u02DB",
+  tilde: "\u02DC",
+  DiacriticalGrave: "`",
+  DiacriticalAcute: "\xB4",
+  DiacriticalTilde: "\u02DC",
+  DiacriticalDot: "\u02D9",
+  DiacriticalDoubleAcute: "\u02DD",
+  grave: "`",
+  acute: "\xB4"
+};
+var CURRENCY = {
+  cent: "\xA2",
+  pound: "\xA3",
+  curren: "\xA4",
+  yen: "\xA5",
+  euro: "\u20AC",
+  dollar: "$",
+  euro: "\u20AC",
+  fnof: "\u0192",
+  inr: "\u20B9",
+  af: "\u060B",
+  birr: "\u1265\u122D",
+  peso: "\u20B1",
+  rub: "\u20BD",
+  won: "\u20A9",
+  yuan: "\xA5",
+  cedil: "\xB8"
+};
+var FRACTIONS = {
+  frac12: "\xBD",
+  half: "\xBD",
+  frac13: "\u2153",
+  frac14: "\xBC",
+  frac15: "\u2155",
+  frac16: "\u2159",
+  frac18: "\u215B",
+  frac23: "\u2154",
+  frac25: "\u2156",
+  frac34: "\xBE",
+  frac35: "\u2157",
+  frac38: "\u215C",
+  frac45: "\u2158",
+  frac56: "\u215A",
+  frac58: "\u215D",
+  frac78: "\u215E",
+  frasl: "\u2044"
+};
+var MISC_SYMBOLS = {
+  trade: "\u2122",
+  TRADE: "\u2122",
+  telrec: "\u2315",
+  target: "\u2316",
+  ulcorn: "\u231C",
+  ulcorner: "\u231C",
+  urcorn: "\u231D",
+  urcorner: "\u231D",
+  dlcorn: "\u231E",
+  llcorner: "\u231E",
+  drcorn: "\u231F",
+  lrcorner: "\u231F",
+  intercal: "\u22BA",
+  intcal: "\u22BA",
+  oplus: "\u2295",
+  CirclePlus: "\u2295",
+  ominus: "\u2296",
+  CircleMinus: "\u2296",
+  otimes: "\u2297",
+  CircleTimes: "\u2297",
+  osol: "\u2298",
+  odot: "\u2299",
+  CircleDot: "\u2299",
+  oast: "\u229B",
+  circledast: "\u229B",
+  odash: "\u229D",
+  circleddash: "\u229D",
+  ocirc: "\u229A",
+  circledcirc: "\u229A",
+  boxplus: "\u229E",
+  plusb: "\u229E",
+  boxminus: "\u229F",
+  minusb: "\u229F",
+  boxtimes: "\u22A0",
+  timesb: "\u22A0",
+  boxdot: "\u22A1",
+  sdotb: "\u22A1",
+  veebar: "\u22BB",
+  vee: "\u2228",
+  barvee: "\u22BD",
+  and: "\u2227",
+  wedge: "\u2227",
+  Cap: "\u22D2",
+  Cup: "\u22D3",
+  Fork: "\u22D4",
+  pitchfork: "\u22D4",
+  epar: "\u22D5",
+  ltlarr: "\u2976",
+  nvap: "\u224D\u20D2",
+  nvsim: "\u223C\u20D2",
+  nvge: "\u2265\u20D2",
+  nvle: "\u2264\u20D2",
+  nvlt: "<\u20D2",
+  nvgt: ">\u20D2",
+  nvltrie: "\u22B4\u20D2",
+  nvrtrie: "\u22B5\u20D2",
+  Vdash: "\u22A9",
+  dashv: "\u22A3",
+  vDash: "\u22A8",
+  Vdash: "\u22A9",
+  Vvdash: "\u22AA",
+  nvdash: "\u22AC",
+  nvDash: "\u22AD",
+  nVdash: "\u22AE",
+  nVDash: "\u22AF"
+};
+var ALL_ENTITIES = {
+  ...BASIC_LATIN,
+  ...LATIN_ACCENTS,
+  ...LATIN_EXTENDED,
+  ...GREEK,
+  ...CYRILLIC,
+  ...MATH,
+  ...MATH_ADVANCED,
+  ...ARROWS,
+  ...SHAPES,
+  ...PUNCTUATION,
+  ...CURRENCY,
+  ...FRACTIONS,
+  ...MISC_SYMBOLS
+};
+var XML = {
+  amp: "&",
+  apos: "'",
+  gt: ">",
+  lt: "<",
+  quot: '"'
+};
+var COMMON_HTML = {
+  nbsp: "\xA0",
+  copy: "\xA9",
+  reg: "\xAE",
+  trade: "\u2122",
+  mdash: "\u2014",
+  ndash: "\u2013",
+  hellip: "\u2026",
+  laquo: "\xAB",
+  raquo: "\xBB",
+  lsquo: "\u2018",
+  rsquo: "\u2019",
+  ldquo: "\u201C",
+  rdquo: "\u201D",
+  bull: "\u2022",
+  para: "\xB6",
+  sect: "\xA7",
+  deg: "\xB0",
+  frac12: "\xBD",
+  frac14: "\xBC",
+  frac34: "\xBE"
+};
+
+// node_modules/@nodable/entities/src/EntityDecoder.js
+var SPECIAL_CHARS = new Set("!?\\\\/[]$%{}^&*()<>|+");
+function validateEntityName(name) {
+  if (name[0] === "#") {
+    throw new Error(`[EntityReplacer] Invalid character '#' in entity name: "${name}"`);
+  }
+  for (const ch of name) {
+    if (SPECIAL_CHARS.has(ch)) {
+      throw new Error(`[EntityReplacer] Invalid character '${ch}' in entity name: "${name}"`);
+    }
+  }
+  return name;
+}
+function mergeEntityMaps(...maps) {
+  const out = /* @__PURE__ */ Object.create(null);
+  for (const map2 of maps) {
+    if (!map2) continue;
+    for (const key of Object.keys(map2)) {
+      const raw = map2[key];
+      if (typeof raw === "string") {
+        out[key] = raw;
+      } else if (raw && typeof raw === "object" && raw.val !== void 0) {
+        const val = raw.val;
+        if (typeof val === "string") {
+          out[key] = val;
+        }
+      }
+    }
+  }
+  return out;
+}
+var LIMIT_TIER_EXTERNAL = "external";
+var LIMIT_TIER_BASE = "base";
+var LIMIT_TIER_ALL = "all";
+function parseLimitTiers(raw) {
+  if (!raw || raw === LIMIT_TIER_EXTERNAL) return /* @__PURE__ */ new Set([LIMIT_TIER_EXTERNAL]);
+  if (raw === LIMIT_TIER_ALL) return /* @__PURE__ */ new Set([LIMIT_TIER_ALL]);
+  if (raw === LIMIT_TIER_BASE) return /* @__PURE__ */ new Set([LIMIT_TIER_BASE]);
+  if (Array.isArray(raw)) return new Set(raw);
+  return /* @__PURE__ */ new Set([LIMIT_TIER_EXTERNAL]);
+}
+var NCR_LEVEL = Object.freeze({ allow: 0, leave: 1, remove: 2, throw: 3 });
+var XML10_ALLOWED_C0 = /* @__PURE__ */ new Set([9, 10, 13]);
+function parseNCRConfig(ncr) {
+  if (!ncr) {
+    return { xmlVersion: 1, onLevel: NCR_LEVEL.allow, nullLevel: NCR_LEVEL.remove };
+  }
+  const xmlVersion = ncr.xmlVersion === 1.1 ? 1.1 : 1;
+  const onLevel = NCR_LEVEL[ncr.onNCR] ?? NCR_LEVEL.allow;
+  const nullLevel = NCR_LEVEL[ncr.nullNCR] ?? NCR_LEVEL.remove;
+  const clampedNull = Math.max(nullLevel, NCR_LEVEL.remove);
+  return { xmlVersion, onLevel, nullLevel: clampedNull };
+}
+var EntityDecoder = class {
+  /**
+   * @param {object} [options]
+   * @param {object|null}  [options.namedEntities]        — extra named entities merged into base map
+   * @param {object}  [options.limit]                 — security limits
+   * @param {number}       [options.limit.maxTotalExpansions=0]  — 0 = unlimited
+   * @param {number}       [options.limit.maxExpandedLength=0]   — 0 = unlimited
+   * @param {'external'|'base'|'all'|string[]} [options.limit.applyLimitsTo='external']
+   *   Which entity tiers count against the security limits:
+   *   - 'external' (default) — only input/runtime + persistent external entities
+   *   - 'base'               — only DEFAULT_XML_ENTITIES + namedEntities
+   *   - 'all'                — every entity regardless of tier
+   *   - string[]             — explicit combination, e.g. ['external', 'base']
+   * @param {((resolved: string, original: string) => string)|null} [options.postCheck=null]
+   * @param {string[]} [options.remove=[]] — entity names (e.g. ['nbsp', '#13']) to delete (replace with empty string)
+   * @param {string[]} [options.leave=[]]  — entity names to keep as literal (unchanged in output)
+   * @param {object}   [options.ncr]       — Numeric Character Reference controls
+   * @param {1.0|1.1}  [options.ncr.xmlVersion=1.0]
+   *   XML version governing which codepoint ranges are restricted:
+   *   - 1.0 — C0 controls U+0001–U+001F (except U+0009/000A/000D) are prohibited
+   *   - 1.1 — C0 controls are allowed when written as NCRs; C1 (U+007F–U+009F) decoded as-is
+   * @param {'allow'|'leave'|'remove'|'throw'} [options.ncr.onNCR='allow']
+   *   Base action for numeric references. Severity order: allow < leave < remove < throw.
+   *   For codepoint ranges that carry a minimum level (surrogates → remove, XML 1.0 C0 → remove),
+   *   the effective action is max(onNCR, rangeMinimum).
+   * @param {'remove'|'throw'} [options.ncr.nullNCR='remove']
+   *   Action for U+0000 (null). 'allow' and 'leave' are clamped to 'remove' since null is never safe.
+   */
+  constructor(options = {}) {
+    this._limit = options.limit || {};
+    this._maxTotalExpansions = this._limit.maxTotalExpansions || 0;
+    this._maxExpandedLength = this._limit.maxExpandedLength || 0;
+    this._postCheck = typeof options.postCheck === "function" ? options.postCheck : (r5) => r5;
+    this._limitTiers = parseLimitTiers(this._limit.applyLimitsTo ?? LIMIT_TIER_EXTERNAL);
+    this._numericAllowed = options.numericAllowed ?? true;
+    this._baseMap = mergeEntityMaps(XML, options.namedEntities || null);
+    this._externalMap = /* @__PURE__ */ Object.create(null);
+    this._inputMap = /* @__PURE__ */ Object.create(null);
+    this._totalExpansions = 0;
+    this._expandedLength = 0;
+    this._removeSet = new Set(options.remove && Array.isArray(options.remove) ? options.remove : []);
+    this._leaveSet = new Set(options.leave && Array.isArray(options.leave) ? options.leave : []);
+    const ncrCfg = parseNCRConfig(options.ncr);
+    this._ncrXmlVersion = ncrCfg.xmlVersion;
+    this._ncrOnLevel = ncrCfg.onLevel;
+    this._ncrNullLevel = ncrCfg.nullLevel;
+  }
+  // -------------------------------------------------------------------------
+  // Persistent external entity registration
+  // -------------------------------------------------------------------------
+  /**
+   * Replace the full set of persistent external entities.
+   * All keys are validated — throws on invalid characters.
+   * @param {Record<string, string | { regex?: RegExp, val: string }>} map
+   */
+  setExternalEntities(map2) {
+    if (map2) {
+      for (const key of Object.keys(map2)) {
+        validateEntityName(key);
+      }
+    }
+    this._externalMap = mergeEntityMaps(map2);
+  }
+  /**
+   * Add a single persistent external entity.
+   * @param {string} key
+   * @param {string} value
+   */
+  addExternalEntity(key, value) {
+    validateEntityName(key);
+    if (typeof value === "string" && value.indexOf("&") === -1) {
+      this._externalMap[key] = value;
+    }
+  }
+  // -------------------------------------------------------------------------
+  // Input / runtime entity registration (per document)
+  // -------------------------------------------------------------------------
+  /**
+   * Inject DOCTYPE entities for the current document.
+   * Also resets per-document expansion counters.
+   * @param {Record<string, string | { regx?: RegExp, regex?: RegExp, val: string }>} map
+   */
+  addInputEntities(map2) {
+    this._totalExpansions = 0;
+    this._expandedLength = 0;
+    this._inputMap = mergeEntityMaps(map2);
+  }
+  // -------------------------------------------------------------------------
+  // Per-document reset
+  // -------------------------------------------------------------------------
+  /**
+   * Wipe input/runtime entities and reset counters.
+   * Call this before processing each new document.
+   * @returns {this}
+   */
+  reset() {
+    this._inputMap = /* @__PURE__ */ Object.create(null);
+    this._totalExpansions = 0;
+    this._expandedLength = 0;
+    return this;
+  }
+  // -------------------------------------------------------------------------
+  // XML version (can be set after construction, e.g. once parser reads <?xml?>)
+  // -------------------------------------------------------------------------
+  /**
+   * Update the XML version used for NCR classification.
+   * Call this as soon as the document's `<?xml version="...">` declaration is parsed.
+   * @param {1.0|1.1|number} version
+   */
+  setXmlVersion(version3) {
+    this._ncrXmlVersion = version3 === 1.1 ? 1.1 : 1;
+  }
+  // -------------------------------------------------------------------------
+  // Primary API
+  // -------------------------------------------------------------------------
+  /**
+   * Replace all entity references in `str` in a single pass.
+   *
+   * @param {string} str
+   * @returns {string}
+   */
+  decode(str) {
+    if (typeof str !== "string" || str.length === 0) return str;
+    const original = str;
+    const chunks = [];
+    const len = str.length;
+    let last = 0;
+    let i5 = 0;
+    const limitExpansions = this._maxTotalExpansions > 0;
+    const limitLength = this._maxExpandedLength > 0;
+    const checkLimits = limitExpansions || limitLength;
+    while (i5 < len) {
+      if (str.charCodeAt(i5) !== 38) {
+        i5++;
+        continue;
+      }
+      let j5 = i5 + 1;
+      while (j5 < len && str.charCodeAt(j5) !== 59 && j5 - i5 <= 32) j5++;
+      if (j5 >= len || str.charCodeAt(j5) !== 59) {
+        i5++;
+        continue;
+      }
+      const token = str.slice(i5 + 1, j5);
+      if (token.length === 0) {
+        i5++;
+        continue;
+      }
+      let replacement;
+      let tier2;
+      if (this._removeSet.has(token)) {
+        replacement = "";
+        if (tier2 === void 0) {
+          tier2 = LIMIT_TIER_EXTERNAL;
+        }
+      } else if (this._leaveSet.has(token)) {
+        i5++;
+        continue;
+      } else if (token.charCodeAt(0) === 35) {
+        const ncrResult = this._resolveNCR(token);
+        if (ncrResult === void 0) {
+          i5++;
+          continue;
+        }
+        replacement = ncrResult;
+        tier2 = LIMIT_TIER_BASE;
+      } else {
+        const resolved = this._resolveName(token);
+        replacement = resolved?.value;
+        tier2 = resolved?.tier;
+      }
+      if (replacement === void 0) {
+        i5++;
+        continue;
+      }
+      if (i5 > last) chunks.push(str.slice(last, i5));
+      chunks.push(replacement);
+      last = j5 + 1;
+      i5 = last;
+      if (checkLimits && this._tierCounts(tier2)) {
+        if (limitExpansions) {
+          this._totalExpansions++;
+          if (this._totalExpansions > this._maxTotalExpansions) {
+            throw new Error(
+              `[EntityReplacer] Entity expansion count limit exceeded: ${this._totalExpansions} > ${this._maxTotalExpansions}`
+            );
+          }
+        }
+        if (limitLength) {
+          const delta = replacement.length - (token.length + 2);
+          if (delta > 0) {
+            this._expandedLength += delta;
+            if (this._expandedLength > this._maxExpandedLength) {
+              throw new Error(
+                `[EntityReplacer] Expanded content length limit exceeded: ${this._expandedLength} > ${this._maxExpandedLength}`
+              );
+            }
+          }
+        }
+      }
+    }
+    if (last < len) chunks.push(str.slice(last));
+    const result = chunks.length === 0 ? str : chunks.join("");
+    return this._postCheck(result, original);
+  }
+  // -------------------------------------------------------------------------
+  // Private: limit tier check
+  // -------------------------------------------------------------------------
+  /**
+   * Returns true if a resolved entity of the given tier should count
+   * against the expansion/length limits.
+   * @param {string} tier  — LIMIT_TIER_EXTERNAL | LIMIT_TIER_BASE
+   * @returns {boolean}
+   */
+  _tierCounts(tier2) {
+    if (this._limitTiers.has(LIMIT_TIER_ALL)) return true;
+    return this._limitTiers.has(tier2);
+  }
+  // -------------------------------------------------------------------------
+  // Private: entity resolution
+  // -------------------------------------------------------------------------
+  /**
+   * Resolve a named entity token (without & and ;).
+   * Priority: inputMap > externalMap > baseMap
+   * Returns the resolved value tagged with its limit tier.
+   *
+   * @param {string} name
+   * @returns {{ value: string, tier: string }|undefined}
+   */
+  _resolveName(name) {
+    if (name in this._inputMap) return { value: this._inputMap[name], tier: LIMIT_TIER_EXTERNAL };
+    if (name in this._externalMap) return { value: this._externalMap[name], tier: LIMIT_TIER_EXTERNAL };
+    if (name in this._baseMap) return { value: this._baseMap[name], tier: LIMIT_TIER_BASE };
+    return void 0;
+  }
+  /**
+   * Classify a codepoint and return the minimum action level that must be applied.
+   * Returns -1 when no minimum is imposed (normal allow path).
+   *
+   * Ranges checked (in priority order):
+   *   1. U+0000            — null, governed by nullNCR (always ≥ remove)
+   *   2. U+D800–U+DFFF     — surrogates, always prohibited (min: remove)
+   *   3. U+0001–U+001F \ {0x09,0x0A,0x0D}  — XML 1.0 restricted C0 (min: remove)
+   *      (skipped in XML 1.1 — C0 controls are allowed when written as NCRs)
+   *
+   * @param {number} cp  — codepoint
+   * @returns {number}   — minimum NCR_LEVEL value, or -1 for no restriction
+   */
+  _classifyNCR(cp) {
+    if (cp === 0) return this._ncrNullLevel;
+    if (cp >= 55296 && cp <= 57343) return NCR_LEVEL.remove;
+    if (this._ncrXmlVersion === 1) {
+      if (cp >= 1 && cp <= 31 && !XML10_ALLOWED_C0.has(cp)) return NCR_LEVEL.remove;
+    }
+    return -1;
+  }
+  /**
+   * Execute a resolved NCR action.
+   *
+   * @param {number} action   — NCR_LEVEL value
+   * @param {string} token    — raw token (e.g. '#38') for error messages
+   * @param {number} cp       — codepoint, used only for error messages
+   * @returns {string|undefined}
+   *   - decoded character string  → 'allow'
+   *   - ''                        → 'remove'
+   *   - undefined                 → 'leave' (caller must skip past '&' only)
+   *   - throws Error              → 'throw'
+   */
+  _applyNCRAction(action5, token, cp) {
+    switch (action5) {
+      case NCR_LEVEL.allow:
+        return String.fromCodePoint(cp);
+      case NCR_LEVEL.remove:
+        return "";
+      case NCR_LEVEL.leave:
+        return void 0;
+      // signal: keep literal
+      case NCR_LEVEL.throw:
+        throw new Error(
+          `[EntityDecoder] Prohibited numeric character reference &${token}; (U+${cp.toString(16).toUpperCase().padStart(4, "0")})`
+        );
+      default:
+        return String.fromCodePoint(cp);
+    }
+  }
+  /**
+   * Full NCR resolution pipeline for a numeric token.
+   *
+   * Steps:
+   *   1. Parse the codepoint (decimal or hex).
+   *   2. Validate the raw codepoint range (NaN, <0, >0x10FFFF).
+   *   3. If numericAllowed is false and no minimum restriction applies → leave as-is.
+   *   4. Classify the codepoint to find the minimum required action level.
+   *   5. Resolve effective action = max(onNCR, minimum).
+   *   6. Apply and return.
+   *
+   * @param {string} token  — e.g. '#38', '#x26', '#X26'
+   * @returns {string|undefined}
+   *   - string (incl. '')  — replacement ('' = remove)
+   *   - undefined          — leave original &token; as-is
+   */
+  _resolveNCR(token) {
+    const second = token.charCodeAt(1);
+    let cp;
+    if (second === 120 || second === 88) {
+      cp = parseInt(token.slice(2), 16);
+    } else {
+      cp = parseInt(token.slice(1), 10);
+    }
+    if (Number.isNaN(cp) || cp < 0 || cp > 1114111) return void 0;
+    const minimum = this._classifyNCR(cp);
+    if (!this._numericAllowed && minimum < NCR_LEVEL.remove) return void 0;
+    const effective = minimum === -1 ? this._ncrOnLevel : Math.max(this._ncrOnLevel, minimum);
+    return this._applyNCRAction(effective, token, cp);
+  }
+};
+
 // node_modules/fast-xml-parser/src/xmlparser/OptionsBuilder.js
 var defaultOnDangerousProperty = (name) => {
   if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
@@ -69209,6 +71257,7 @@ var defaultOptions2 = {
   unpairedTags: [],
   processEntities: true,
   htmlEntities: false,
+  entityDecoder: null,
   ignoreDeclaration: false,
   ignorePiTags: false,
   transformTagName: false,
@@ -69240,18 +71289,19 @@ function validatePropertyName(propertyName, optionName) {
     );
   }
 }
-function normalizeProcessEntities(value) {
+function normalizeProcessEntities(value, htmlEntities) {
   if (typeof value === "boolean") {
     return {
       enabled: value,
       // true or false
       maxEntitySize: 1e4,
-      maxExpansionDepth: 10,
-      maxTotalExpansions: 1e3,
+      maxExpansionDepth: 1e4,
+      maxTotalExpansions: Infinity,
       maxExpandedLength: 1e5,
-      maxEntityCount: 100,
+      maxEntityCount: 1e3,
       allowedTags: null,
-      tagFilter: null
+      tagFilter: null,
+      appliesTo: "all"
     };
   }
   if (typeof value === "object" && value !== null) {
@@ -69263,7 +71313,8 @@ function normalizeProcessEntities(value) {
       maxExpandedLength: Math.max(1, value.maxExpandedLength ?? 1e5),
       maxEntityCount: Math.max(1, value.maxEntityCount ?? 1e3),
       allowedTags: value.allowedTags ?? null,
-      tagFilter: value.tagFilter ?? null
+      tagFilter: value.tagFilter ?? null,
+      appliesTo: value.appliesTo ?? "all"
     };
   }
   return normalizeProcessEntities(true);
@@ -69285,7 +71336,7 @@ var buildOptions = function(options) {
   if (built.onDangerousProperty === null) {
     built.onDangerousProperty = defaultOnDangerousProperty;
   }
-  built.processEntities = normalizeProcessEntities(built.processEntities);
+  built.processEntities = normalizeProcessEntities(built.processEntities, built.htmlEntities);
   built.unpairedTagsSet = new Set(built.unpairedTags);
   if (built.stopNodes && Array.isArray(built.stopNodes)) {
     built.stopNodes = built.stopNodes.map((node) => {
@@ -69358,11 +71409,7 @@ var DocTypeReader = class {
                   `Entity count (${entityCount + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`
                 );
               }
-              const escaped = entityName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-              entities[entityName] = {
-                regx: RegExp(`&${escaped};`, "g"),
-                val
-              };
+              entities[entityName] = val;
               entityCount++;
             }
           } else if (hasBody && hasSeq(xmlData, "!ELEMENT", i5)) {
@@ -69412,7 +71459,7 @@ var DocTypeReader = class {
       i5++;
     }
     let entityName = xmlData.substring(startIndex, i5);
-    validateEntityName(entityName);
+    validateEntityName2(entityName);
     i5 = skipWhitespace(xmlData, i5);
     if (!this.suppressValidationErr) {
       if (xmlData.substring(i5, i5 + 6).toUpperCase() === "SYSTEM") {
@@ -69438,7 +71485,7 @@ var DocTypeReader = class {
       i5++;
     }
     let notationName = xmlData.substring(startIndex, i5);
-    !this.suppressValidationErr && validateEntityName(notationName);
+    !this.suppressValidationErr && validateEntityName2(notationName);
     i5 = skipWhitespace(xmlData, i5);
     const identifierType = xmlData.substring(i5, i5 + 6).toUpperCase();
     if (!this.suppressValidationErr && identifierType !== "SYSTEM" && identifierType !== "PUBLIC") {
@@ -69520,14 +71567,14 @@ var DocTypeReader = class {
       i5++;
     }
     let elementName = xmlData.substring(startIndex, i5);
-    validateEntityName(elementName);
+    validateEntityName2(elementName);
     i5 = skipWhitespace(xmlData, i5);
     startIndex = i5;
     while (i5 < xmlData.length && !/\s/.test(xmlData[i5])) {
       i5++;
     }
     let attributeName = xmlData.substring(startIndex, i5);
-    if (!validateEntityName(attributeName)) {
+    if (!validateEntityName2(attributeName)) {
       throw new Error(`Invalid attribute name: "${attributeName}"`);
     }
     i5 = skipWhitespace(xmlData, i5);
@@ -69548,7 +71595,7 @@ var DocTypeReader = class {
         }
         let notation = xmlData.substring(startIndex2, i5);
         notation = notation.trim();
-        if (!validateEntityName(notation)) {
+        if (!validateEntityName2(notation)) {
           throw new Error(`Invalid notation name: "${notation}"`);
         }
         allowedNotations.push(notation);
@@ -69605,7 +71652,7 @@ function hasSeq(data2, seq, i5) {
   }
   return true;
 }
-function validateEntityName(name) {
+function validateEntityName2(name) {
   if (isName(name))
     return name;
   else
@@ -70522,314 +72569,6 @@ var Matcher = class {
   }
 };
 
-// node_modules/@nodable/entities/src/EntityReplacer.js
-var DEFAULT_XML_ENTITIES = {
-  apos: { regex: /&(apos|#0*39|#x0*27);/g, val: "'" },
-  gt: { regex: /&(gt|#0*62|#x0*3[Ee]);/g, val: ">" },
-  lt: { regex: /&(lt|#0*60|#x0*3[Cc]);/g, val: "<" },
-  quot: { regex: /&(quot|#0*34|#x0*22);/g, val: '"' }
-};
-var AMP_ENTITY = { regex: /&(amp|#0*38|#x0*26);/g, val: "&" };
-var SPECIAL_CHARS = new Set("!?\\\\/[]$%{}^&*()<>|+");
-function validateEntityName2(name) {
-  for (const ch of name) {
-    if (SPECIAL_CHARS.has(ch)) {
-      throw new Error(`[EntityReplacer] Invalid character '${ch}' in entity name: "${name}"`);
-    }
-  }
-  return name;
-}
-function escapeForRegex(str) {
-  return str.replace(/[.\-+*:]/g, "\\$&");
-}
-function resolveTable(option, builtIn, enabledByDefault = false) {
-  if (option === false || option === null) return null;
-  if (option === true) return builtIn;
-  if (option === void 0) return enabledByDefault ? builtIn : null;
-  if (typeof option === "object") return option;
-  return null;
-}
-function resolveApplyLimitsTo(spec) {
-  if (spec === "all") return "all";
-  if (typeof spec === "string") return /* @__PURE__ */ new Set([spec]);
-  if (Array.isArray(spec)) return new Set(spec);
-  return /* @__PURE__ */ new Set(["external"]);
-}
-function buildEntries(map2) {
-  const entries = [];
-  for (const key of Object.keys(map2)) {
-    const raw = map2[key];
-    if (typeof raw === "object" && raw !== null && raw.val !== void 0) {
-      entries.push([key, { regex: raw.regex ?? raw.regx, val: raw.val }]);
-    } else if (typeof raw === "string") {
-      if (raw.indexOf("&") !== -1) continue;
-      validateEntityName2(key);
-      entries.push([key, {
-        regex: new RegExp("&" + escapeForRegex(key) + ";", "g"),
-        val: raw
-      }]);
-    }
-  }
-  return entries;
-}
-var EntityReplacer = class {
-  /**
-   * @param {object} [options]
-   * @param {boolean|object|null} [options.default=true]
-   * @param {boolean|object|null} [options.amp=true]
-   * @param {boolean|object|null} [options.system=false]
-   * @param {number}              [options.maxTotalExpansions=0]
-   * @param {number}              [options.maxExpandedLength=0]
-   * @param {'external'|'all'|string[]} [options.applyLimitsTo='external']
-   * @param {((resolved: string, original: string) => string)|null} [options.postCheck=null]
-   */
-  constructor(options = {}) {
-    this._defaultTable = resolveTable(options.default, DEFAULT_XML_ENTITIES, true);
-    this._systemTable = resolveTable(options.system, null, false);
-    this._ampEnabled = options.amp !== false && options.amp !== null;
-    this._maxTotalExpansions = options.maxTotalExpansions || 0;
-    this._maxExpandedLength = options.maxExpandedLength || 0;
-    this._applyLimitsTo = resolveApplyLimitsTo(options.applyLimitsTo ?? "external");
-    this._postCheck = typeof options.postCheck === "function" ? options.postCheck : (r5) => r5;
-    this._limitExternal = this._applyLimitsTo === "all" || this._applyLimitsTo instanceof Set && this._applyLimitsTo.has("external");
-    this._limitSystem = this._applyLimitsTo === "all" || this._applyLimitsTo instanceof Set && this._applyLimitsTo.has("system");
-    this._limitDefault = this._applyLimitsTo === "all" || this._applyLimitsTo instanceof Set && this._applyLimitsTo.has("default");
-    this._defaultEntries = this._defaultTable ? Object.entries(this._defaultTable) : [];
-    this._systemEntries = this._systemTable ? Object.entries(this._systemTable) : [];
-    this._persistentEntries = [];
-    this._inputEntries = [];
-    this._totalExpansions = 0;
-    this._expandedLength = 0;
-  }
-  // -------------------------------------------------------------------------
-  // Persistent external entity registration (survives across documents)
-  // -------------------------------------------------------------------------
-  /**
-   * Replace the full set of persistent external entities.
-   * These are never wiped between documents.
-   *
-   * @param {Record<string, string | { regex: RegExp, val: string | Function }>} map
-   */
-  setExternalEntities(map2) {
-    this._persistentEntries = buildEntries(map2);
-  }
-  /**
-   * Add a single persistent external entity without disturbing existing ones.
-   *
-   * @param {string} key   — bare entity name, e.g. `'copy'`
-   * @param {string} value — replacement string, e.g. `'©'`
-   */
-  addExternalEntity(key, value) {
-    validateEntityName2(key);
-    if (typeof value === "string" && value.indexOf("&") === -1) {
-      this._persistentEntries.push([key, {
-        regex: new RegExp("&" + escapeForRegex(key) + ";", "g"),
-        val: value
-      }]);
-    }
-  }
-  // -------------------------------------------------------------------------
-  // Input / runtime entity registration (per document)
-  // -------------------------------------------------------------------------
-  /**
-   * Inject DOCTYPE (input/runtime) entities for the current document.
-   * These are stored separately from persistent entities and wiped on the
-   * next `getInstance()` call so they never leak into subsequent documents.
-   *
-   * Also resets per-document expansion counters.
-   *
-   * @param {Record<string, string | { regx?: RegExp, regex?: RegExp, val: string | Function }>} map
-   */
-  addInputEntities(map2) {
-    this._totalExpansions = 0;
-    this._expandedLength = 0;
-    this._inputEntries = buildEntries(map2);
-  }
-  // -------------------------------------------------------------------------
-  // getInstance — builder factory integration point
-  // -------------------------------------------------------------------------
-  /**
-   * Reset all per-document state (input entities + expansion counters) and
-   * return `this`.
-   *
-   * The builder factory calls this each time it creates a new builder instance
-   * so DOCTYPE entities from a previous document are never carried over.
-   *
-   */
-  reset() {
-    this._inputEntries = [];
-    this._totalExpansions = 0;
-    this._expandedLength = 0;
-  }
-  // -------------------------------------------------------------------------
-  // Primary API
-  // -------------------------------------------------------------------------
-  /**
-   * Replace all entity references in `str`.
-   *
-   * Processing order:
-   *   1. persistent external
-   *   2. input / runtime  (DOCTYPE)
-   *   3. system
-   *   4. default (lt/gt/apos/quot)
-   *   5. amp
-   *   6. postCheck hook
-   *
-   * @param {string} str
-   * @returns {string}
-   */
-  replace(str) {
-    if (typeof str !== "string" || str.length === 0) return str;
-    if (str.indexOf("&") === -1) return str;
-    const original = str;
-    if (this._persistentEntries.length > 0) {
-      str = this._applyEntries(str, this._persistentEntries, this._limitExternal);
-    }
-    if (this._inputEntries.length > 0 && str.indexOf("&") !== -1) {
-      str = this._applyEntries(str, this._inputEntries, this._limitExternal);
-    }
-    if (this._defaultEntries.length > 0 && str.indexOf("&") !== -1) {
-      str = this._applyEntries(str, this._defaultEntries, this._limitDefault);
-    }
-    if (this._systemEntries.length > 0 && str.indexOf("&") !== -1) {
-      str = this._applyEntries(str, this._systemEntries, this._limitSystem);
-    }
-    if (this._ampEnabled && str.indexOf("&") !== -1) {
-      str = str.replace(AMP_ENTITY.regex, AMP_ENTITY.val);
-    }
-    str = this._postCheck(str, original);
-    return str;
-  }
-  /**
-   * 
-   * @param {string} val 
-   * @returns 
-   */
-  parse(val) {
-    return this.replace(val);
-  }
-  // -------------------------------------------------------------------------
-  // Private helpers
-  // -------------------------------------------------------------------------
-  _applyEntries(str, entries, track) {
-    const limitExpansions = track && this._maxTotalExpansions > 0;
-    const limitLength = track && this._maxExpandedLength > 0;
-    const trackAny = limitExpansions || limitLength;
-    for (let i5 = 0; i5 < entries.length; i5++) {
-      if (str.indexOf("&") === -1) break;
-      const entity = entries[i5][1];
-      if (!trackAny) {
-        str = str.replace(entity.regex, entity.val);
-        continue;
-      }
-      if (limitExpansions && !limitLength) {
-        let count = 0;
-        str = str.replace(entity.regex, (...args) => {
-          count++;
-          return typeof entity.val === "function" ? entity.val(...args) : entity.val;
-        });
-        if (count > 0) {
-          this._totalExpansions += count;
-          if (this._totalExpansions > this._maxTotalExpansions) {
-            throw new Error(
-              `[EntityReplacer] Entity expansion count limit exceeded: ${this._totalExpansions} > ${this._maxTotalExpansions}`
-            );
-          }
-        }
-      } else if (limitLength && !limitExpansions) {
-        const before = str.length;
-        str = str.replace(entity.regex, entity.val);
-        const delta = str.length - before;
-        if (delta > 0) {
-          this._expandedLength += delta;
-          if (this._expandedLength > this._maxExpandedLength) {
-            throw new Error(
-              `[EntityReplacer] Expanded content length limit exceeded: ${this._expandedLength} > ${this._maxExpandedLength}`
-            );
-          }
-        }
-      } else {
-        const before = str.length;
-        let count = 0;
-        str = str.replace(entity.regex, (...args) => {
-          count++;
-          return typeof entity.val === "function" ? entity.val(...args) : entity.val;
-        });
-        if (count > 0) {
-          this._totalExpansions += count;
-          if (this._totalExpansions > this._maxTotalExpansions) {
-            throw new Error(
-              `[EntityReplacer] Entity expansion count limit exceeded: ${this._totalExpansions} > ${this._maxTotalExpansions}`
-            );
-          }
-        }
-        const delta = str.length - before;
-        if (delta > 0) {
-          this._expandedLength += delta;
-          if (this._expandedLength > this._maxExpandedLength) {
-            throw new Error(
-              `[EntityReplacer] Expanded content length limit exceeded: ${this._expandedLength} > ${this._maxExpandedLength}`
-            );
-          }
-        }
-      }
-    }
-    return str;
-  }
-};
-
-// node_modules/@nodable/entities/src/groups.js
-var COMMON_HTML = {
-  nbsp: { regex: /&(nbsp|#0*160|#x0*[Aa]0);/g, val: "\xA0" },
-  copy: { regex: /&(copy|#0*169|#x0*[Aa]9);/g, val: "\xA9" },
-  reg: { regex: /&(reg|#0*174|#x0*[Aa][Ee]);/g, val: "\xAE" },
-  trade: { regex: /&(trade|#0*8482|#x0*2122);/g, val: "\u2122" },
-  mdash: { regex: /&(mdash|#0*8212|#x0*2014);/g, val: "\u2014" },
-  ndash: { regex: /&(ndash|#0*8211|#x0*2013);/g, val: "\u2013" },
-  hellip: { regex: /&(hellip|#0*8230|#x0*2026);/g, val: "\u2026" },
-  laquo: { regex: /&(laquo|#0*171|#x0*[Aa][Bb]);/g, val: "\xAB" },
-  raquo: { regex: /&(raquo|#0*187|#x0*[Bb][Bb]);/g, val: "\xBB" },
-  lsquo: { regex: /&(lsquo|#0*8216|#x0*2018);/g, val: "\u2018" },
-  rsquo: { regex: /&(rsquo|#0*8217|#x0*2019);/g, val: "\u2019" },
-  ldquo: { regex: /&(ldquo|#0*8220|#x0*201[Cc]);/g, val: "\u201C" },
-  rdquo: { regex: /&(rdquo|#0*8221|#x0*201[Dd]);/g, val: "\u201D" },
-  bull: { regex: /&(bull|#0*8226|#x0*2022);/g, val: "\u2022" },
-  para: { regex: /&(para|#0*182|#x0*[Bb]6);/g, val: "\xB6" },
-  sect: { regex: /&(sect|#0*167|#x0*[Aa]7);/g, val: "\xA7" },
-  deg: { regex: /&(deg|#0*176|#x0*[Bb]0);/g, val: "\xB0" },
-  frac12: { regex: /&(frac12|#0*189|#x0*[Bb][Dd]);/g, val: "\xBD" },
-  frac14: { regex: /&(frac14|#0*188|#x0*[Bb][Cc]);/g, val: "\xBC" },
-  frac34: { regex: /&(frac34|#0*190|#x0*[Bb][Ee]);/g, val: "\xBE" },
-  inr: { regex: /&(inr|#0*8377);/g, val: "\u20B9" }
-};
-var CURRENCY_ENTITIES = {
-  cent: { regex: /&(cent|#0*162|#x0*[Aa]2);/g, val: "\xA2" },
-  pound: { regex: /&(pound|#0*163|#x0*[Aa]3);/g, val: "\xA3" },
-  yen: { regex: /&(yen|#0*165|#x0*[Aa]5);/g, val: "\xA5" },
-  euro: { regex: /&(euro|#0*8364|#x0*20[Aa][Cc]);/g, val: "\u20AC" },
-  inr: { regex: /&(inr|#0*8377|#x0*20[Bb]9);/g, val: "\u20B9" },
-  curren: { regex: /&(curren|#0*164|#x0*[Aa]4);/g, val: "\xA4" },
-  fnof: { regex: /&(fnof|#0*402|#x0*192);/g, val: "\u0192" }
-};
-var NUMERIC_ENTITIES = {
-  num_dec: {
-    regex: /&#0*([0-9]{1,7});/g,
-    val: (_, s5) => fromCodePoint(s5, 10, "&#")
-  },
-  num_hex: {
-    regex: /&#x0*([0-9a-fA-F]{1,6});/g,
-    val: (_, s5) => fromCodePoint(s5, 16, "&#x")
-  }
-};
-function fromCodePoint(str, base, prefix2) {
-  const codePoint = Number.parseInt(str, base);
-  if (codePoint >= 0 && codePoint <= 1114111) {
-    return String.fromCodePoint(codePoint);
-  } else {
-    return prefix2 + str + ";";
-  }
-}
-
 // node_modules/fast-xml-parser/src/xmlparser/OrderedObjParser.js
 function extractRawAttributes(prefixedAttrs, options) {
   if (!prefixedAttrs) return {};
@@ -70858,7 +72597,7 @@ function extractNamespace(rawTagName) {
   return void 0;
 }
 var OrderedObjParser = class {
-  constructor(options) {
+  constructor(options, externalEntities) {
     this.options = options;
     this.currentNode = null;
     this.tagsNodeStack = [];
@@ -70874,15 +72613,23 @@ var OrderedObjParser = class {
     this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes);
     this.entityExpansionCount = 0;
     this.currentExpandedLength = 0;
-    this.entityReplacer = new EntityReplacer({
-      default: true,
-      // amp:     true,
-      system: this.options.htmlEntities ? { ...COMMON_HTML, ...NUMERIC_ENTITIES, ...CURRENCY_ENTITIES } : {},
-      maxTotalExpansions: this.options.processEntities.maxTotalExpansions,
-      maxExpandedLength: this.options.processEntities.maxExpandedLength,
-      applyLimitsTo: "all"
-      //postCheck: resolved => resolved
-    });
+    let namedEntities = { ...XML };
+    if (this.options.entityDecoder) {
+      this.entityDecoder = this.options.entityDecoder;
+    } else {
+      if (typeof this.options.htmlEntities === "object") namedEntities = this.options.htmlEntities;
+      else if (this.options.htmlEntities === true) namedEntities = { ...COMMON_HTML, ...CURRENCY };
+      this.entityDecoder = new EntityDecoder({
+        namedEntities: { ...namedEntities, ...externalEntities },
+        numericAllowed: this.options.htmlEntities,
+        limit: {
+          maxTotalExpansions: this.options.processEntities.maxTotalExpansions,
+          maxExpandedLength: this.options.processEntities.maxExpandedLength,
+          applyLimitsTo: this.options.processEntities.appliesTo
+        }
+        //postCheck: resolved => resolved
+      });
+    }
     this.matcher = new Matcher();
     this.readonlyMatcher = this.matcher.readOnly();
     this.isCurrentNodeStopNode = false;
@@ -70942,9 +72689,9 @@ function resolveNameSpace(tagname) {
   return tagname;
 }
 var attrsRegx = new RegExp(`([^\\s=]+)\\s*(=\\s*(['"])([\\s\\S]*?)\\3)?`, "gm");
-function buildAttributesMap(attrStr, jPath, tagName) {
+function buildAttributesMap(attrStr, jPath, tagName, force = false) {
   const options = this.options;
-  if (options.ignoreAttributes !== true && typeof attrStr === "string") {
+  if (force === true || options.ignoreAttributes !== true && typeof attrStr === "string") {
     const matches = getAllMatches(attrStr, attrsRegx);
     const len = matches.length;
     const attrs = {};
@@ -70995,7 +72742,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
       }
     }
     if (!hasAttrs) return;
-    if (options.attributesGroupName) {
+    if (options.attributesGroupName && !options.preserveOrder) {
       const attrCollection = {};
       attrCollection[options.attributesGroupName] = attrs;
       return attrCollection;
@@ -71009,6 +72756,7 @@ var parseXml = function(xmlData) {
   let currentNode = xmlObj;
   let textData = "";
   this.matcher.reset();
+  this.entityDecoder.reset();
   this.entityExpansionCount = 0;
   this.currentExpandedLength = 0;
   const options = this.options;
@@ -71048,12 +72796,17 @@ var parseXml = function(xmlData) {
         let tagData = readTagExp(xmlData, i5, false, "?>");
         if (!tagData) throw new Error("Pi Tag is not closed.");
         textData = this.saveTextToParentTag(textData, currentNode, this.readonlyMatcher);
+        const attsMap = this.buildAttributesMap(tagData.tagExp, this.matcher, tagData.tagName, true);
+        if (attsMap) {
+          const ver = attsMap[this.options.attributeNamePrefix + "version"];
+          this.entityDecoder.setXmlVersion(Number(ver) || 1);
+        }
         if (options.ignoreDeclaration && tagData.tagName === "?xml" || options.ignorePiTags) {
         } else {
           const childNode = new XmlNode2(tagData.tagName);
           childNode.add(options.textNodeName, "");
-          if (tagData.tagName !== tagData.tagExp && tagData.attrExpPresent) {
-            childNode[":@"] = this.buildAttributesMap(tagData.tagExp, this.matcher, tagData.tagName);
+          if (tagData.tagName !== tagData.tagExp && tagData.attrExpPresent && options.ignoreAttributes !== true) {
+            childNode[":@"] = attsMap;
           }
           this.addChild(currentNode, childNode, this.readonlyMatcher, i5);
         }
@@ -71068,7 +72821,7 @@ var parseXml = function(xmlData) {
         i5 = endIndex;
       } else if (c1 === 33 && xmlData.charCodeAt(i5 + 2) === 68) {
         const result = docTypeReader.readDocType(xmlData, i5);
-        this.entityReplacer.addInputEntities(result.entities);
+        this.entityDecoder.addInputEntities(result.entities);
         i5 = result.i;
       } else if (c1 === 33 && xmlData.charCodeAt(i5 + 2) === 91) {
         const closeIndex = findClosingIndex(xmlData, "]]>", i5, "CDATA is not closed.") - 2;
@@ -71227,7 +72980,7 @@ function replaceEntitiesValue(val, tagName, jPath) {
       return val;
     }
   }
-  return this.entityReplacer.replace(val);
+  return this.entityDecoder.decode(val);
 }
 function saveTextToParentTag(textData, parentNode, matcher, isLeafNode) {
   if (textData) {
@@ -71252,10 +73005,11 @@ function isItStopNode() {
 }
 function tagExpWithClosingIndex(xmlData, i5, closingChar = ">") {
   let attrBoundary = 0;
-  const chars = [];
   const len = xmlData.length;
   const closeCode0 = closingChar.charCodeAt(0);
   const closeCode1 = closingChar.length > 1 ? closingChar.charCodeAt(1) : -1;
+  let result = "";
+  let segmentStart = i5;
   for (let index = i5; index < len; index++) {
     const code = xmlData.charCodeAt(index);
     if (attrBoundary) {
@@ -71265,16 +73019,17 @@ function tagExpWithClosingIndex(xmlData, i5, closingChar = ">") {
     } else if (code === closeCode0) {
       if (closeCode1 !== -1) {
         if (xmlData.charCodeAt(index + 1) === closeCode1) {
-          return { data: String.fromCharCode(...chars), index };
+          result += xmlData.substring(segmentStart, index);
+          return { data: result, index };
         }
       } else {
-        return { data: String.fromCharCode(...chars), index };
+        result += xmlData.substring(segmentStart, index);
+        return { data: result, index };
       }
-    } else if (code === 9) {
-      chars.push(32);
-      continue;
+    } else if (code === 9 && !attrBoundary) {
+      result += xmlData.substring(segmentStart, index) + " ";
+      segmentStart = index + 1;
     }
-    chars.push(code);
   }
 }
 function findClosingIndex(xmlData, str, i5, errMsg) {
@@ -71527,8 +73282,7 @@ var XMLParser = class {
         throw Error(`${result.err.msg}:${result.err.line}:${result.err.col}`);
       }
     }
-    const orderedObjParser = new OrderedObjParser(this.options);
-    orderedObjParser.entityReplacer.setExternalEntities(this.externalEntities);
+    const orderedObjParser = new OrderedObjParser(this.options, this.externalEntities);
     const orderedResult = orderedObjParser.parseXml(xmlData);
     if (this.options.preserveOrder || orderedResult === void 0) return orderedResult;
     else return prettify(orderedResult, this.options, orderedObjParser.matcher, orderedObjParser.readonlyMatcher);
@@ -71623,12 +73377,16 @@ function arrToStr(arr, options, indentation, matcher, stopNodeExpressions) {
       if (isPreviousElementTag) {
         xmlStr += indentation;
       }
-      xmlStr += `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
+      const val = tagObj[tagName][0][options.textNodeName];
+      const safeVal = String(val).replace(/\]\]>/g, "]]]]><![CDATA[>");
+      xmlStr += `<![CDATA[${safeVal}]]>`;
       isPreviousElementTag = false;
       matcher.pop();
       continue;
     } else if (tagName === options.commentPropName) {
-      xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
+      const val = tagObj[tagName][0][options.textNodeName];
+      const safeVal = String(val).replace(/--/g, "- -").replace(/-$/, "- ");
+      xmlStr += indentation + `<!--${safeVal}-->`;
       isPreviousElementTag = true;
       matcher.pop();
       continue;
@@ -72179,9 +73937,11 @@ Builder.prototype.checkStopNode = function(matcher) {
 };
 Builder.prototype.buildTextValNode = function(val, key, attrStr, level, matcher) {
   if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
-    return this.indentate(level) + `<![CDATA[${val}]]>` + this.newLine;
+    const safeVal = String(val).replace(/\]\]>/g, "]]]]><![CDATA[>");
+    return this.indentate(level) + `<![CDATA[${safeVal}]]>` + this.newLine;
   } else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
-    return this.indentate(level) + `<!--${val}-->` + this.newLine;
+    const safeVal = String(val).replace(/--/g, "- -").replace(/-$/, "- ");
+    return this.indentate(level) + `<!--${safeVal}-->` + this.newLine;
   } else if (key[0] === "?") {
     return this.indentate(level) + "<" + key + attrStr + "?" + this.tagEndChar;
   } else {
